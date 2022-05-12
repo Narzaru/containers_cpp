@@ -22,7 +22,18 @@ namespace s21 {
         void pop_back();
         void push_front(T data);
         void pop_front();
-    
+        void reverse();
+        void swap(list& other);
+        void unique();
+        void sort();
+        void merge(list& other);
+
+
+        T& front() const;
+        T& back() const;
+
+
+
         list& operator=(list& other);
 
         list<T>();
@@ -74,7 +85,7 @@ namespace s21 {
             ~ListIterator() {
                 free_iterator();
             };
-            
+            void swap_elements(ListIterator pos);
             void free_iterator();
             T& operator*() const;
             ListIterator operator++();
@@ -88,6 +99,7 @@ namespace s21 {
 
         iterator begin();
         iterator end();
+        iterator insert(iterator pos, const_reference value);
 
         class ListConstIterator {
          public:
