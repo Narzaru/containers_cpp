@@ -12,7 +12,7 @@ class vector {
   using reference = T&;
   using const_reference = const T&;
   using iterator = T *;
-  using const_iteratorr = const T *;
+  using const_iterator = const T *;
   using size_type = std::size_t;
 
   vector();
@@ -21,8 +21,8 @@ class vector {
   explicit vector(const vector &other);
   explicit vector(vector &&other);
   ~vector();
-  explicit operator=(const vector &other);
-  explicit operator=(vector &&other);
+  vector<value_type> operator=(const vector &other);
+  vector<value_type> operator=(vector &&other);
 
   reference at(size_type position);
   const_reference at(size_type position) const;
@@ -33,12 +33,12 @@ class vector {
   reference back();
   const_reference back() const;
   iterator data();
-  const_iteratorr data() const;
+  const_iterator data() const;
 
   iterator begin();
   const_iterator begin() const;
   iterator end();
-  const_iteratorr end() const;
+  const_iterator end() const;
 
   bool empty() const;
   size_type size() const;
@@ -55,9 +55,12 @@ class vector {
   void swap(vector& other);
 
  private:
-  size_type size;
-  size_type capacity;
+  iterator array_;
+  size_type size_;
+  size_type capacity_;
 };
 }  // namespace s21
+
+#include "s21_vector.inc"
 
 #endif  // SRC_S21_VECTOR_S21_VECTOR_H_
