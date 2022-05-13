@@ -16,13 +16,13 @@ class vector {
   using size_type = std::size_t;
 
   vector();
-  explicit vector(size_type size);
+  explicit vector(size_type capacity);
   explicit vector(std::initializer_list<value_type> const &list);
-  explicit vector(const vector &other);
-  explicit vector(vector &&other);
+  vector(const vector &other);
+  vector(vector &&other) noexcept;
   ~vector();
-  vector<value_type> operator=(const vector &other);
-  vector<value_type> operator=(vector &&other);
+  vector<T>& operator=(const vector &other);
+  vector<T>& operator=(vector &&other);
 
   reference at(size_type position);
   const_reference at(size_type position) const;
@@ -56,9 +56,13 @@ class vector {
 
  private:
   iterator array_;
-  size_type size_;
-  size_type capacity_;
+  size_type size_{};
+  size_type capacity_{};
+
+  static void copy_array(const vector &from, vector *to, size_type size);
+  void realloc_array(size_type capacity);
 };
+
 }  // namespace s21
 
 #include "s21_vector.inc"
