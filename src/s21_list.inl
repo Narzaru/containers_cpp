@@ -257,7 +257,7 @@ namespace s21 {
             ptr++;
         }
     }
-    
+
     template <typename T>
     void list<T>::sort() {
         
@@ -294,7 +294,7 @@ namespace s21 {
         size_+= other.size_;
         last_node();
     }
-        
+
     template <typename T>
     void list<T>::swap(list& other) {
         node* tmp;
@@ -305,7 +305,24 @@ namespace s21 {
         other.size_ = size_;
         size_ = tmp_size;
     }
-    
+
+    template <typename T>
+    void list<T>::erase(typename list<T>::ListIterator pos) {
+        if (pos.itr == pos.end) {
+            pos--;
+            pos.itr->pNext = nullptr;
+            size_--;
+        } else if (pos.itr == pos.first) {
+            pop_front();
+        } else {
+            pos.itr->pPrev->pNext = pos.itr->pNext;
+            pos++;
+            pos.itr->pPrev = pos.itr->pPrev->pPrev;
+            size_--;
+        }
+        
+    }
+
     // ITERATOR
 
     template <typename T>
@@ -379,14 +396,14 @@ namespace s21 {
     template <typename T>
     typename list<T>::iterator  list<T>::end() {
         ListIterator tmp = (*this);
-        while (tmp.itr != nullptr) {
+        while (tmp.itr->pNext != nullptr) {
             tmp++;
         }
         return tmp;
     }
 
     template <typename T>
-    typename list<T>::ListIterator list<T>::insert (ListIterator pos, const T& value) {
+    typename list<T>::ListIterator list<T>::insert (ListIterator pos, const T& value) {         //  нужно реализовать
         // нужно реализовать        
        return pos;
     }

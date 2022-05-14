@@ -28,6 +28,7 @@ namespace s21 {
         void sort();
         void merge(list& other);
 
+        // void splice(const_iterator pos, list& other);  //  нужно реализовать
 
         T& front() const;
         T& back() const;
@@ -99,7 +100,8 @@ namespace s21 {
 
         iterator begin();
         iterator end();
-        iterator insert(iterator pos, const_reference value);
+        iterator insert(iterator pos, const_reference value);           //нужно реализовать
+        void erase(ListIterator pos);
 
         class ListConstIterator {
          public:

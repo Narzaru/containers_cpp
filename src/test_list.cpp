@@ -16,16 +16,24 @@ int main()
     s21::list<int> s21list{777, 5};
     s21::list<int> s21list2{566, 123, 123, 5, 6, 7};
     
-    // s21::list<int>::ListIterator ptr_first = s21list2.begin();
+    s21::list<int>::ListIterator ptr_first = s21list2.begin();
+    ptr_first++;
+    ptr_first++;
+
+    s21list2.erase(ptr_first);
     // ptr_first++;
     // s21::list<int>::ListIterator ptr_back = s21list2.end();
     // // s21list.swap(s21list2);
-    s21list.merge(s21list2);
-    s21list.sort();
-    s21list.unique();
+    // s21list.merge(s21list2);
+    // s21list.sort();
+    // s21list.unique();
     // ptr_first.swap_elements(ptr_back);
     std::cout << "=========================" << std::endl;
-
+    std::cout << *ptr_first << std::endl;
+    ptr_first--;
+    std::cout << *ptr_first << std::endl;
+    ptr_first--;
+    std::cout << *ptr_first << std::endl;
     // std::list<int> stdlist{44, 55};
     // s21::list<int>::ListIterator s21it= s21list.begin();
     // s21it = s21list.begin();
