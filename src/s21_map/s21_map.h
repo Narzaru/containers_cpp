@@ -2,12 +2,19 @@
 #include <cstddef>
 #include <initializer_list>
 
+typedef enum {
+    RED,
+    BLACK
+} node_color;
+
 namespace s21 {
     template <typename Key, typename T>
     class map
     {
     
      public:
+        
+        static empty_node = new Node(BLACK);
         // Map Member type
         using key_type = Key;
         using mapped_type = T;
@@ -61,10 +68,12 @@ namespace s21 {
             Node *left_child;
             Node *right_child;
 
+            node_color color;
             Key key;
             T value;
 
-            Node(Key key = Key(), T value = T(), Node *parent = nullptr, Node *left_child = nullptr, Node *right_child = nullptr) {
+            Node(node_color color = RED, Key key = Key(), T value = T(), Node *parent = nullptr, Node *left_child = nullptr, Node *right_child = nullptr) {
+                this->color = color;
                 this->key = key;
                 this->value = value;
                 this->parent = parent;
