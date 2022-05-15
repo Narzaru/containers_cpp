@@ -2,35 +2,30 @@
 // !<done or not> done/..
 // !<tested or not> tested/..
 // !<temp> ?
+#include "s21_vector.h"
+
 namespace s21 {
 
-// !done
-// !..
 template<typename T>
 vector<T>::vector() : vector(0) {}
 
-// !done
-// !..
 template<typename T>
-vector<T>::vector(size_type capacity)
+vector<T>::vector(vector<T>::size_type capacity)
     : array_(nullptr),
       size_(0),
       capacity_(capacity) {
   realloc_array(capacity);
 }
 
-// !done
-// !..
 template<typename T>
 vector<T>::vector(std::initializer_list<T> const &list)
     : vector(list.size()) {
+  size_ = list.size();
   for (size_type i = 0; i < list.size(); ++i) {
     array_[i] = list.begin()[i];
   }
 }
 
-// !done
-// !..
 template<typename T>
 vector<T>::vector(const vector<T> &other)
     : vector(other.capacity_) {
@@ -38,8 +33,6 @@ vector<T>::vector(const vector<T> &other)
   copy_array(this, other, other.size_);
 }
 
-// !done
-// !..
 template<typename T>
 vector<T>::vector(vector<T> &&other) noexcept
     : array_(other.array_),
@@ -50,17 +43,13 @@ vector<T>::vector(vector<T> &&other) noexcept
   other.capacity_ = 0;
 }
 
-// !done
-// !..
 template<typename T>
 vector<T>::~vector() {
   vector<T>::clear();
 }
 
-// !done
-// !..
 template<typename T>
-vector<T>& vector<T>::operator=(const vector<T> &other) {
+vector<T> &vector<T>::operator=(const vector<T> &other) {
   if (capacity_ != other.capacity_) {
     capacity_ = other.capacity_;
     realloc_array(*this, capacity_);
@@ -69,10 +58,8 @@ vector<T>& vector<T>::operator=(const vector<T> &other) {
   size_ = other.size_;
 }
 
-// !done
-// !..
 template<typename T>
-vector<T>& vector<T>::operator=(vector &&other) {
+vector<T> &vector<T>::operator=(vector &&other) noexcept {
   clear();
   array_ = other.array_;
   size_ = other.size_;
@@ -80,8 +67,6 @@ vector<T>& vector<T>::operator=(vector &&other) {
   other.clear();
 }
 
-// !done
-// !..
 template<typename T>
 void vector<T>::clear() {
   delete[] array_;
@@ -89,8 +74,16 @@ void vector<T>::clear() {
   capacity_ = 0;
 }
 
-// !done
-// !..
+template<typename T>
+typename vector<T>::size_type vector<T>::size() const {
+  return size_;
+}
+
+template<typename T>
+typename vector<T>::size_type vector<T>::capacity() const {
+  return capacity_;
+}
+
 template<typename T>
 void vector<T>::copy_array(const vector<T> &from, vector<T> *to, size_type size) {
   for (size_type i = 0; i < size; ++i) {
@@ -98,8 +91,6 @@ void vector<T>::copy_array(const vector<T> &from, vector<T> *to, size_type size)
   }
 }
 
-// !done
-// !..
 template<typename T>
 void vector<T>::realloc_array(size_type capacity) {
   capacity_ = capacity;
@@ -109,6 +100,32 @@ void vector<T>::realloc_array(size_type capacity) {
   } else {
     array_ = nullptr;
   }
+}
+
+template<typename T>
+typename vector<T>::reference vector<T>::at(size_type position) {
+  return const_cast<vector<T>::reference>(const_cast<const vector<T> *>(this)->at(position));
+}
+
+template<typename T>
+typename vector<T>::const_reference vector<T>::at(size_type position) const {
+  if (position >= size_) {
+    throw std::out_of_range("index is out of range");
+  }
+  if (capacity_ == 0) {
+    throw std::length_error("vector is empty");
+  }
+  return array_[position];
+}
+
+template<typename T>
+typename vector<T>::reference vector<T>::operator[](size_type position) {
+  return at(position);
+}
+
+template<typename T>
+typename vector<T>::const_reference vector<T>::operator[](size_type position) const {
+  return at(position);
 }
 
 }  // namespace s21

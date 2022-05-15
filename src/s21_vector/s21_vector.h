@@ -1,6 +1,7 @@
 #ifndef SRC_S21_VECTOR_S21_VECTOR_H_
 #define SRC_S21_VECTOR_S21_VECTOR_H_
 
+#include <stdexcept>
 #include <cstddef>
 #include <initializer_list>
 
@@ -9,20 +10,20 @@ template<typename T>
 class vector {
  public:
   using value_type = T;
-  using reference = T&;
-  using const_reference = const T&;
+  using reference = T &;
+  using const_reference = const T &;
   using iterator = T *;
   using const_iterator = const T *;
   using size_type = std::size_t;
 
   vector();
   explicit vector(size_type capacity);
-  explicit vector(std::initializer_list<value_type> const &list);
+  vector(std::initializer_list<value_type> const &list);
   vector(const vector &other);
   vector(vector &&other) noexcept;
   ~vector();
-  vector<T>& operator=(const vector &other);
-  vector<T>& operator=(vector &&other);
+  vector<value_type> &operator=(const vector &other);
+  vector<value_type> &operator=(vector &&other) noexcept;
 
   reference at(size_type position);
   const_reference at(size_type position) const;
@@ -52,7 +53,7 @@ class vector {
   void erase(iterator pos);
   void push_back(const_reference value);
   void pop_back(const_reference value);
-  void swap(vector& other);
+  void swap(vector &other);
 
  private:
   iterator array_;
