@@ -5,7 +5,7 @@ CFLAG := -Wall -Wextra -Wshadow
 FSANITIZE_DEBUG := True
 ifeq ($(shell uname), Linux)
 	ifeq ($(FSANITIZE_DEBUG), True)
-	CFLAG += -fno-omit-frame-pointer -fsanitize=address
+	CFLAG += -fsanitize=address
 	endif
 endif
 
