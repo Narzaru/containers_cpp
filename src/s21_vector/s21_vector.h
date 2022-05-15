@@ -1,9 +1,10 @@
 #ifndef SRC_S21_VECTOR_S21_VECTOR_H_
 #define SRC_S21_VECTOR_S21_VECTOR_H_
 
+#include <limits>
 #include <stdexcept>
-#include <cstddef>
 #include <initializer_list>
+#include <cstddef>
 
 namespace s21 {
 template<typename T>
@@ -44,7 +45,7 @@ class vector {
   bool empty() const;
   size_type size() const;
   size_type max_size() const;
-  void reserve(size_type size);
+  void reserve(size_type new_capacity);
   size_type capacity() const;
   void shrink_to_fit();
 
@@ -61,7 +62,9 @@ class vector {
   size_type capacity_{};
 
   static void copy_array(const vector &from, vector *to, size_type size);
+  static void copy_array(const_iterator from, iterator to, size_type size);
   void realloc_array(size_type capacity);
+  void realloc_and_copy(size_type capacity);
 };
 
 }  // namespace s21

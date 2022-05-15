@@ -1,7 +1,3 @@
-// TODO(bgreydon) remove marks
-// !<done or not> done/..
-// !<tested or not> tested/..
-// !<temp> ?
 #include "s21_vector.h"
 
 namespace s21 {
@@ -85,9 +81,26 @@ typename vector<T>::size_type vector<T>::capacity() const {
 }
 
 template<typename T>
-void vector<T>::copy_array(const vector<T> &from, vector<T> *to, size_type size) {
+typename vector<T>::size_type vector<T>::max_size() const {
+  return std::numeric_limits<std::size_t>::max() / sizeof(T);
+}
+
+// TODO(bgreydon) use copy_array instead for
+template<typename T>
+void vector<T>::copy_array(const vector<T> &from,
+                           vector<T> *to,
+                           size_type size) {
   for (size_type i = 0; i < size; ++i) {
     to->array_[i] = from.array_[i];
+  }
+}
+
+template<typename T>
+void vector<T>::copy_array(vector<T>::const_iterator from,
+                           vector<T>::iterator to,
+                           vector<T>::size_type size) {
+  for (vector<T>::size_type i = 0; i < size; ++i) {
+    to[i] = from[i];
   }
 }
 
@@ -103,8 +116,21 @@ void vector<T>::realloc_array(size_type capacity) {
 }
 
 template<typename T>
+void vector<T>::realloc_and_copy(vector<T>::size_type capacity) {
+  vector<T> new_vector(capacity);
+  copy_array(*this, &new_vector, size_ > capacity ? capacity : size_);
+  *this = std::move(new_vector);
+}
+
+template<typename T>
+bool vector<T>::empty() const {
+  return size_ == 0;
+}
+
+template<typename T>
 typename vector<T>::reference vector<T>::at(size_type position) {
-  return const_cast<vector<T>::reference>(const_cast<const vector<T> *>(this)->at(position));
+  return const_cast<vector<T>::reference>(const_cast<const vector<T> *>(this)->at(
+      position));
 }
 
 template<typename T>
@@ -127,5 +153,23 @@ template<typename T>
 typename vector<T>::const_reference vector<T>::operator[](size_type position) const {
   return at(position);
 }
+
+template<typename T>
+void vector<T>::reserve(vector<T>::size_type new_capacity) {
+  if (new_capacity > max_size()) {
+    throw std::length_error("trying to allocate as much as possible");
+  }
+  if (new_capacity > capacity_) {
+    realloc_and_copy(new_capacity);
+  }
+}
+
+template<typename T>
+void vector<T>::shrink_to_fit() {
+  if (size_ < capacity_) {
+    realloc_and_copy(size_);
+  }
+}
+
 
 }  // namespace s21
