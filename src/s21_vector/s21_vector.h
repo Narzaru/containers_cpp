@@ -61,10 +61,14 @@ class vector {
   size_type size_{};
   size_type capacity_{};
 
-  static void copy_array(const vector &from, vector *to, size_type size);
-  static void copy_array(const_iterator from, iterator to, size_type size);
-  void realloc_array(size_type capacity);
-  void realloc_and_copy(size_type capacity);
+  static void copy_array(const vector &source,
+                         vector *destination,
+                         size_type size);
+  static void copy_array(const_iterator source,
+                         iterator destination,
+                         size_type size);
+  void realloc_array(size_type new_capacity);
+  void realloc_and_copy(size_type new_capacity);
 };
 
 }  // namespace s21

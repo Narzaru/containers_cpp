@@ -8,7 +8,7 @@ vector<T>::vector() : vector(0) {}
 template<typename T>
 vector<T>::vector(vector<T>::size_type capacity)
     : array_(nullptr),
-      size_(0),
+      size_(capacity),
       capacity_(capacity) {
   realloc_array(capacity);
 }
@@ -41,7 +41,7 @@ vector<T>::vector(vector<T> &&other) noexcept
 
 template<typename T>
 vector<T>::~vector() {
-  vector<T>::clear();
+  vector < T > ::clear();
 }
 
 template<typename T>
@@ -58,73 +58,11 @@ template<typename T>
 vector<T> &vector<T>::operator=(vector &&other) noexcept {
   clear();
   array_ = other.array_;
+  other.array_ = nullptr;
   size_ = other.size_;
   capacity_ = other.capacity_;
   other.clear();
-}
-
-template<typename T>
-void vector<T>::clear() {
-  delete[] array_;
-  size_ = 0;
-  capacity_ = 0;
-}
-
-template<typename T>
-typename vector<T>::size_type vector<T>::size() const {
-  return size_;
-}
-
-template<typename T>
-typename vector<T>::size_type vector<T>::capacity() const {
-  return capacity_;
-}
-
-template<typename T>
-typename vector<T>::size_type vector<T>::max_size() const {
-  return std::numeric_limits<std::size_t>::max() / sizeof(T);
-}
-
-// TODO(bgreydon) use copy_array instead for
-template<typename T>
-void vector<T>::copy_array(const vector<T> &from,
-                           vector<T> *to,
-                           size_type size) {
-  for (size_type i = 0; i < size; ++i) {
-    to->array_[i] = from.array_[i];
-  }
-}
-
-template<typename T>
-void vector<T>::copy_array(vector<T>::const_iterator from,
-                           vector<T>::iterator to,
-                           vector<T>::size_type size) {
-  for (vector<T>::size_type i = 0; i < size; ++i) {
-    to[i] = from[i];
-  }
-}
-
-template<typename T>
-void vector<T>::realloc_array(size_type capacity) {
-  capacity_ = capacity;
-  delete[] array_;
-  if (capacity != 0) {
-    array_ = new T[capacity]();
-  } else {
-    array_ = nullptr;
-  }
-}
-
-template<typename T>
-void vector<T>::realloc_and_copy(vector<T>::size_type capacity) {
-  vector<T> new_vector(capacity);
-  copy_array(*this, &new_vector, size_ > capacity ? capacity : size_);
-  *this = std::move(new_vector);
-}
-
-template<typename T>
-bool vector<T>::empty() const {
-  return size_ == 0;
+  return *this;
 }
 
 template<typename T>
@@ -155,6 +93,71 @@ typename vector<T>::const_reference vector<T>::operator[](size_type position) co
 }
 
 template<typename T>
+typename vector<T>::reference vector<T>::front() {
+  return *array_;
+}
+
+template<typename T>
+typename vector<T>::const_reference vector<T>::front() const {
+  return const_cast<vector<T>::const_reference>(front());
+}
+
+template<typename T>
+typename vector<T>::reference vector<T>::back() {
+  return *(array_ + size_);
+}
+
+template<typename T>
+typename vector<T>::const_reference vector<T>::back() const {
+  return const_cast<vector<T>::const_reference>(back());
+}
+
+template<typename T>
+typename vector<T>::iterator vector<T>::data() {
+  return &front();
+}
+
+template<typename T>
+typename vector<T>::const_iterator vector<T>::data() const {
+  return &front();
+}
+
+template<typename T>
+typename vector<T>::iterator vector<T>::begin() {
+  return &front();
+}
+
+template<typename T>
+typename vector<T>::const_iterator vector<T>::begin() const {
+  return &front();
+}
+
+template<typename T>
+typename vector<T>::iterator vector<T>::end() {
+  return &back();
+}
+
+template<typename T>
+typename vector<T>::const_iterator vector<T>::end() const {
+  return &back();
+}
+
+template<typename T>
+bool vector<T>::empty() const {
+  return size_ == 0;
+}
+
+template<typename T>
+typename vector<T>::size_type vector<T>::size() const {
+  return size_;
+}
+
+template<typename T>
+typename vector<T>::size_type vector<T>::max_size() const {
+  return std::numeric_limits<std::size_t>::max() / sizeof(T);
+}
+
+template<typename T>
 void vector<T>::reserve(vector<T>::size_type new_capacity) {
   if (new_capacity > max_size()) {
     throw std::length_error("trying to allocate as much as possible");
@@ -165,11 +168,92 @@ void vector<T>::reserve(vector<T>::size_type new_capacity) {
 }
 
 template<typename T>
+typename vector<T>::size_type vector<T>::capacity() const {
+  return capacity_;
+}
+
+template<typename T>
 void vector<T>::shrink_to_fit() {
   if (size_ < capacity_) {
     realloc_and_copy(size_);
   }
 }
 
+template<typename T>
+void vector<T>::clear() {
+  delete[] array_;
+  size_ = 0;
+  capacity_ = 0;
+}
+
+template<typename T>
+T *vector<T>::insert(T *pos, const T &value) {
+  std::size_t insert_position = (pos - array_) / sizeof(T);
+  if (insert_position > size_) {
+    throw std::out_of_range("insert position is out of range");
+  }
+  if (insert_position > max_size()) {
+    throw std::length_error("trying to allocate as much as possible");
+  }
+  if (size_ + 1 > capacity_) {
+    realloc_and_copy(capacity_ == 0 ? 1 : capacity_ * 2);
+  }
+  for (std::size_t i = size_; i != insert_position; --i) {
+    array_[i] = array_[i - 1];
+  }
+  array_[insert_position] = value;
+  size_ += 1;
+  return pos;
+}
+
+template<typename T>
+void vector<T>::erase(iterator pos) {
+
+}
+
+// TODO(bgreydon) use copy_array instead for
+template<typename T>
+void vector<T>::copy_array(const vector<T> &source,
+                           vector<T> *destination,
+                           size_type size) {
+  for (size_type i = 0; i < size; ++i) {
+    destination->array_[i] = source.array_[i];
+  }
+}
+
+template<typename T>
+void vector<T>::copy_array(vector<T>::const_iterator source,
+                           vector<T>::iterator destination,
+                           vector<T>::size_type size) {
+  for (std::size_t i = 0; i < size; ++i) {
+    destination[i] = source[i];
+  }
+}
+
+template<typename T>
+void vector<T>::realloc_array(size_type new_capacity) {
+  if (new_capacity > max_size()) {
+    throw std::length_error("trying to allocate as much as possible");
+  }
+  capacity_ = new_capacity;
+  delete[] array_;
+  if (new_capacity != 0) {
+    array_ = new T[new_capacity]();
+  } else {
+    array_ = nullptr;
+  }
+}
+
+template<typename T>
+void vector<T>::realloc_and_copy(vector<T>::size_type new_capacity) {
+  if (new_capacity > max_size()) {
+    throw std::length_error("trying to allocate as much as possible");
+  }
+  std::size_t old_size = size_;
+  vector<T> new_vector(new_capacity);
+  copy_array(*this, &new_vector, size_);
+  *this = std::move(new_vector);
+  size_ = old_size;
+}
 
 }  // namespace s21
