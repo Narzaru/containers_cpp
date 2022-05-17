@@ -4,9 +4,8 @@
 
 namespace s21 {
 
-    template <typename T>
+    template <typename T> 
     class list {
-
      public:
         typedef T value_type;
         typedef T& reference;
@@ -17,8 +16,8 @@ namespace s21 {
         bool emply();
         size_t size();
         size_t max_size();
-        void clear(); 
-        void push_back (T data);
+        void clear();
+        void push_back(T data);
         void pop_back();
         void push_front(T data);
         void pop_front();
@@ -28,12 +27,8 @@ namespace s21 {
         void sort();
         void merge(list& other);
 
-        // void splice(const_iterator pos, list& other);  //  нужно реализовать
-
         T& front() const;
         T& back() const;
-
-
 
         list& operator=(list& other);
 
@@ -42,7 +37,7 @@ namespace s21 {
         list<T>(std::initializer_list<T> const& items);
         list<T>(list &&l);
         list(const list &l);
-        
+
         ~list() {
             clear();
         }
@@ -52,7 +47,7 @@ namespace s21 {
             listNode *pNext;
             listNode *pPrev;
 
-            listNode(T data = T(), listNode *pNext = nullptr, listNode *pPrev = nullptr) { // конструктор
+            explicit listNode(T data = T(), listNode *pNext = nullptr, listNode *pPrev = nullptr) {
                 this->data = data;
                 this->pNext = pNext;
                 this->pPrev = pPrev;
@@ -61,31 +56,30 @@ namespace s21 {
             ~listNode() {
                 free_memory();
             }
-            
-            T data; 
+            T data;
             void free_memory();
         };
         typedef list<T>::listNode node;
 
         class ListIterator {
          public:
-            node* first;        //первый
-            node* end;          //последний
-            node* itr;          //текущий
-            
+            node* first;
+            node* end;
+            node* itr;
+
             ListIterator() {
                 first = nullptr;
                 end = nullptr;
                 itr = nullptr;
-            };
-            ListIterator(const list<T>& other) {
+            }
+            explicit ListIterator(const list<T>& other) {
                 first = other.head_;
                 end = other.back_;
                 itr = other.head_;
-            };
+            }
             ~ListIterator() {
                 free_iterator();
-            };
+            }
             void swap_elements(ListIterator pos);
             void free_iterator();
             T& operator*() const;
@@ -100,29 +94,29 @@ namespace s21 {
 
         iterator begin();
         iterator end();
-        iterator insert(iterator pos, const_reference value);           //нужно реализовать
-        void erase(ListIterator pos);
+        iterator insert(iterator pos, const_reference value);
+        void erase(iterator pos);
 
         class ListConstIterator {
          public:
-            node* first;        //первый
-            node* end;          //последний
-            node* itr;          //текущий
-            
+            node* first;
+            node* end;
+            node* itr;
+
             ListConstIterator() {
                 first = nullptr;
                 end = nullptr;
                 itr = nullptr;
-            };
-            ListConstIterator(const list<T>& other) {
+            }
+            explicit ListConstIterator(const list<T>& other) {
                 first = other.head_;
                 end = other.back_;
                 itr = other.head_;
-            };
+            }
             ~ListConstIterator() {
                 free_iterator();
-            };
-            
+            }
+
             void free_iterator();
             T& operator*() const;
             ListConstIterator operator++();
@@ -136,14 +130,14 @@ namespace s21 {
 
         const_iterator cbegin() const;
         const_iterator cend() const;
-        
-     private:
+        void splice(const_iterator pos, list& other);
 
+     private:
         size_t size_;               // максимальный размер
         node* head_;
-        node* back_;                // реализовать присваивание 
+        node* back_;                // реализовать присваивание
         void last_node();
     };
 
-} // namespace s21
+}  // namespace s21
 #include "s21_list.inl"

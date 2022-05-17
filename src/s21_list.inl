@@ -167,13 +167,13 @@ namespace s21 {
 
     template <typename T>
     void list<T>::pop_front() {
-        head_->data = head_->pNext->data;
-        head_->pNext->data = 0;
-        node *del = head_->pNext;
-        head_->pNext= head_->pNext->pNext;
-        node *second = head_->pNext->pNext;
-        second->pPrev = head_;
-        del->free_memory();
+        if (size_ > 1) {
+            head_ = head_->pNext;
+            head_->pPrev->free_memory();
+            head_->pPrev = nullptr;
+        } else {
+            head_->free_memory();
+        }
         size_--;
     }
 
@@ -316,13 +316,23 @@ namespace s21 {
             pop_front();
         } else {
             pos.itr->pPrev->pNext = pos.itr->pNext;
-            pos++;
-            pos.itr->pPrev = pos.itr->pPrev->pPrev;
+            pos.itr->pNext->pPrev = pos.itr->pPrev->pPrev;
+            pos.itr->pPrev->free_memory();
             size_--;
         }
         
     }
 
+    template <typename T>
+    void list<T>::splice(const_iterator pos, list& other) {
+        iterator tmp = other.begin();
+        pos.itr->pNext->pPrev = tmp.end;
+        tmp.end->pNext = pos.itr->pNext;
+        pos.itr->pNext = tmp.itr;
+        tmp.itr->pPrev = pos.itr;
+        size_ +=other.size_;
+        other.clear();
+    }
     // ITERATOR
 
     template <typename T>
@@ -403,9 +413,16 @@ namespace s21 {
     }
 
     template <typename T>
-    typename list<T>::ListIterator list<T>::insert (ListIterator pos, const T& value) {         //  нужно реализовать
-        // нужно реализовать        
-       return pos;
+    typename list<T>::ListIterator list<T>::insert (ListIterator pos, const T& value) {
+        node* element = new node;
+        element->data = value;
+        element->pPrev = pos.itr;
+        element->pNext = pos.itr->pNext;
+        pos.itr->pNext->pPrev = element;
+        pos.itr->pNext = element;
+        pos++;
+        size_++;
+        return pos;
     }
 
     // CONST ITERATOR
@@ -439,11 +456,11 @@ namespace s21 {
         if (itr == nullptr) {
             // бросить исключение
         }
-        iterator ptr = *this;
+        const_iterator ptr = *this;
         itr = itr->pNext;
         return ptr;
     }
-
+ 
     template <typename T>
     typename list<T>::ListConstIterator list<T>::ListConstIterator::operator-- () {
         if (itr == nullptr) {
@@ -458,7 +475,7 @@ namespace s21 {
         if (itr == nullptr) {
             // бросить исключение
         }
-        iterator ptr = *this;
+        const_iterator ptr = *this;
         itr = itr->pPrev;
         return ptr;
     }
@@ -486,117 +503,5 @@ namespace s21 {
         }
         return ListConstIterator(tmp);
     }
-    
+
 } // namespace s21
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        //   r_j != pivot);
-        //   if (size_ < 2) return;
-        // list<T>::ListIterator ptr_i = this->begin();
-        // list<T>::ListIterator ptr_j = this->end();
-        // list<T>::ListIterator pivot = this->begin();
-        // int count = size_/2;
-        // while (count-->0) {
-        //     pivot++;
-        // }
-        // T value = *pivot;
-        // list<T> left;
-        // list<T> right;
-
-
-        // while (ptr_i.itr != ptr_j.end)
-        // {
-        //     while (ptr_i.itr->data < value)
-        //         ptr_i++;
-        //     while (ptr_j.end->data > value)
-        //         ptr_j--;
-        //     if (ptr_i.itr->data <= ptr_j.itr->data)
-        //     {
-        //         ptr_i.swap_elements(ptr_j);
-        //         ptr_i++;
-        //         ptr_j--;
-        //     }
-        // }
-        // if (ptr_j.itr > ptr_j.first)
-        //     // sort();
-        // if (ptr_i.itr < ptr_j.end)
-        //     // sort();
-        
-        // left.sort();
-        // right.sort();
-        // left.merge(right);
-        // *this = left;
-    
-    // void quickSort(int *array, int low, int high) {
-    //     int i = low;
-    //     int j = high;
-    //     int pivot = array[(i + j) / 2];
-    //     int temp;
-
-    //     while (i <= j)
-    //     {
-    //         while (array[i] < pivot)
-    //             i++;
-    //         while (array[j] > pivot)
-    //             j--;
-    //         if (i <= j)
-    //         {
-    //             temp = array[i];
-    //             array[i] = array[j];
-    //             array[j] = temp;
-    //             i++;
-    //             j--;
-    //         }
-    //     }
-    //     if (j > low)
-    //         quickSort(array, low, j);
-    //     if (i < high)
-    //         quickSort(array, i, high);
-    // }
-
-
-
-
-        // while (ptr_i != ptr_j) {
-        //     if (*ptr_i > value) {
-        //         right.push_back(*ptr_i);
-        //     } else {
-        //         left.push_back(*ptr_i);
-        //     }
-        //     ptr_i++;
-        // }
-
-        // do {
-        //     while(*ptr_i < value) {
-        //         ptr_i++;
-        //     }
-        //     while(*ptr_j.end > value) {
-        //         ptr_j--;
-        //     }
-        //     if (*ptr_i >= *ptr_j) {
-        //         ptr_i.swap_elements(ptr_j);
-        //         ptr_i++;
-        //         ptr_j--;
-        //     }
-        // } while (ptr_i != pivot || pt

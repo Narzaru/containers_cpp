@@ -12,15 +12,15 @@ int main()
 
     // std::cout << "=========================" << std::endl;
     // std::cout << *ptr << std::endl;
+    // int value = 999;
+    s21::list<int> s21list1{777, 5};
+    s21::list<int> s21list2{566, 133, 123, 5, 6, 7};
     
-    s21::list<int> s21list{777, 5};
-    s21::list<int> s21list2{566, 123, 123, 5, 6, 7};
-    
-    s21::list<int>::ListIterator ptr_first = s21list2.begin();
+    s21::list<int>::ListConstIterator ptr_first = s21list2.cbegin();
     ptr_first++;
     ptr_first++;
 
-    s21list2.erase(ptr_first);
+    s21list2.splice(ptr_first, s21list1);
     // ptr_first++;
     // s21::list<int>::ListIterator ptr_back = s21list2.end();
     // // s21list.swap(s21list2);
@@ -34,8 +34,9 @@ int main()
     std::cout << *ptr_first << std::endl;
     ptr_first--;
     std::cout << *ptr_first << std::endl;
+
     // std::list<int> stdlist{44, 55};
-    // s21::list<int>::ListIterator s21it= s21list.begin();
+    // s21::list<int>::ListIterator s21it = s21list.begin();
     // s21it = s21list.begin();
     // std::list<int>::iterator stdit = stdlist.begin();
     // s21list.insert(s21it, 77);
