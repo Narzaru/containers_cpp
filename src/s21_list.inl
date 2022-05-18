@@ -89,7 +89,7 @@ namespace s21 {
     }
 
     template <typename T>
-    bool list<T>::emply() {
+    bool list<T>::empty() {
         return size() == 0;
     }
 
@@ -105,7 +105,7 @@ namespace s21 {
 
     template <typename T>
     void list<T>::clear() {        // нужно переделать на удаление с конца (указатель на конец) а не проходить через весь лист
-        if (emply() == 0){
+        if (empty() == 0){
             node *p = head_;
             int count = 0;
             while (p->pNext != nullptr) {
@@ -202,15 +202,16 @@ namespace s21 {
     }
     
     template <typename T>
-    T& list<T>::front() {
+    T& list<T>::front() const{
         list<T>::ListIterator tmp(*this);
         return *tmp;
     }
 
     template <typename T>
-    T& list<T>::back() {
-        ListIterator tmp = this->end();
-        return *tmp;
+    T& list<T>::back() const{
+        list<T>::ListIterator ptr(*this);
+        ptr.itr = ptr.end;
+        return *ptr;
     }
 
     template <typename T>

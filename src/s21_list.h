@@ -13,7 +13,7 @@ namespace s21 {
         typedef size_t size_type;
 
         void print_cont();
-        bool emply();
+        bool empty();
         size_t size();
         size_t max_size();
         void clear();
@@ -27,8 +27,8 @@ namespace s21 {
         void sort();
         void merge(list& other);
 
-        T& front();
-        T& back();
+        T& front() const;
+        T& back() const;
 
         list& operator=(list& other);
 

@@ -36,7 +36,10 @@ class queue {
         return A.back();
     }
 
-    bool empty();
+    bool empty() {
+        return A.empty();
+    }
+    
     size_type size();
 
 };
