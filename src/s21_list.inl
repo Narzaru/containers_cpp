@@ -38,7 +38,6 @@ namespace s21 {
         size_ = 0;
         for (size_t i = 0; i < n; i++)
             push_back(0);
-        
     }
 
     template <typename T>
@@ -203,14 +202,14 @@ namespace s21 {
     }
     
     template <typename T>
-    T& list<T>::front() const {
+    T& list<T>::front() {
         list<T>::ListIterator tmp(*this);
         return *tmp;
     }
 
     template <typename T>
-    T& list<T>::back() const {
-        ListIterator tmp = this.end();
+    T& list<T>::back() {
+        ListIterator tmp = this->end();
         return *tmp;
     }
 
@@ -218,9 +217,6 @@ namespace s21 {
     void list<T>::reverse() {
         list<T> ptr;
         list<T>::ListIterator tmp = this->begin();
-        // for (auto c = tmp.end; tmp.itr != c; tmp++) {
-        //     ptr.push_front(*tmp);
-        // }
         int count = size_;
         for (auto c = tmp.end; count > 0; tmp++) {
             ptr.push_front(*tmp);
@@ -405,7 +401,7 @@ namespace s21 {
 
     template <typename T>
     typename list<T>::iterator  list<T>::end() {
-        ListIterator tmp = (*this);
+        ListIterator tmp(*this);
         while (tmp.itr->pNext != nullptr) {
             tmp++;
         }

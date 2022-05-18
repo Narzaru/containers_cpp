@@ -14,14 +14,31 @@ class queue {
 
     queue(): A() {};
     queue(std::initializer_list<T> const& items): A(items) {};
-    queue(const queue &q): A(q) {};
-    queue(queue &&q): A(q) {};
-    // ~queue() {
-    // };
+    queue(const queue &q): A(q.A) {};
+    queue(queue &&q): A(std::move(q.A)) {};
+    ~queue() {
+    };
+
+    queue<T>& operator=(queue &&q) {
+        this->A = q.A;
+        return *this;
+    }
 
     void push(const_reference value) {A.push_back(value);}
     void pop() {A.pop_front();}
     void swap(queue& other) {A.swap(other.A);}
+
+    const_reference front() {
+        return A.front();
+    }
+
+    const_reference back() {
+        return A.back();
+    }
+
+    bool empty();
+    size_type size();
+
 };
 
 }

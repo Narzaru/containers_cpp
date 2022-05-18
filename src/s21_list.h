@@ -27,8 +27,8 @@ namespace s21 {
         void sort();
         void merge(list& other);
 
-        T& front() const;
-        T& back() const;
+        T& front();
+        T& back();
 
         list& operator=(list& other);
 
