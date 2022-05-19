@@ -1,6 +1,6 @@
 CC := g++
 STD := -std=c++17
-CFLAG := -Wall -Wextra -Wshadow
+CFLAG := -Wall -Wextra -Wshadow -pedantic
 
 FSANITIZE_DEBUG := True
 ifeq ($(shell uname), Linux)

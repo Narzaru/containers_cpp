@@ -1,5 +1,6 @@
-#include <algorithm>
 #include <gtest/gtest.h>
+
+#include <algorithm>
 
 #include "s21_containers.h"
 
@@ -25,10 +26,10 @@ TEST(constructors, size_constructor_test_3) {
 }
 
 TEST(constructors, size_constructor_test_4) {
-  ASSERT_THROW(s21::vector<double> vec
-      (std::numeric_limits<std::size_t>::max() / sizeof(double)
-                   +1),
-               std::length_error);
+  ASSERT_THROW(
+      s21::vector<double> vec(
+          std::numeric_limits<std::size_t>::max() / sizeof(double) + 1),
+      std::length_error);
 }
 
 TEST(constructors, initializer_list_constructor_test_1) {
@@ -69,13 +70,10 @@ TEST(constructors, move_constructor_test_1) {
   s21::vector<double> vec_1({1, 2});
   s21::vector<double> vec_2(std::move(vec_1));
   s21::vector<double> sample({1, 2});
-  ASSERT_TRUE(std::equal(sample.begin(),
-                         sample.end(),
-                         vec_2.begin(),
-                         [](double a, double b) {
-                           return (std::abs(a - b)
-                               < std::numeric_limits<float>::epsilon());
-                         }));
+  ASSERT_TRUE(std::equal(
+      sample.begin(), sample.end(), vec_2.begin(), [](double a, double b) {
+        return (std::abs(a - b) < std::numeric_limits<float>::epsilon());
+      }));
 }
 
 TEST(constructors, move_constructor_test_2) {
