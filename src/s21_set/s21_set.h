@@ -25,8 +25,6 @@ namespace s21 {
             clear();
         };
 
-        set& operator=(set& other);
-
         bool empty() const;
         size_type size() const;
         size_type max_size() const;
@@ -50,12 +48,13 @@ namespace s21 {
                 this->right_child = right_child;
             };
             ~Node() {
-                // free_node();
+                free_node();
             }
             void free_node();
         };
 
         Node *nil;
+        Node *find_node_to_insert(const value_type& value);
 
         class SetIterator {
          public:
@@ -66,10 +65,12 @@ namespace s21 {
             Node *find_first(const set<Key>& other);
 
             SetIterator() {
-                first = nullptr;
-                end = nullptr;
-                itr = nullptr;
+                free_iterator();
             };
+
+            ~SetIterator() {
+                free_iterator();
+            }
 
             explicit SetIterator(const set<Key>& other) {
                 first = find_first(other);
@@ -78,6 +79,7 @@ namespace s21 {
             }
 
             Key& operator*() const;
+            void free_iterator();
         };
         using iterator = SetIterator;
         iterator begin();
