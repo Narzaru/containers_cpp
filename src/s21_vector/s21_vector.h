@@ -1,13 +1,13 @@
 #ifndef SRC_S21_VECTOR_S21_VECTOR_H_
 #define SRC_S21_VECTOR_S21_VECTOR_H_
 
+#include <cstddef>
+#include <initializer_list>
 #include <limits>
 #include <stdexcept>
-#include <initializer_list>
-#include <cstddef>
 
 namespace s21 {
-template<typename T>
+template <typename T>
 class vector {
  public:
   using value_type = T;
