@@ -10,7 +10,7 @@ namespace s21 {
     void list<T>::listNode::free_memory() {
         pNext = nullptr;
         pPrev = nullptr;
-        data = 0;
+        // data тоже надо очистить но я не знаю как потому что если массив то delete []  а если переменная то просто 0
     }
 
     template <typename T>
@@ -38,7 +38,6 @@ namespace s21 {
         size_ = 0;
         for (size_t i = 0; i < n; i++)
             push_back(0);
-        
     }
 
     template <typename T>
@@ -90,7 +89,7 @@ namespace s21 {
     }
 
     template <typename T>
-    bool list<T>::emply() {
+    bool list<T>::empty() {
         return size() == 0;
     }
 
@@ -101,12 +100,12 @@ namespace s21 {
 
     template <typename T>
     size_t list<T>::max_size(){
-        return LLONG_MAX / sizeof(node);
+        return LLONG_MAX / sizeof(node) -1;
     }
 
     template <typename T>
     void list<T>::clear() {        // нужно переделать на удаление с конца (указатель на конец) а не проходить через весь лист
-        if (emply() == 0){
+        if (empty() == 0){
             node *p = head_;
             int count = 0;
             while (p->pNext != nullptr) {
@@ -125,15 +124,12 @@ namespace s21 {
     }
 
     template <typename T>
-    void list<T>::pop_back(){    
-        node *p = head_;    
-        while (p->pNext->pNext != nullptr) {
-            p = p->pNext;
-        }
-        node *tmp = p->pNext;
-        p->pNext = nullptr;
+    void list<T>::pop_back(){   
+        list<T>::ListIterator ptr(*this);
+        ptr.end->pPrev->pNext = nullptr;
+        ptr.end->free_memory();
         size_--;
-        tmp->free_memory();
+        last_node();
     }
 
     template <typename T>
@@ -167,13 +163,13 @@ namespace s21 {
 
     template <typename T>
     void list<T>::pop_front() {
-        head_->data = head_->pNext->data;
-        head_->pNext->data = 0;
-        node *del = head_->pNext;
-        head_->pNext= head_->pNext->pNext;
-        node *second = head_->pNext->pNext;
-        second->pPrev = head_;
-        del->free_memory();
+        if (size_ > 1) {
+            head_ = head_->pNext;
+            head_->pPrev->free_memory();
+            head_->pPrev = nullptr;
+        } else {
+            head_->free_memory();
+        }
         size_--;
     }
 
@@ -203,24 +199,22 @@ namespace s21 {
     }
     
     template <typename T>
-    T& list<T>::front() const {
+    T& list<T>::front() const{
         list<T>::ListIterator tmp(*this);
         return *tmp;
     }
 
     template <typename T>
-    T& list<T>::back() const {
-        ListIterator tmp = this.end();
-        return *tmp;
+    T& list<T>::back() const{
+        list<T>::ListIterator ptr(*this);
+        ptr.itr = ptr.end;
+        return *ptr;
     }
 
     template <typename T>
     void list<T>::reverse() {
         list<T> ptr;
         list<T>::ListIterator tmp = this->begin();
-        // for (auto c = tmp.end; tmp.itr != c; tmp++) {
-        //     ptr.push_front(*tmp);
-        // }
         int count = size_;
         for (auto c = tmp.end; count > 0; tmp++) {
             ptr.push_front(*tmp);
@@ -232,29 +226,21 @@ namespace s21 {
     template <typename T>
     void list<T>::unique() {
         list<T>::ListIterator ptr = this->begin();
-        auto c = ptr.itr;
-        node *second = nullptr;
+        auto c = *ptr;
         ptr++;
         while (ptr.itr) {
-            if (c->data == ptr.itr->data) {
-                if (second) {
-                second->pNext = ptr.itr->pNext;
-                ptr.itr->pNext->pPrev = second; 
-                ptr.itr->free_memory();
-                size_--;
-                ptr++;
-                continue;
-                } else {
-                    pop_front();
-                    ptr = begin();
-                    second = ptr.itr;
-                    ptr++;
-                    continue;
+            if ( c == *ptr) {
+                ptr.itr->pPrev->pNext = ptr.itr->pNext;
+                if (ptr.itr->pNext != nullptr) {
+                    ptr.itr->pNext->pPrev = ptr.itr->pPrev;
                 }
+                ptr++;
+                size_--;
+            } else {
+                c = *ptr;
+                ptr++;
             }
-            c = ptr.itr;
-            second = ptr.itr;
-            ptr++;
+            
         }
     }
 
@@ -316,13 +302,23 @@ namespace s21 {
             pop_front();
         } else {
             pos.itr->pPrev->pNext = pos.itr->pNext;
-            pos++;
-            pos.itr->pPrev = pos.itr->pPrev->pPrev;
+            pos.itr->pNext->pPrev = pos.itr->pPrev->pPrev;
+            pos.itr->pPrev->free_memory();
             size_--;
         }
         
     }
 
+    template <typename T>
+    void list<T>::splice(const_iterator pos, list& other) {
+        iterator tmp = other.begin();
+        pos.itr->pNext->pPrev = tmp.end;
+        tmp.end->pNext = pos.itr->pNext;
+        pos.itr->pNext = tmp.itr;
+        tmp.itr->pPrev = pos.itr;
+        size_ +=other.size_;
+        other.clear();
+    }
     // ITERATOR
 
     template <typename T>
@@ -380,7 +376,7 @@ namespace s21 {
     
     template <typename T>
     bool list<T>::ListIterator:: operator== (const ListIterator& other) {
-        return itr == other.iter;
+        return itr == other.itr;
     }
 
     template <typename T>
@@ -395,7 +391,7 @@ namespace s21 {
 
     template <typename T>
     typename list<T>::iterator  list<T>::end() {
-        ListIterator tmp = (*this);
+        ListIterator tmp(*this);
         while (tmp.itr->pNext != nullptr) {
             tmp++;
         }
@@ -403,9 +399,17 @@ namespace s21 {
     }
 
     template <typename T>
-    typename list<T>::ListIterator list<T>::insert (ListIterator pos, const T& value) {         //  нужно реализовать
-        // нужно реализовать        
-       return pos;
+    typename list<T>::ListIterator list<T>::insert (ListIterator pos, const T& value) {
+        node* element = new node;
+        element->data = pos.itr->data;
+        pos.itr->data = value;
+        element->pPrev = pos.itr;
+        element->pNext = pos.itr->pNext;
+        pos.itr->pNext->pPrev = element;
+        pos.itr->pNext = element;
+        pos++;
+        size_++;
+        return pos;
     }
 
     // CONST ITERATOR
@@ -439,11 +443,11 @@ namespace s21 {
         if (itr == nullptr) {
             // бросить исключение
         }
-        iterator ptr = *this;
+        const_iterator ptr = *this;
         itr = itr->pNext;
         return ptr;
     }
-
+ 
     template <typename T>
     typename list<T>::ListConstIterator list<T>::ListConstIterator::operator-- () {
         if (itr == nullptr) {
@@ -458,19 +462,19 @@ namespace s21 {
         if (itr == nullptr) {
             // бросить исключение
         }
-        iterator ptr = *this;
+        const_iterator ptr = *this;
         itr = itr->pPrev;
         return ptr;
     }
     
     template <typename T>
     bool list<T>::ListConstIterator:: operator== (const ListConstIterator& other) {
-        return itr == other.iter;
+        return itr == other.itr;
     }
 
     template <typename T>
     bool list<T>::ListConstIterator:: operator!= (const ListConstIterator& other) {
-        return itr != other.iter;
+        return itr != other.itr;
     }
 
     template <typename T>
@@ -480,123 +484,11 @@ namespace s21 {
 
     template <typename T>
     typename list<T>::const_iterator  list<T>::cend() const{
-        ListConstIterator tmp = (*this);
+        ListConstIterator tmp(*this);
         while (tmp.itr != tmp.end) {
             tmp++;
         }
         return ListConstIterator(tmp);
     }
-    
+
 } // namespace s21
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        //   r_j != pivot);
-        //   if (size_ < 2) return;
-        // list<T>::ListIterator ptr_i = this->begin();
-        // list<T>::ListIterator ptr_j = this->end();
-        // list<T>::ListIterator pivot = this->begin();
-        // int count = size_/2;
-        // while (count-->0) {
-        //     pivot++;
-        // }
-        // T value = *pivot;
-        // list<T> left;
-        // list<T> right;
-
-
-        // while (ptr_i.itr != ptr_j.end)
-        // {
-        //     while (ptr_i.itr->data < value)
-        //         ptr_i++;
-        //     while (ptr_j.end->data > value)
-        //         ptr_j--;
-        //     if (ptr_i.itr->data <= ptr_j.itr->data)
-        //     {
-        //         ptr_i.swap_elements(ptr_j);
-        //         ptr_i++;
-        //         ptr_j--;
-        //     }
-        // }
-        // if (ptr_j.itr > ptr_j.first)
-        //     // sort();
-        // if (ptr_i.itr < ptr_j.end)
-        //     // sort();
-        
-        // left.sort();
-        // right.sort();
-        // left.merge(right);
-        // *this = left;
-    
-    // void quickSort(int *array, int low, int high) {
-    //     int i = low;
-    //     int j = high;
-    //     int pivot = array[(i + j) / 2];
-    //     int temp;
-
-    //     while (i <= j)
-    //     {
-    //         while (array[i] < pivot)
-    //             i++;
-    //         while (array[j] > pivot)
-    //             j--;
-    //         if (i <= j)
-    //         {
-    //             temp = array[i];
-    //             array[i] = array[j];
-    //             array[j] = temp;
-    //             i++;
-    //             j--;
-    //         }
-    //     }
-    //     if (j > low)
-    //         quickSort(array, low, j);
-    //     if (i < high)
-    //         quickSort(array, i, high);
-    // }
-
-
-
-
-        // while (ptr_i != ptr_j) {
-        //     if (*ptr_i > value) {
-        //         right.push_back(*ptr_i);
-        //     } else {
-        //         left.push_back(*ptr_i);
-        //     }
-        //     ptr_i++;
-        // }
-
-        // do {
-        //     while(*ptr_i < value) {
-        //         ptr_i++;
-        //     }
-        //     while(*ptr_j.end > value) {
-        //         ptr_j--;
-        //     }
-        //     if (*ptr_i >= *ptr_j) {
-        //         ptr_i.swap_elements(ptr_j);
-        //         ptr_i++;
-        //         ptr_j--;
-        //     }
-        // } while (ptr_i != pivot || pt
