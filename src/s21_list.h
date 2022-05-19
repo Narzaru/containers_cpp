@@ -7,10 +7,10 @@ namespace s21 {
     template <typename T> 
     class list {
      public:
-        typedef T value_type;
-        typedef T& reference;
-        typedef const T& const_reference;
-        typedef size_t size_type;
+        using value_type = T;
+        using reference = T&;
+        using const_reference = const T&;
+        using size_type = size_t;
 
         void print_cont();
         bool empty();
@@ -90,7 +90,7 @@ namespace s21 {
             bool operator==(const ListIterator& other);
             bool operator!=(const ListIterator& other);
         };
-        typedef typename list<T>::ListIterator iterator;
+        using iterator = typename list<T>::ListIterator;
 
         iterator begin();
         iterator end();
@@ -126,7 +126,7 @@ namespace s21 {
             bool operator==(const ListConstIterator& other);
             bool operator!=(const ListConstIterator& other);
         };
-        typedef typename list<T>::ListConstIterator const_iterator;
+        using const_iterator = typename list<T>::ListConstIterator;
 
         const_iterator cbegin() const;
         const_iterator cend() const;
