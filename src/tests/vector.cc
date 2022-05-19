@@ -1,85 +1,394 @@
+#include <algorithm>
 #include <gtest/gtest.h>
 
 #include "s21_containers.h"
 
 namespace constructors_suite {
-TEST(constructors, empty_constructor) {
+TEST(constructors, base_constructor_test) {
   s21::vector<double> vec;
-  ASSERT_EQ(vec.size(), 0);
-  ASSERT_EQ(vec.capacity(), 0);
+  ASSERT_TRUE(vec.empty());
 }
 
-TEST(constructors, size_constructor_1) {
+TEST(constructors, size_constructor_test_1) {
   s21::vector<double> vec(10);
   ASSERT_EQ(vec.size(), 10);
   ASSERT_EQ(vec.capacity(), 10);
 }
 
-// TODO(bgreydon) add more tests with 0 size
-TEST(constructors, size_constructor_2) {
+TEST(constructors, size_constructor_test_2) {
   s21::vector<double> vec(0);
-  ASSERT_EQ(vec.size(), 0);
-  ASSERT_EQ(vec.capacity(), 0);
+  ASSERT_TRUE(vec.empty());
 }
 
-// TODO(bgreydon) add more tests with max size size
-TEST(constructors, size_constructor_3) {
+TEST(constructors, size_constructor_test_3) {
   ASSERT_THROW(s21::vector<double> vec(-1), std::length_error);
 }
 
-TEST(constructors, initializer_list_constructor_1) {
-  s21::vector<double> vec({1, 2, 3, 4});
-  ASSERT_EQ(vec.size(), 4);
-  ASSERT_EQ(vec.capacity(), 4);
+TEST(constructors, size_constructor_test_4) {
+  ASSERT_THROW(s21::vector<double> vec
+      (std::numeric_limits<std::size_t>::max() / sizeof(double)
+                   +1),
+               std::length_error);
 }
 
-// TODO(bgreydon) add more tests with 0 size
-TEST(constructors, initializer_list_constructor_2) {
+TEST(constructors, initializer_list_constructor_test_1) {
+  s21::vector<double> vec({1, 2, 3, 4});
+  s21::vector<double> sample(4);
+  sample[0] = 1;
+  sample[1] = 2;
+  sample[2] = 3;
+  sample[3] = 4;
+  ASSERT_EQ(vec.size(), 4);
+  ASSERT_EQ(vec.capacity(), 4);
+  ASSERT_TRUE(std::equal(sample.begin(), sample.end(), vec.begin()));
+}
+
+TEST(constructors, initializer_list_constructor_test_2) {
   s21::vector<double> vec({});
-  ASSERT_EQ(vec.size(), 0);
-  ASSERT_EQ(vec.capacity(), 0);
+  ASSERT_TRUE(vec.empty());
+}
+
+TEST(constructors, copy_constructor_test_1) {
+  s21::vector<int> vec_1({1, 2, 3, 4});
+  s21::vector<int> vec_2(vec_1);
+  s21::vector<int> example({1, 2, 3, 4});
+  ASSERT_EQ(vec_2.size(), example.size());
+  ASSERT_EQ(vec_2.capacity(), example.capacity());
+  ASSERT_TRUE(std::equal(example.begin(), example.end(), vec_2.begin()));
+}
+
+TEST(constructors, copy_constructor_test_2) {
+  s21::vector<int> vec_1;
+  s21::vector<int> vec_2(vec_1);
+  vec_2.begin();  // warning suppression
+  ASSERT_EQ(vec_2.size(), 0);
+  ASSERT_EQ(vec_2.capacity(), 0);
+}
+
+TEST(constructors, move_constructor_test_1) {
+  s21::vector<double> vec_1({1, 2});
+  s21::vector<double> vec_2(std::move(vec_1));
+  s21::vector<double> sample({1, 2});
+  ASSERT_TRUE(std::equal(sample.begin(),
+                         sample.end(),
+                         vec_2.begin(),
+                         [](double a, double b) {
+                           return (std::abs(a - b)
+                               < std::numeric_limits<float>::epsilon());
+                         }));
+}
+
+TEST(constructors, move_constructor_test_2) {
+  s21::vector<double> vec_1;
+  s21::vector<double> vec_2(std::move(vec_1));
+  ASSERT_TRUE(vec_2.empty());
 }
 
 }  // namespace constructors_suite
-
 
 namespace insert_suite {
 TEST(insert, insert_1) {
   s21::vector<int> vec({1, 2, 3, 5, 6});
   vec.insert(vec.begin() + 3, 4);
+  s21::vector<int> example({1, 2, 3, 4, 5, 6});
   ASSERT_EQ(vec.size(), 6);
   ASSERT_EQ(vec.capacity(), 10);
+  ASSERT_TRUE(std::equal(example.begin(), example.end(), vec.begin()));
 }
 
 TEST(insert, insert_2) {
   s21::vector<int> vec;
+  s21::vector<int> example({0});
   vec.insert(vec.begin(), 0);
   ASSERT_EQ(vec.size(), 1);
   ASSERT_EQ(vec.capacity(), 1);
+  ASSERT_TRUE(std::equal(example.begin(), example.end(), vec.begin()));
 }
 
 TEST(insert, insert_3) {
   s21::vector<int> vec;
+  s21::vector<int> example({2, 1, 0});
   vec.insert(vec.begin(), 0);
   vec.insert(vec.begin(), 1);
   vec.insert(vec.begin(), 2);
   ASSERT_EQ(vec.size(), 3);
   ASSERT_EQ(vec.capacity(), 4);
+  ASSERT_TRUE(std::equal(example.begin(), example.end(), vec.begin()));
 }
 
 TEST(insert, insert_4) {
   s21::vector<int> vec;
+  s21::vector<int> example({0, 1});
   vec.insert(vec.begin(), 0);
   vec.insert(vec.begin() + 1, 1);
+  ASSERT_EQ(vec.size(), 2);
+  ASSERT_EQ(vec.capacity(), 2);
+  ASSERT_TRUE(std::equal(example.begin(), example.end(), vec.begin()));
+}
+
+TEST(insert, insert_5) {
+  s21::vector<int> vec({1, 2, 3});
+  s21::vector<int> example({0, 1, 1, 2, 3});
+  vec.insert(vec.begin(), 0);
+  vec.insert(vec.begin() + 1, 1);
+  ASSERT_EQ(vec.size(), 5);
+  ASSERT_EQ(vec.capacity(), 6);
+  ASSERT_TRUE(std::equal(example.begin(), example.end(), vec.begin()));
+}
+}  // namespace insert_suite
+
+namespace erase_suite {
+TEST(erase, erase_1) {
+  s21::vector<int> vec({1, 1, 2, 3, 4});
+  s21::vector<int> example({1, 2, 3, 4});
+  vec.erase(vec.begin());
+  ASSERT_EQ(vec.size(), 4);
+  ASSERT_EQ(vec.capacity(), 5);
+  ASSERT_TRUE(std::equal(example.begin(), example.end(), vec.begin()));
+}
+
+TEST(erase, erase_2) {
+  s21::vector<int> vec({1, 1, 1, 2, 1});
+  s21::vector<int> example({1, 1, 1, 1});
+  vec.erase(vec.begin() + 3);
+  ASSERT_EQ(vec.size(), 4);
+  ASSERT_EQ(vec.capacity(), 5);
+  ASSERT_TRUE(std::equal(example.begin(), example.end(), vec.begin()));
+}
+
+TEST(erase, erase_3) {
+  s21::vector<int> vec;
+  ASSERT_ANY_THROW(vec.erase(vec.begin()));
+  ASSERT_EQ(vec.size(), 0);
+  ASSERT_EQ(vec.capacity(), 0);
+}
+
+TEST(erase, erase_4) {
+  s21::vector<int> vec({1});
+  ASSERT_ANY_THROW(vec.erase(vec.begin() + 1));
+  ASSERT_EQ(vec.size(), 1);
+  ASSERT_EQ(vec.capacity(), 1);
+  vec.erase(vec.begin());
+  ASSERT_EQ(vec.size(), 0);
+  ASSERT_EQ(vec.capacity(), 1);
+  ASSERT_ANY_THROW(vec.erase(vec.begin()));
+}
+}  // namespace erase_suite
+
+namespace clear_suite {
+TEST(clear, clear_1) {
+  s21::vector<int> vec({1, 2, 3});
+  ASSERT_NO_THROW(vec.clear());
+  ASSERT_EQ(vec.size(), 0);
+  ASSERT_EQ(vec.capacity(), 0);
+  ASSERT_NO_THROW(vec.clear());
+}
+}  // namespace clear_suite
+
+namespace push_back_suite {
+TEST(push_back, push_back_1) {
+  s21::vector<int> vec;
+  s21::vector<int> example({0, 2, 4, 16});
+  ASSERT_NO_THROW(vec.push_back(0));
+  ASSERT_NO_THROW(vec.push_back(2));
+  ASSERT_NO_THROW(vec.push_back(4));
+  ASSERT_NO_THROW(vec.push_back(16));
+  ASSERT_EQ(vec.size(), 4);
+  ASSERT_EQ(vec.capacity(), 4);
+  ASSERT_TRUE(std::equal(example.begin(), example.end(), vec.begin()));
+}
+
+TEST(push_back, push_back_2) {
+  s21::vector<int> vec(5);
+  s21::vector<int> example({0, 0, 0, 0, 0, 0, 2, 2, 0});
+  ASSERT_NO_THROW(vec.push_back(0));
+  ASSERT_NO_THROW(vec.push_back(2));
+  ASSERT_NO_THROW(vec.push_back(2));
+  ASSERT_NO_THROW(vec.push_back(0));
+  ASSERT_EQ(vec.size(), 9);
+  ASSERT_EQ(vec.capacity(), 10);
+  ASSERT_TRUE(std::equal(example.begin(), example.end(), vec.begin()));
+}
+}  // namespace push_back_suite
+
+namespace pop_back_suite {
+TEST(pop_back, pop_back_1) {
+  s21::vector<int> vec({1, 2, 3});
+  vec.pop_back();
+  vec.pop_back();
+  ASSERT_EQ(vec.size(), 1);
+  ASSERT_EQ(vec.capacity(), 3);
+  ASSERT_EQ(vec[0], 1);
+}
+
+TEST(pop_back, pop_back_2) {
+  s21::vector<int> vec;
+  vec.pop_back();
+  ASSERT_EQ(vec.size(), -1UL);
+  ASSERT_EQ(vec.capacity(), 0);
+}
+}  // namespace pop_back_suite
+
+namespace swap_suite {
+TEST(swap, swap_1) {
+  s21::vector<int> vec_1({1, 2, 3});
+  s21::vector<int> vec_2({1, 2, 4, 5, 6});
+
+  s21::vector<int> example_1({1, 2, 3});
+  s21::vector<int> example_2({1, 2, 4, 5, 6});
+
+  vec_1.swap(vec_2);
+  ASSERT_EQ(vec_1.size(), 5);
+  ASSERT_EQ(vec_1.capacity(), 5);
+
+  ASSERT_EQ(vec_2.size(), 3);
+  ASSERT_EQ(vec_2.capacity(), 3);
+
+  ASSERT_TRUE(std::equal(example_1.begin(), example_1.end(), vec_2.begin()));
+  ASSERT_TRUE(std::equal(example_2.begin(), example_2.end(), vec_1.begin()));
+}
+}  // namespace swap_suite
+
+namespace empty_suite {
+TEST(empty, empty_1) {
+  s21::vector<int> vec;
+  ASSERT_TRUE(vec.empty());
+}
+
+TEST(empty, empty_2) {
+  s21::vector<int> vec({});
+  ASSERT_TRUE(vec.empty());
+}
+
+TEST(empty, empty_3) {
+  s21::vector<int> vec({});
+  vec.push_back(4);
+  ASSERT_FALSE(vec.empty());
+}
+}  // namespace empty_suite
+
+namespace size_capacity_suite {
+TEST(size_capacity, size_capacity_1) {
+  s21::vector<int> vec;
+  ASSERT_EQ(vec.size(), 0);
+  ASSERT_EQ(vec.capacity(), 0);
+}
+
+TEST(size_capacity, size_capacity_2) {
+  s21::vector<int> vec({1});
+  vec.push_back(1);
   ASSERT_EQ(vec.size(), 2);
   ASSERT_EQ(vec.capacity(), 2);
 }
 
-TEST(insert, insert_4) {
-  s21::vector<int> vec;
-  vec.insert(vec.begin(), 0);
-  vec.insert(vec.begin() + 1, 1);
-  ASSERT_EQ(vec.size(), 2);
-  ASSERT_EQ(vec.capacity(), 2);
+TEST(size_capacity, size_capacity_3) {
+  s21::vector<int> vec({1});
+  vec.push_back(1);
+  vec.push_back(1);
+  ASSERT_EQ(vec.size(), 3);
+  ASSERT_EQ(vec.capacity(), 4);
 }
-};
+
+TEST(size_capacity, max_size_1) {
+  s21::vector<s21::vector<int>> vec;
+  ASSERT_EQ(vec.max_size(),
+            std::numeric_limits<std::size_t>::max() / sizeof(s21::vector<int>));
+}
+}  // namespace size_capacity_suite
+
+namespace resize_suite {
+TEST(resize, reserve_1) {
+  std::vector<int> vec;
+  vec.reserve(100);
+  ASSERT_EQ(vec.size(), 0);
+  ASSERT_EQ(vec.capacity(), 100);
+}
+
+TEST(resize, reserve_2) {
+  s21::vector<int> vec(100);
+  ASSERT_NO_THROW(vec.reserve(0));
+  ASSERT_EQ(vec.size(), 100);
+  ASSERT_EQ(vec.capacity(), 100);
+}
+
+TEST(resize, reserve_3) {
+  std::vector<int> vec({1, 2, 3, 4, 5});
+  std::vector<int> example({1, 2, 3, 4, 5});
+  vec.reserve(100);
+  ASSERT_EQ(vec.size(), 5);
+  ASSERT_EQ(vec.capacity(), 100);
+  ASSERT_TRUE(std::equal(example.begin(), example.end(), vec.begin()));
+}
+
+TEST(resize, shrink_1) {
+  s21::vector<int> vec(5);
+  s21::vector<int> example({0, 0, 0, 0, 0, 8});
+  vec.push_back(8);
+  ASSERT_NO_THROW(vec.shrink_to_fit());
+  ASSERT_EQ(vec.size(), 6);
+  ASSERT_EQ(vec.capacity(), 6);
+  ASSERT_TRUE(std::equal(example.begin(), example.end(), vec.begin()));
+}
+
+TEST(resize, shrink_2) {
+  s21::vector<int> vec(5);
+  ASSERT_NO_THROW(vec.shrink_to_fit());
+  ASSERT_EQ(vec.size(), 5);
+  ASSERT_EQ(vec.capacity(), 5);
+}
+
+TEST(resize, shrink_3) {
+  s21::vector<int> vec;
+  ASSERT_NO_THROW(vec.shrink_to_fit());
+  ASSERT_EQ(vec.size(), 0);
+  ASSERT_EQ(vec.capacity(), 0);
+}
+}  // namespace resize_suite
+
+namespace access_suite {
+TEST(access, at_1) {
+  s21::vector<int> vec;
+  ASSERT_ANY_THROW(vec.at(0));
+}
+
+TEST(access, at_2) {
+  s21::vector<int> vec({1, 2});
+  ASSERT_NO_THROW(vec.at(0) = 2);
+  ASSERT_EQ(vec[0], 2);
+}
+
+TEST(access, operator_bracket_1) {
+  s21::vector<int> vec;
+  ASSERT_ANY_THROW(vec[0]);
+}
+
+TEST(access, operator_bracket_2) {
+  s21::vector<int> vec({1, 2});
+  ASSERT_NO_THROW(vec[0] = 2);
+  ASSERT_EQ(vec.at(0), 2);
+}
+
+TEST(access, front_back_1) {
+  s21::vector<int> vec({1, 2, 3, 4});
+  ASSERT_EQ(vec.front(), 1);
+  ASSERT_EQ(vec.back(), 4);
+}
+
+TEST(access, front_back_2) {
+  s21::vector<int> vec({1});
+  ASSERT_EQ(vec.front(), 1);
+  ASSERT_EQ(vec.back(), 1);
+}
+
+TEST(access, begin_end_1) {
+  s21::vector<int> vec({1, 2, 3, 4});
+  ASSERT_EQ(*vec.begin(), 1);
+  ASSERT_EQ(*(vec.end() - 1), 4);
+}
+
+TEST(access, begin_end_2) {
+  s21::vector<int> vec({1});
+  ASSERT_EQ(*vec.begin(), 1);
+  ASSERT_EQ(*(vec.end() - 1), 1);
+}
+}  // namespace access_suite

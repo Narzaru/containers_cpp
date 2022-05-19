@@ -34,39 +34,33 @@ class vector {
   const_reference front() const;
   reference back();
   const_reference back() const;
+
   iterator data();
   const_iterator data() const;
-
   iterator begin();
   const_iterator begin() const;
   iterator end();
   const_iterator end() const;
 
-  bool empty() const;
-  size_type size() const;
-  size_type max_size() const;
+  [[nodiscard]] bool empty() const;
+  [[nodiscard]] size_type size() const;
+  [[nodiscard]] size_type max_size() const;
   void reserve(size_type new_capacity);
-  size_type capacity() const;
+  [[nodiscard]] size_type capacity() const;
   void shrink_to_fit();
 
   void clear();
   iterator insert(iterator pos, const_reference value);
   void erase(iterator pos);
   void push_back(const_reference value);
-  void pop_back(const_reference value);
+  void pop_back();
   void swap(vector &other);
 
  private:
-  iterator array_;
+  iterator array_{};
   size_type size_{};
   size_type capacity_{};
 
-  static void copy_array(const vector &source,
-                         vector *destination,
-                         size_type size);
-  static void copy_array(const_iterator source,
-                         iterator destination,
-                         size_type size);
   void realloc_array(size_type new_capacity);
   void realloc_and_copy(size_type new_capacity);
 };

@@ -6,7 +6,7 @@ template<typename T>
 vector<T>::vector() : vector(0) {}
 
 template<typename T>
-vector<T>::vector(vector<T>::size_type capacity)
+vector<T>::vector(size_type capacity)
     : array_(nullptr),
       size_(capacity),
       capacity_(capacity) {
@@ -16,17 +16,15 @@ vector<T>::vector(vector<T>::size_type capacity)
 template<typename T>
 vector<T>::vector(std::initializer_list<T> const &list)
     : vector(list.size()) {
-  size_ = list.size();
-  for (size_type i = 0; i < list.size(); ++i) {
-    array_[i] = list.begin()[i];
-  }
+  std::copy(list.begin(), list.end(), array_);
 }
 
 template<typename T>
 vector<T>::vector(const vector<T> &other)
     : vector(other.capacity_) {
-  size_ = other.size_;
-  copy_array(this, other, other.size_);
+  if (other.begin() != other.end()) {
+    std::copy(other.begin(), other.end(), begin());
+  }
 }
 
 template<typename T>
@@ -35,13 +33,12 @@ vector<T>::vector(vector<T> &&other) noexcept
       size_(other.size_),
       capacity_(other.capacity_) {
   other.array_ = nullptr;
-  other.size_ = 0;
-  other.capacity_ = 0;
+  other.clear();
 }
 
 template<typename T>
 vector<T>::~vector() {
-  vector < T > ::clear();
+  vector<T>::clear();
 }
 
 template<typename T>
@@ -50,7 +47,7 @@ vector<T> &vector<T>::operator=(const vector<T> &other) {
     capacity_ = other.capacity_;
     realloc_array(*this, capacity_);
   }
-  copy_array(other, this, other.size_);
+  std::copy(other.begin(), other.end(), begin());
   size_ = other.size_;
 }
 
@@ -58,17 +55,17 @@ template<typename T>
 vector<T> &vector<T>::operator=(vector &&other) noexcept {
   clear();
   array_ = other.array_;
-  other.array_ = nullptr;
   size_ = other.size_;
   capacity_ = other.capacity_;
+  other.array_ = nullptr;
   other.clear();
   return *this;
 }
 
 template<typename T>
 typename vector<T>::reference vector<T>::at(size_type position) {
-  return const_cast<vector<T>::reference>(const_cast<const vector<T> *>(this)->at(
-      position));
+  return const_cast<vector<value_type>::reference>(
+      const_cast<const vector<value_type> *>(this)->at(position));
 }
 
 template<typename T>
@@ -99,17 +96,17 @@ typename vector<T>::reference vector<T>::front() {
 
 template<typename T>
 typename vector<T>::const_reference vector<T>::front() const {
-  return const_cast<vector<T>::const_reference>(front());
+  return *array_;
 }
 
 template<typename T>
 typename vector<T>::reference vector<T>::back() {
-  return *(array_ + size_);
+  return *(array_ + (size_ - 1));
 }
 
 template<typename T>
 typename vector<T>::const_reference vector<T>::back() const {
-  return const_cast<vector<T>::const_reference>(back());
+  return *(array_ + (size_ - 1));
 }
 
 template<typename T>
@@ -134,12 +131,12 @@ typename vector<T>::const_iterator vector<T>::begin() const {
 
 template<typename T>
 typename vector<T>::iterator vector<T>::end() {
-  return &back();
+  return &back() + 1;
 }
 
 template<typename T>
 typename vector<T>::const_iterator vector<T>::end() const {
-  return &back();
+  return &back() + 1;
 }
 
 template<typename T>
@@ -154,7 +151,7 @@ typename vector<T>::size_type vector<T>::size() const {
 
 template<typename T>
 typename vector<T>::size_type vector<T>::max_size() const {
-  return std::numeric_limits<std::size_t>::max() / sizeof(T);
+  return std::numeric_limits<size_type>::max() / sizeof(T);
 }
 
 template<typename T>
@@ -182,13 +179,15 @@ void vector<T>::shrink_to_fit() {
 template<typename T>
 void vector<T>::clear() {
   delete[] array_;
+  array_ = nullptr;
   size_ = 0;
   capacity_ = 0;
 }
 
+// TODO(bgreydon) rework exceptions
 template<typename T>
 T *vector<T>::insert(T *pos, const T &value) {
-  std::size_t insert_position = (pos - array_) / sizeof(T);
+  size_type insert_position = pos - array_;
   if (insert_position > size_) {
     throw std::out_of_range("insert position is out of range");
   }
@@ -198,7 +197,7 @@ T *vector<T>::insert(T *pos, const T &value) {
   if (size_ + 1 > capacity_) {
     realloc_and_copy(capacity_ == 0 ? 1 : capacity_ * 2);
   }
-  for (std::size_t i = size_; i != insert_position; --i) {
+  for (size_type i = size_; i != insert_position; --i) {
     array_[i] = array_[i - 1];
   }
   array_[insert_position] = value;
@@ -208,26 +207,35 @@ T *vector<T>::insert(T *pos, const T &value) {
 
 template<typename T>
 void vector<T>::erase(iterator pos) {
-
+  size_type erase_position = pos - array_;
+  if (empty()) {
+    throw std::length_error("empty object erase");
+  }
+  if (erase_position > max_size()) {
+    throw std::length_error("erase is greater than the max size of the vector");
+  }
+  if (erase_position >= size_) {
+    throw std::out_of_range("erasing in an invalid range");
+  }
+  for (size_type i = erase_position; i < size_ - 1; ++i) {
+    array_[i] = array_[i + 1];
+  }
+  size_ -= 1;
 }
 
-// TODO(bgreydon) use copy_array instead for
 template<typename T>
-void vector<T>::copy_array(const vector<T> &source,
-                           vector<T> *destination,
-                           size_type size) {
-  for (size_type i = 0; i < size; ++i) {
-    destination->array_[i] = source.array_[i];
-  }
+void vector<T>::push_back(const_reference value) {
+  insert(end(), value);
 }
 
 template<typename T>
-void vector<T>::copy_array(vector<T>::const_iterator source,
-                           vector<T>::iterator destination,
-                           vector<T>::size_type size) {
-  for (std::size_t i = 0; i < size; ++i) {
-    destination[i] = source[i];
-  }
+void vector<T>::pop_back() { size_ -= 1; }
+
+template<typename T>
+void vector<T>::swap(vector<T> &other) {
+  std::swap(array_, other.array_);
+  std::swap(size_, other.size_);
+  std::swap(capacity_, other.capacity_);
 }
 
 template<typename T>
@@ -235,25 +243,25 @@ void vector<T>::realloc_array(size_type new_capacity) {
   if (new_capacity > max_size()) {
     throw std::length_error("trying to allocate as much as possible");
   }
-  capacity_ = new_capacity;
   delete[] array_;
   if (new_capacity != 0) {
-    array_ = new T[new_capacity]();
+    array_ = new value_type[new_capacity]();
   } else {
     array_ = nullptr;
   }
+  capacity_ = new_capacity;
 }
 
 template<typename T>
-void vector<T>::realloc_and_copy(vector<T>::size_type new_capacity) {
+void vector<T>::realloc_and_copy(size_type new_capacity) {
   if (new_capacity > max_size()) {
     throw std::length_error("trying to allocate as much as possible");
   }
-  std::size_t old_size = size_;
-  vector<T> new_vector(new_capacity);
-  copy_array(*this, &new_vector, size_);
+  size_type old_size = size_;
+  vector<value_type> new_vector(new_capacity);
+  std::copy(begin(), end(), new_vector.begin());
   *this = std::move(new_vector);
   size_ = old_size;
 }
 
-}  // namespace s21
+} // namespace s21
