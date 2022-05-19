@@ -56,7 +56,7 @@ namespace s21 {
         while (ptr.itr) {
             push_back(*ptr);
             ptr++;
-        } 
+        }
     }
 
     template <typename T>
@@ -113,7 +113,7 @@ namespace s21 {
                 count++;
             }
             while (p->pPrev != nullptr) {
-                node *tmp = p; 
+                node *tmp = p;
                 p = p->pPrev;
                 tmp->free_memory();
                 --size_;
@@ -124,7 +124,7 @@ namespace s21 {
     }
 
     template <typename T>
-    void list<T>::pop_back(){   
+    void list<T>::pop_back(){
         list<T>::ListIterator ptr(*this);
         ptr.end->pPrev->pNext = nullptr;
         ptr.end->free_memory();
@@ -183,7 +183,7 @@ namespace s21 {
             --count;
             current = current->pNext;
         }
-        
+
     }
 
     template <typename T>
@@ -197,7 +197,7 @@ namespace s21 {
         }
         return *this;
     }
-    
+
     template <typename T>
     T& list<T>::front() const{
         list<T>::ListIterator tmp(*this);
@@ -240,13 +240,13 @@ namespace s21 {
                 c = *ptr;
                 ptr++;
             }
-            
+
         }
     }
 
     template <typename T>
     void list<T>::sort() {
-        
+
         list<T>::ListIterator ptr_i = begin();
 
         for (size_t i = 0 ; i < size_ - 1; ++i) {
@@ -268,7 +268,7 @@ namespace s21 {
     void list<T>::iterator::swap_elements(typename list<T>::ListIterator other) {
         T tmp = other.itr->data;
         other.itr->data = itr->data;
-        itr->data = tmp; 
+        itr->data = tmp;
     }
 
     template <typename T>
@@ -306,7 +306,7 @@ namespace s21 {
             pos.itr->pPrev->free_memory();
             size_--;
         }
-        
+
     }
 
     template <typename T>
@@ -373,7 +373,7 @@ namespace s21 {
         itr = itr->pPrev;
         return ptr;
     }
-    
+
     template <typename T>
     bool list<T>::ListIterator:: operator== (const ListIterator& other) {
         return itr == other.itr;
@@ -383,7 +383,7 @@ namespace s21 {
     bool list<T>::ListIterator:: operator!= (const ListIterator& other) {
         return itr != other.itr;
     }
-    
+
     template <typename T>
     typename list<T>::iterator  list<T>::begin() {
         return ListIterator(*this);
@@ -447,7 +447,7 @@ namespace s21 {
         itr = itr->pNext;
         return ptr;
     }
- 
+
     template <typename T>
     typename list<T>::ListConstIterator list<T>::ListConstIterator::operator-- () {
         if (itr == nullptr) {
@@ -466,7 +466,7 @@ namespace s21 {
         itr = itr->pPrev;
         return ptr;
     }
-    
+
     template <typename T>
     bool list<T>::ListConstIterator:: operator== (const ListConstIterator& other) {
         return itr == other.itr;

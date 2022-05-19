@@ -1,5 +1,6 @@
-#pragma once
-#include "./s21_list.h"
+#ifndef SRC_S21_QUEUE_S21_QUEUE_H_
+#define SRC_S21_QUEUE_S21_QUEUE_H_
+#include "s21_list.h"
 
 namespace s21 {
 
@@ -44,3 +45,5 @@ namespace s21 {
     };
 
 } // namespace s21
+
+#endif // SRC_S21_QUEUE_S21_QUEUE_H_

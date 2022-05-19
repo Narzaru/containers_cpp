@@ -1,4 +1,7 @@
-#include "./s21_list.h"
+#include <gtest/gtest.h>
+#include <list>
+
+#include "s21_containers.h"
 
 TEST(list_constructor_suit, default_constructor) {
     s21::list<int> s21list;

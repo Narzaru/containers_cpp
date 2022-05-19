@@ -1,10 +1,11 @@
-#pragma once
+#ifndef SRC_S21_LIST_S21_LIST_H_
+#define SRC_S21_LIST_S21_LIST_H_
 #include <cstddef>
 #include <initializer_list>
 
 namespace s21 {
 
-    template <typename T> 
+    template <typename T>
     class list {
      public:
         using value_type = T;
@@ -140,4 +141,6 @@ namespace s21 {
     };
 
 }  // namespace s21
-#include "s21_list.inl"
+#include "s21_list.inc"
+
+#endif  // SRC_S21_LIST_S21_LIST_H_

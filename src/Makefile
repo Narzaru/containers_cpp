@@ -10,12 +10,14 @@ ifeq ($(shell uname), Linux)
 endif
 
 GTEST_LIBS := -lgtest
-INCLUDE_PATHS := . s21_vector tests
+INCLUDE_PATHS := . s21_list s21_queue s21_vector tests
 INCLUDE := $(addprefix -I,$(INCLUDE_PATHS))
 
 TEST_FILES := $(addprefix ./tests/,\
 	test.cc\
-	vector.cc)
+	vector.cc\
+	list.cc\
+	queue.cc)
 
 all: test
 
@@ -28,8 +30,11 @@ test: clean
 
 linter:
 	@clear
-	@find . -name "*.cc" -exec python3 cpplint.py {} \;
-	@find . -name "*.h" -exec python3 cpplint.py {} \;
+	@cp ../materials/linters/CPPLINT.cfg .
+	@find . -name "*.cpp" -exec python3 ../materials/linters/cpplint.py {} \;
+	@find . -name "*.h" -exec python3 ../materials/linters/cpplint.py {} \;
+	@rm -f CPPLINT.cfg
+
 
 clean:
 	@rm -f test
