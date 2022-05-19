@@ -1,5 +1,6 @@
 # Prerequisites
 *.d
+compile_commands.json
 
 # Object files
 *.o
@@ -54,3 +55,5 @@ dkms.conf
 #folders
 .vscode
 .idea
+.cache
+.ccls-cache
