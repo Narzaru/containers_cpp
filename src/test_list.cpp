@@ -1,6 +1,4 @@
 #include "./s21_list.h"
-#include <gtest/gtest.h>
-#include <list>
 
 TEST(list_constructor_suit, default_constructor) {
     s21::list<int> s21list;
@@ -221,8 +219,3 @@ TEST(list_change_suit, unique) {
 //         ++ch2;
 //     }
 // }
-
-int main(int argc, char* argv[]) {
-    ::testing::InitGoogleTest(&argc, argv);
-    return RUN_ALL_TESTS();
-}

@@ -1,19 +1,88 @@
 #include "./s21_queue.h"
-#include "./s21_list.h"
 
-int main() {
-    s21::list<int> A = {99, 2, 3, 4};
-    int tmp = A.front();
-    // s21::list<int> C(A);
-    s21::queue<double> B;
-    B.push(17.33);
-    B.push(19);
-    B.push(24);
-    double Ad = B.front();
+TEST(queue_constructor_suit, default_constructor) {
+    s21::queue<int> s21Queue;
+    std::queue<int> stdQueue;
+    ASSERT_EQ(s21Queue.empty(), stdQueue.empty());
+}
 
-    double C = B.back();
+TEST(queue_constructor_suit, init_constructor) {
+    s21::queue<int> s21Queue{1, 2, 3};
+    ASSERT_FALSE(s21Queue.empty());
+}
 
-    // A = std::moveB;
+TEST(queue_constructor_suit, init_string_constructor) {
+    s21::queue<std::string> s21Queue{"hello", "world"};
+    ASSERT_EQ(s21Queue.back(), "world");
+    ASSERT_EQ(s21Queue.front(), "hello");
+}
 
-    return 0;
+TEST(queue_constructor_suit, copy_constructor) {
+    s21::queue<int> s21Queue{1};
+    s21::queue<int> s21QueueCopied(s21Queue);
+    ASSERT_EQ(s21Queue.front(), s21QueueCopied.front());
+}
+
+TEST(queue_constructor_suit, move_constructor) {
+    s21::queue<int> s21Queue{1, 2, 3};
+    s21::queue<int> s21QueueMoved(std::move(s21Queue));
+    ASSERT_TRUE(s21Queue.empty());
+    ASSERT_FALSE(s21QueueMoved.empty());
+}
+
+TEST(queue_constructor_suit, move_operator_constructor) {
+    s21::queue<int> s21Queue{1, 2, 3};
+    s21::queue<int> s21QueueMoved(std::move(s21Queue));
+    ASSERT_TRUE(s21Queue.empty());
+    ASSERT_FALSE(s21QueueMoved.empty());
+}
+
+TEST(queue_push_suit, push_int) {
+    s21::queue<int> s21Queue;
+    s21Queue.push(566);
+    std::queue<int> stdQueue;
+    stdQueue.push(566);
+    ASSERT_EQ(s21Queue.front(), stdQueue.front());
+    ASSERT_EQ(s21Queue.back(), stdQueue.back());
+}
+
+TEST(queue_pop_suit, pop_int) {
+    s21::queue<int> s21Queue{566, 123};
+    std::queue<int> stdQueue;
+    stdQueue.push(566);
+    stdQueue.push(123);
+    ASSERT_EQ(s21Queue.front(), stdQueue.front());
+    ASSERT_EQ(s21Queue.back(), stdQueue.back());
+    s21Queue.pop();
+    stdQueue.pop();
+    ASSERT_EQ(s21Queue.front(), stdQueue.front());
+    ASSERT_EQ(s21Queue.back(), stdQueue.back());
+}
+
+TEST(queue_pop_suit, pop_string) {
+    s21::queue<std::string> s21Queue{"hello", "world"};
+    std::queue<std::string> stdQueue;
+    stdQueue.push("hello");
+    stdQueue.push("world");
+    ASSERT_EQ(s21Queue.front(), stdQueue.front());
+    ASSERT_EQ(s21Queue.back(), stdQueue.back());
+    s21Queue.pop();
+    stdQueue.pop();
+    ASSERT_EQ(s21Queue.front(), stdQueue.front());
+    ASSERT_EQ(s21Queue.back(), stdQueue.back());
+}
+
+TEST(queue_size_suit, size) {
+    s21::queue<int> s21Queue{566, 123, 3, 3, 2, 1};
+    s21::queue<int> s21Queue2{566, 123};
+    ASSERT_EQ(s21Queue.size(), 6);
+    ASSERT_EQ(s21Queue2.size(), 2);
+}
+
+TEST(queue_swap_suit, swap) {
+    s21::queue<int> s21Queue{566, 123, 3, 3, 2, 1};
+    s21::queue<int> s21Queue2{566, 123};
+    s21Queue.swap(s21Queue2);
+    ASSERT_EQ(s21Queue.size(), 2);
+    ASSERT_EQ(s21Queue2.size(), 6);
 }
