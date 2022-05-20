@@ -51,6 +51,7 @@ namespace s21 {
                 free_node();
             }
             void free_node();
+            void free_node_recursive(Node*, Node*);
         };
 
         Node *nil;
@@ -61,11 +62,13 @@ namespace s21 {
             Node *first;
             Node *end;
             Node *itr;
+            Node *nil;
 
-            Node *find_first(const set<Key>& other);
+            Node *find_lowest_child(Node *node);
+            Node *find_highest_child(Node *node);
 
             SetIterator() {
-                free_iterator();
+                nullify_iterator_properties();
             };
 
             ~SetIterator() {
@@ -73,13 +76,25 @@ namespace s21 {
             }
 
             explicit SetIterator(const set<Key>& other) {
-                first = find_first(other);
-                end = other.nil;
+                nil = other.nil;
+                first = find_lowest_child(other.root_);
+                Node *highest_value = find_highest_child(other.root_);
+                end = nil;
+                nil->value = highest_value->value;
                 itr = first;
             }
 
             Key& operator*() const;
+            SetIterator operator++();
+            SetIterator operator--();
+            SetIterator operator++(int);
+            SetIterator operator--(int);
+            bool operator==(const SetIterator &other);
+            bool operator!=(const SetIterator &other);
+
+            Node *find_higher_volume_parent(Node *node);
             void free_iterator();
+            void nullify_iterator_properties();
         };
         using iterator = SetIterator;
         iterator begin();

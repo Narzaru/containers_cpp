@@ -29,20 +29,38 @@ namespace constructors_suite {
 
       std::pair<s21::set<double>::iterator, bool> pair(set.insert(15));
       double first = *pair.first;
-      // s21::set<double>::iterator begin = set.begin();
-      // s21::set<double>::Node *first_element = begin.first;
-      // ASSERT_EQ(first_element, 1);
+      s21::set<double>::iterator begin = set.begin();
+      ASSERT_EQ(*begin, 1);
       ASSERT_EQ(first, 15);
       ASSERT_EQ(pair.second, false);
       ASSERT_EQ(set.size(), 4);
+
+      s21::set<double>::iterator number = set.find(16);
+      ASSERT_EQ(number.itr, number.end);
+      number = set.find(15);
+      ASSERT_EQ(*number, 15);
+      number = set.find(14);
+      ASSERT_EQ(number.itr, number.end);
+
+      ASSERT_FALSE(set.contains(21));
+      ASSERT_FALSE(set.contains(19));
+      ASSERT_TRUE(set.contains(15));
+      ASSERT_TRUE(set.contains(1));
+
+      s21::set<double>::iterator it;
+      for (it = set.begin(); it != set.end(); ++it) {
+        cout << *it << endl;
+      }
+      ++it;
+        cout << *it << endl;
+      ++it;
+        cout << *it << endl;
 
     }
 }
 
 int main(int argc, char *argv[]) {
   s21::set<double> set;
-  // set.insert(10);
-  // set.insert(20);
 
   testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();
