@@ -81,18 +81,18 @@ namespace s21 {
                 Node *highest_value = find_highest_child(other.root_);
                 end = nil;
                 nil->value = highest_value->value;
+                nil->parent = highest_value;
                 itr = first;
             }
 
             Key& operator*() const;
             SetIterator operator++();
             SetIterator operator--();
-            SetIterator operator++(int);
-            SetIterator operator--(int);
             bool operator==(const SetIterator &other);
             bool operator!=(const SetIterator &other);
 
             Node *find_higher_volume_parent(Node *node);
+            Node *find_lower_volume_parent(Node *node);
             void free_iterator();
             void nullify_iterator_properties();
         };

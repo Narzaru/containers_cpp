@@ -159,18 +159,38 @@ namespace s21 {
     template <typename Key>
     typename set<Key>::SetIterator set<Key>::SetIterator::operator++() {
         Node *parent = itr->parent;
-        // if (itr == nil) {
-        //     // бросить исключение
-        // }
         if (itr != nil) {
             if (itr->right_child != nil) {
                 itr = itr->right_child;
                 if (itr->left_child != nil) itr = find_lowest_child(itr->left_child);
-            } else if (parent && parent->left_child == itr) {
+            } else if (!parent) {
+                itr = end;
+            } else if (parent->left_child == itr) {
                 itr = itr->parent;
-            } else if (parent && parent->right_child == itr ) {
+            } else if (parent->right_child == itr) {
                 Node *higher_volume_parent = find_higher_volume_parent(parent);
                 if (higher_volume_parent) itr = higher_volume_parent;
+                else itr = end;
+            }
+        }
+        return *this;
+    }
+
+
+    template <typename Key>
+    typename set<Key>::SetIterator set<Key>::SetIterator::operator--() {
+        Node *parent = itr->parent;
+        if (itr == end) {
+            itr = itr->parent;
+        } else {
+            if (itr->left_child != nil) {
+                itr = itr->left_child;
+                if (itr->left_child != nil) itr = find_highest_child(itr->right_child);
+            } else if (parent && parent->right_child == itr) {
+                itr = itr->parent;
+            } else if (parent && parent->left_child == itr ) {
+                Node *lower_volume_parent = find_lower_volume_parent(parent);
+                if (lower_volume_parent) itr = lower_volume_parent;
                 else itr = end;
             } else if (!parent) {
                 itr = end;
@@ -194,6 +214,13 @@ namespace s21 {
     typename set<Key>::Node *set<Key>::SetIterator::find_higher_volume_parent(Node *node) {
         Node *current_node = node->parent;
         while (current_node && current_node->value < node->value) current_node = current_node->parent;
+        return current_node;
+    }
+
+    template<typename Key>
+    typename set<Key>::Node *set<Key>::SetIterator::find_lower_volume_parent(Node *node) {
+        Node *current_node = node->parent;
+        while (current_node && current_node->value > node->value) current_node = current_node->parent;
         return current_node;
     }
 

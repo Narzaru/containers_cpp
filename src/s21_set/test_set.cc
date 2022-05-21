@@ -48,13 +48,31 @@ namespace constructors_suite {
       ASSERT_TRUE(set.contains(1));
 
       s21::set<double>::iterator it;
-      for (it = set.begin(); it != set.end(); ++it) {
-        cout << *it << endl;
-      }
-      ++it;
-        cout << *it << endl;
-      ++it;
-        cout << *it << endl;
+      // for (it = set.begin(); it != set.end(); ++it) {
+      //   cout << *it << endl;
+      // }
+      // ++it;
+      //   cout << *it << endl;
+      // ++it;
+      //   cout << *it << endl;
+      // ++it;
+      //   cout << *it << endl;
+      // ++it;
+      //   cout << *it << endl;
+
+    // for (it = set.end(); it != set.begin(); --it) {
+    //     cout << *it << endl;
+    // }
+    // cout << *it << endl;
+    // --it;
+    // cout << *it << endl;
+    // --it;
+    // cout << *it << endl;
+    // --it;
+    // cout << *it << endl;
+    // --it;
+    // cout << *it << endl;
+    // --it;
 
     }
 }
