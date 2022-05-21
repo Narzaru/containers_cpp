@@ -186,15 +186,15 @@ namespace s21 {
             if (itr->left_child != nil) {
                 itr = itr->left_child;
                 if (itr->left_child != nil) itr = find_highest_child(itr->right_child);
-            } else if (parent && parent->right_child == itr) {
+            } else if (!parent) {
+                itr = end;
+            } else if (parent->right_child == itr) {
                 itr = itr->parent;
-            } else if (parent && parent->left_child == itr ) {
+            } else if (parent->left_child == itr ) {
                 Node *lower_volume_parent = find_lower_volume_parent(parent);
                 if (lower_volume_parent) itr = lower_volume_parent;
                 else itr = end;
-            } else if (!parent) {
-                itr = end;
-            } 
+            }
         }
         
         return *this;
