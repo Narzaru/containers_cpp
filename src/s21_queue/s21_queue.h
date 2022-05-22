@@ -16,10 +16,10 @@ class queue {
   using size_type = typename s21_queue::size_type;
 
   queue() : A(){};
-  queue(std::initializer_list<T> const& items) : A(items){};
-  queue(const queue& q) : A(q.A){};
-  queue(queue&& q) : A(std::move(q.A)){};
-  ~queue(){};
+  queue(std::initializer_list<T> const& items) : A(items) {}
+  queue(const queue& q) : A(q.A) {}
+  queue(queue&& q) : A(std::move(q.A)) {}
+  ~queue() {}
 
   queue<T>& operator=(queue&& q) {
     this->A = q.A;
@@ -33,7 +33,7 @@ class queue {
   const_reference front() { return A.front(); }
   const_reference back() { return A.back(); }
   bool empty() { return A.empty(); }
-  size_type size() { return A.size(); };
+  size_type size() { return A.size(); }
 };
 
 }  // namespace s21
