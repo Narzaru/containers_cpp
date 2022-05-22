@@ -5,9 +5,9 @@
 
 namespace s21 {
 
-    template <typename T>
-    class list {
-     public:
+template <typename T>
+class list {
+ public:
         using value_type = T;
         using reference = T&;
         using const_reference = const T&;
@@ -18,6 +18,7 @@ namespace s21 {
         size_t size();
         size_t max_size();
         void clear();
+        void free_data_list();
         void push_back(T data);
         void pop_back();
         void push_front(T data);
@@ -49,7 +50,9 @@ namespace s21 {
             listNode *pNext;
             listNode *pPrev;
 
-            explicit listNode(T d_data = T(), listNode *d_pNext = nullptr, listNode *d_pPrev = nullptr) : data(d_data), pNext(d_pNext), pPrev(d_pPrev) {
+            explicit listNode(T d_data = T(),
+            listNode *d_pNext = nullptr, listNode *d_pPrev = nullptr)
+            : data(d_data), pNext(d_pNext), pPrev(d_pPrev) {
                 this->data = data;
                 this->pNext = pNext;
                 this->pPrev = pPrev;
@@ -62,8 +65,8 @@ namespace s21 {
         };
         typedef list<T>::listNode node;
 
-        class ListIterator {
-         public:
+    class ListIterator {
+     public:
             node* first;
             node* end;
             node* itr;
@@ -90,7 +93,7 @@ namespace s21 {
             ListIterator operator--(int);
             bool operator==(const ListIterator& other);
             bool operator!=(const ListIterator& other);
-        };
+    };
         using iterator = typename list<T>::ListIterator;
 
         iterator begin();
@@ -98,8 +101,8 @@ namespace s21 {
         iterator insert(iterator pos, const_reference value);
         void erase(iterator pos);
 
-        class ListConstIterator {
-         public:
+    class ListConstIterator {
+     public:
             node* first;
             node* end;
             node* itr;
@@ -126,19 +129,19 @@ namespace s21 {
             ListConstIterator operator--(int);
             bool operator==(const ListConstIterator& other);
             bool operator!=(const ListConstIterator& other);
-        };
+    };
         using const_iterator = typename list<T>::ListConstIterator;
 
         const_iterator cbegin() const;
         const_iterator cend() const;
         void splice(const_iterator pos, list& other);
 
-     private:
+ private:
         size_t size_;               // максимальный размер
         node* head_;
         node* back_;                // реализовать присваивание
         void last_node();
-    };
+};
 
 }  // namespace s21
 #include "s21_list.inc"

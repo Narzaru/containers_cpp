@@ -16,6 +16,8 @@ namespace s21 {
     template <typename T>
     void list<T>::last_node() {
         node* p = head_;
+        // head_->pNext = nullptr;
+        // head_->pPrev = nullptr;
         while (p->pNext != nullptr) {
                 p = p->pNext;
         }
@@ -62,7 +64,8 @@ namespace s21 {
     template <typename T>
     list<T>::list(list &&l) : size_(0) {
         list<T> ptr(l);
-        l.clear();
+        l.free_data_list();
+        ptr.last_node();
         *this = ptr;
     }
 
@@ -104,21 +107,39 @@ namespace s21 {
     }
 
     template <typename T>
-    void list<T>::clear() {        // нужно переделать на удаление с конца (указатель на конец) а не проходить через весь лист
+    void list<T>::clear() {
         if (empty() == 0){
             node *p = head_;
-            int count = 0;
             while (p->pNext != nullptr) {
                 p = p->pNext;
-                count++;
             }
             while (p->pPrev != nullptr) {
-                node *tmp = p;
                 p = p->pPrev;
-                delete tmp;
+                delete p->pNext;
                 --size_;
             }
-            delete p;   // очищаяет послдний элемент
+            delete p;
+            --size_;
+        } else {
+            delete head_;
+        }
+    }
+
+
+    template <typename T>
+    void list<T>::free_data_list() {
+        if (empty() == 0){
+            node *p = head_;
+            while (p->pNext != nullptr) {
+                p = p->pNext;
+            }
+            while (p->pPrev != nullptr) {
+                p = p->pPrev;
+                delete p->pNext;
+                --size_;
+            }
+            head_->pNext = nullptr;
+            head_->pPrev = nullptr;
             --size_;
         }
     }
@@ -187,7 +208,7 @@ namespace s21 {
 
     template <typename T>
     list<T>& list<T>::operator=(list& other) {
-        this->clear();
+        this->free_data_list();
         head_ = new node();
         list<T>::ListIterator ptr(other);
         while (ptr.itr) {
@@ -315,7 +336,7 @@ namespace s21 {
         pos.itr->pNext = tmp.itr;
         tmp.itr->pPrev = pos.itr;
         size_ +=other.size_;
-        other.clear();
+        other.free_data_list();
     }
     // ITERATOR
 

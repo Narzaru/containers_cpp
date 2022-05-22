@@ -19,7 +19,7 @@ TEST(list_constructor_suit, init_constructor) {
     s21::list<int> s21list{1, 2, 3};
     ASSERT_FALSE(s21list.empty());
     ASSERT_EQ(s21list.front(), 1);
-    s21list.clear();
+    s21list.free_data_list();
     ASSERT_TRUE(s21list.empty());
 }
 
