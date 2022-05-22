@@ -50,20 +50,24 @@ class list {
             listNode *pNext;
             listNode *pPrev;
 
-            explicit listNode(T d_data = T(),
-            listNode *d_pNext = nullptr, listNode *d_pPrev = nullptr)
-            : data(d_data), pNext(d_pNext), pPrev(d_pPrev) {
-                this->data = data;
-                this->pNext = pNext;
-                this->pPrev = pPrev;
-            }
+            listNode() : listNode(T()) {}
+
+            explicit listNode(T new_data)
+              : data(new_data),
+                pNext(nullptr),
+                pPrev(nullptr) {}
+
+            explicit listNode(T d_data, listNode *next, listNode *prev)
+              : data(d_data),
+                pNext(next),
+                pPrev(prev) {}
 
             ~listNode() {
                 free_memory();
             }
             void free_memory();
         };
-        typedef list<T>::listNode node;
+        using node = list<T>::listNode;
 
     class ListIterator {
      public:
@@ -137,9 +141,9 @@ class list {
         void splice(const_iterator pos, list& other);
 
  private:
-        size_t size_;               // максимальный размер
+        size_t size_;
         node* head_;
-        node* back_;                // реализовать присваивание
+        node* back_;
         void last_node();
 };
 
