@@ -45,7 +45,7 @@ namespace s21 {
         head_ = new node();
         head_-> pNext = nullptr;
         head_-> pPrev = nullptr;
-        for (const auto data:items)
+        for (const auto &data:items)
             push_back(data);
     }
 
@@ -115,10 +115,10 @@ namespace s21 {
             while (p->pPrev != nullptr) {
                 node *tmp = p;
                 p = p->pPrev;
-                tmp->free_memory();
+                delete tmp;
                 --size_;
             }
-            p->free_memory();   // очищаяет послдний элемент
+            delete p;   // очищаяет послдний элемент
             --size_;
         }
     }
@@ -134,7 +134,6 @@ namespace s21 {
 
     template <typename T>
     void list<T>::push_front(T data) {
-        // listNode second(this->head_->data, this->head_->pNext, head_);
         if (size_ == 0) {
             head_ = new node;
             head_->pNext = nullptr;
@@ -215,8 +214,7 @@ namespace s21 {
     void list<T>::reverse() {
         list<T> ptr;
         list<T>::ListIterator tmp = this->begin();
-        int count = size_;
-        for (auto c = tmp.end; count > 0; tmp++) {
+        for (int count = size_; count > 0; tmp++) {
             ptr.push_front(*tmp);
             count--;
         }

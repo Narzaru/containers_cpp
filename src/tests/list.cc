@@ -45,7 +45,6 @@ TEST(list_constructor_suit, move_constructor) {
 TEST(list_constructor_suit, move_operator_constructor) {
     s21::list<int> s21list{1, 2, 3};
     s21::list<int> s21listMoved = std::move(s21list);
-    // s21listMoved = std::move(s21list);
     ASSERT_TRUE(s21list.empty());
     ASSERT_FALSE(s21listMoved.empty());
 }

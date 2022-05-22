@@ -45,10 +45,11 @@ namespace s21 {
 
         class listNode {
          public:
+            T data;
             listNode *pNext;
             listNode *pPrev;
 
-            explicit listNode(T data = T(), listNode *pNext = nullptr, listNode *pPrev = nullptr) {
+            explicit listNode(T d_data = T(), listNode *d_pNext = nullptr, listNode *d_pPrev = nullptr) : data(d_data), pNext(d_pNext), pPrev(d_pPrev) {
                 this->data = data;
                 this->pNext = pNext;
                 this->pPrev = pPrev;
@@ -57,7 +58,6 @@ namespace s21 {
             ~listNode() {
                 free_memory();
             }
-            T data;
             void free_memory();
         };
         typedef list<T>::listNode node;
