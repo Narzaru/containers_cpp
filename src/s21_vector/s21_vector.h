@@ -42,7 +42,7 @@ class vector {
   iterator end();
   const_iterator end() const;
 
-  [[nodiscard]] bool empty() const;
+  bool empty() const;
   [[nodiscard]] size_type size() const;
   [[nodiscard]] size_type max_size() const;
   void reserve(size_type new_capacity);

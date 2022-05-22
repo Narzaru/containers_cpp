@@ -21,6 +21,7 @@ vector<T>::vector(const vector<T> &other) : vector(other.capacity_) {
   if (other.begin() != other.end()) {
     std::copy(other.begin(), other.end(), begin());
   }
+  size_ = other.size_;
 }
 
 template <typename T>
