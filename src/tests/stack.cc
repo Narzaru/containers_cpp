@@ -2,7 +2,7 @@
 
 #include "s21_containers.h"
 
-namespace constructors_suite {
+namespace stack_constructors_suite {
 TEST(constructors, base_constructor_test_1) {
   s21::stack<int> stk1;
   ASSERT_EQ(stk1.size(), 0);
@@ -52,9 +52,9 @@ TEST(constructors, move_constructor_test_1) {
   stk2.pop();
   ASSERT_EQ(stk2.top(), 1);
 }
-}  // namespace constructors_suite
+}  // namespace stack_constructors_suite
 
-namespace operators_suite {
+namespace stack_operators_suite {
 TEST(operators, copy_assignment_operator_test_1) {
   s21::stack<int> stk1({1, 2, 3, 4});
   s21::stack<int> stk2 = stk1;
@@ -87,27 +87,27 @@ TEST(operators, move_assignment_operator_test_2) {
   stk2.pop();
   ASSERT_EQ(stk2.top(), 1);
 }
-}  // namespace operators_suite
+}  // namespace stack_operators_suite
 
-namespace top_suite {
+namespace stack_top_suite {
 TEST(top, top_test_1) {
   s21::stack<int> stk({1, 2, 3, 4, 5, 6});
   ASSERT_EQ(stk.top(), 6);
   stk.pop();
   ASSERT_EQ(stk.top(), 5);
 }
-}  // namespace top_suite
+}  // namespace stack_top_suite
 
-namespace empty_suite {
+namespace stack_empty_suite {
 TEST(empty, empty_test_1) {
   s21::stack<int> stk({1});
   ASSERT_FALSE(stk.empty());
   stk.pop();
   ASSERT_TRUE(stk.empty());
 }
-}  // namespace empty_suite
+}  // namespace stack_empty_suite
 
-namespace size_suite {
+namespace stack_size_suite {
 TEST(size, size_test_1) {
   s21::stack<int> stk({1, 2, 3, 4, 5, 6});
   ASSERT_EQ(stk.size(), 6);
@@ -115,9 +115,9 @@ TEST(size, size_test_1) {
   ASSERT_EQ(stk.size(), 5);
 }
 
-}  // namespace size_suite
+}  // namespace stack_size_suite
 
-namespace push_suite {
+namespace stack_push_suite {
 TEST(push, push_test_1) {
   s21::stack<int> stk({1, 2, 3, 4, 5, 6});
   ASSERT_NO_THROW(stk.push(7));
@@ -131,7 +131,7 @@ TEST(push, push_test_2) {
   ASSERT_EQ(stk.size(), 1);
   ASSERT_EQ(stk.top(), 7);
 }
-}  // namespace push_suite
+}  // namespace stack_push_suite
 
 namespace pop_suite {
 TEST(pop, pop_test_1) {

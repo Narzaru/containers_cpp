@@ -15,12 +15,10 @@ INCLUDE := $(addprefix -I,$(INCLUDE_PATHS))
 
 TEST_FILES := $(addprefix ./tests/,\
 	test.cc\
+	vector.cc\
+	list.cc\
+	queue.cc\
 	stack.cc)
-#	test.cc\
-#	vector.cc\
-#	list.cc\
-#	queue.cc\
-#	stack.cc)
 
 all: test
 
