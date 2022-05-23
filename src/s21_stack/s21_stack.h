@@ -2,7 +2,6 @@
 #define SRC_S21_STACK_S21_STACK_H_
 
 #include "s21_vector/s21_vector.h"
-#include <gtest/internal/gtest-death-test-internal.h>
 
 namespace s21 {
 template <typename T>
