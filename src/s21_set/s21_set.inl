@@ -113,12 +113,78 @@ namespace s21 {
                 }
                 result.second = true;
                 size_++;
+                fix_up_insert(current_node);
             }
             result.first = this->begin();
             iterator *current_iterator = &result.first;
             current_iterator->itr = current_node;
         }
         return result;
+    }
+
+    template<typename Key>
+    void set<Key>::erase(iterator pos) {
+        if (pos.itr != pos.end) {
+            erase_existing(pos);
+            size_--;
+        }
+    }
+
+    template<typename Key>
+    void set<Key>::erase_existing(iterator pos) {
+        Node *node = pos.itr;
+        Node *child, *parent;
+        node_color color;
+        if (node->left_child != nil && node->right_child != nil) {
+            Node *replace = pos.find_lowest_child(node->right_child);
+            if (node->parent != nullptr) {
+                if (node->parent->left_child == node)
+                    node->parent->left_child = replace;
+                else
+                    node->parent->right_child = replace;
+            } else {
+                root_ = replace;
+            }
+            child = replace->right_child;
+            parent = replace->parent;
+            color = replace->color;
+
+            if (parent == node) {
+                parent = replace;
+            } else {
+                if (child != nil) child->parent = parent;
+                parent->left_child = child;
+
+                replace->right_child = node->right_child;
+                node->right_child->parent = replace;
+            }
+            replace->parent = node->parent;
+            replace->color = node->color;
+            replace->left_child = node->left_child;
+            node->left_child->parent = replace;
+        } else {
+            if (node->left_child != nil)
+                child = node->left_child;
+            else
+                child = node->right_child;
+            
+            parent = node->parent;
+            color = node->color;
+            
+            if (child != nil) child->parent = parent;
+            if (parent) {
+                if (node == parent->left_child)
+                    parent->left_child = child;
+                else
+                    parent->right_child = child;
+            } else {
+                root_ = child;
+            }
+        }
+        if (color == BLACK) {
+            fix_up_erase(child, parent);
+        }
+        delete node;
     }
 
     template<typename Key>
@@ -129,6 +195,146 @@ namespace s21 {
             if (current_node->value < value) current_node = current_node->right_child;
         }
         return current_node;
+    }
+
+    template<typename Key>
+    void set<Key>::rotate_left(Node *node) {
+        Node *right = node->right_child;
+        node->right_child = right->left_child;
+        if (right->left_child != nil) right->left_child->parent = node;
+        right->parent = node->parent;
+        if (node->parent == nullptr) {
+            root_ = right;
+        } else {
+            if (node == node->parent->left_child)
+                node->parent->left_child = right;
+            else
+                node->parent->right_child = right; 
+        }
+        right->left_child = node;
+        node->parent = right;
+    }
+
+    template<typename Key>
+    void set<Key>::rotate_right(Node *node) {
+        Node *left = node->left_child;
+        node->left_child = left->right_child;
+        if (left->right_child != nil) left->right_child->parent = node;
+        left->parent = node->parent;
+        if (node->parent == nullptr) {
+            root_ = left;
+        } else {
+            if (node == node->parent->right_child)
+                node->parent->right_child = left;
+            else
+                node->parent->left_child = left; 
+        }
+        left->right_child = node;
+        node->parent = left;
+    }
+    
+    
+    template<typename Key>
+    void set<Key>::fix_up_insert(Node *node) {
+        Node *parent = node->parent;
+        while (node != root_ && parent->color == RED) {
+            Node *gparent = parent->parent;
+            if (gparent->left_child == parent) {
+                Node *uncle = gparent->right_child;
+                if (uncle != nil && uncle->color == RED) {
+                    parent->color = BLACK;
+                    uncle->color = BLACK;
+                    gparent->color = RED;
+                    node = gparent;
+                    parent = node->parent;
+                } else {
+                    if (parent->right_child == node) {
+                        rotate_left(parent);
+                        std::swap(node, parent);
+                    }
+                    rotate_right(gparent);
+                    gparent->color = RED;
+                    parent->color = BLACK;
+                    break;
+                }
+            } else {
+                Node *uncle = gparent->left_child;
+                if (uncle != nil && uncle->color == RED) {
+                    parent->color = BLACK;
+                    uncle->color = BLACK;
+                    gparent->color = RED;
+
+                    node = gparent;
+                    parent = node->parent;
+                } else {
+                    if (parent->left_child == node) {
+                        rotate_right(parent);
+                        std::swap(parent, node);
+                    }
+                    gparent->color = RED;
+                    parent->color = BLACK;
+                    break;
+                }
+            }
+        }
+        root_->color = BLACK;        
+    }
+
+    template<typename Key>
+    void set<Key>::fix_up_erase(Node *node, Node *parent) {
+        Node *other;
+        while (!node || node->color == BLACK && node != root_) {
+            if (parent->left_child == node) {
+                other = parent->right_child;
+                if (other->color == RED) {
+                    other->color = BLACK;
+                    parent->color = RED;
+                    rotate_left(parent);
+                    other = parent->right_child;
+                } else {
+                    if (other->right_child == nil || other->color == BLACK) {
+                        other->left_child->color = BLACK;
+                        other->color = RED;
+                        rotate_right(other);
+                        other = parent->right_child;
+                    }
+                    other->color = parent->color;
+                    parent->color = BLACK;
+                    other->right_child->color = BLACK;
+                    rotate_left(parent);
+                    node = root_;
+                    break;
+                }
+            } else {
+                other = parent->left_child;
+                if (other->color == RED) {
+                    other->color = BLACK;
+                    parent->color = RED;
+                    rotate_right(parent);
+                    other = parent->left_child;
+                }
+                if (other->left_child->color == BLACK && other->right_child->color == BLACK) {
+                    other->color = RED;
+                    node = parent;
+                    parent = node->parent;
+                } else {
+                    if (other->left_child->color = BLACK) {
+                        other->right_child->color = BLACK;
+                        other->color = RED;
+                        rotate_left(other);
+                        other = parent->left_child;
+                    }
+                    other->color = parent->color;
+                    parent->color = BLACK;
+                    other->left_child->color = BLACK;
+                    rotate_right(parent);
+                    node = root_;
+                    break;
+                }
+            }
+        }
+        if (node) node->color = BLACK;
+        
     }
 
     // ITERATOR
@@ -196,7 +402,6 @@ namespace s21 {
                 else itr = end;
             }
         }
-        
         return *this;
     }
 

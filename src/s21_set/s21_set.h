@@ -56,6 +56,10 @@ namespace s21 {
 
         Node *nil;
         Node *find_node_to_insert(const value_type& value);
+        void rotate_left(Node *node);
+        void rotate_right(Node *node);
+        void fix_up_insert(Node *node);
+        void fix_up_erase(Node *node, Node *parent);
 
         class SetIterator {
          public:
@@ -101,6 +105,8 @@ namespace s21 {
         iterator end();
 
         std::pair<iterator, bool> insert(const value_type& value);
+        void erase(iterator pos);
+        void erase_existing(iterator pos);
 
         iterator find(const Key& key);
         bool contains(const Key& key);

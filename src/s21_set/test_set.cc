@@ -26,6 +26,7 @@ namespace constructors_suite {
       set.insert(20);
       set.insert(1);
       set.insert(15);
+      set.insert(12);
 
       std::pair<s21::set<double>::iterator, bool> pair(set.insert(15));
       double first = *pair.first;
@@ -33,7 +34,7 @@ namespace constructors_suite {
       ASSERT_EQ(*begin, 1);
       ASSERT_EQ(first, 15);
       ASSERT_EQ(pair.second, false);
-      ASSERT_EQ(set.size(), 4);
+      ASSERT_EQ(set.size(), 5);
 
       s21::set<double>::iterator number = set.find(16);
       ASSERT_EQ(number.itr, number.end);
@@ -47,7 +48,10 @@ namespace constructors_suite {
       ASSERT_TRUE(set.contains(15));
       ASSERT_TRUE(set.contains(1));
 
-      s21::set<double>::iterator it;
+      s21::set<double>::iterator it = set.find(15);
+      set.erase(it);
+      ASSERT_FALSE(set.contains(15));
+      ASSERT_EQ(set.size(), 4);
       // for (it = set.begin(); it != set.end(); ++it) {
       //   cout << *it << endl;
       // }
