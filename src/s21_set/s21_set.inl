@@ -271,6 +271,7 @@ namespace s21 {
                         rotate_right(parent);
                         std::swap(parent, node);
                     }
+                    rotate_left(gparent);
                     gparent->color = RED;
                     parent->color = BLACK;
                     break;
