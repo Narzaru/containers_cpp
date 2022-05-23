@@ -3,7 +3,6 @@
 
 #include "s21_containers.h"
 
-
 TEST(list_constructor_suit, default_constructor) {
     s21::list<int> s21list;
     std::list<int> stdlist;
@@ -20,7 +19,7 @@ TEST(list_constructor_suit, init_constructor) {
     s21::list<int> s21list{1, 2, 3};
     ASSERT_FALSE(s21list.empty());
     ASSERT_EQ(s21list.front(), 1);
-    s21list.clear();
+    s21list.free_data_list();
     ASSERT_TRUE(s21list.empty());
 }
 
@@ -91,8 +90,8 @@ TEST(list_pop_suit, pop_string) {
 }
 
 TEST(list_size_suit, size_swap) {
-    s21::list<int> s21list{1, 2, 3, 4, 5, 6};
-    s21::list<int> s21list2{11, 12};
+    s21::list<int> s21list{566, 123, 3, 3, 2, 1};
+    s21::list<int> s21list2{566, 123};
     ASSERT_EQ(s21list.size(), 6);
     ASSERT_EQ(s21list2.size(), 2);
     s21list.swap(s21list2);
@@ -222,47 +221,3 @@ TEST(list_change_suit, unique) {
 //         ++ch2;
 //     }
 // }
-
-
-namespace bgreydon {
-TEST(b_list_push_suite, b_multi_push_1) {
-    s21::list<int> s21list;
-    s21list.push_back(1);
-    s21list.push_back(2);
-    s21list.push_back(3);
-    s21list.push_back(4);
-    s21list.push_back(5);
-    s21list.push_back(6);
-}
-
-
-TEST(b_list_push_suite, b_multi_push_2) {
-    s21::list<int> s21list;
-    s21list.push_front(1);
-    s21list.push_front(2);
-    s21list.push_front(3);
-    s21list.push_front(4);
-    s21list.push_front(5);
-}
-
-TEST(list_insert_suit, insert_int_1) {
-    s21::list<int> s21list({1, 2});
-    s21list.insert(s21list.end(), 3);
-    s21list.insert(s21list.end(), 4);
-    s21list.insert(s21list.end(), 5);
-}
-
-TEST(list_insert_suit, insert_int_2) {
-    s21::list<int> s21list{1, 2};
-    std::list<int> stdlist{1, 2};
-    s21::list<int>::ListIterator s21it = s21list.begin();
-    std::list<int>::iterator stdit = stdlist.begin();
-    s21list.insert(s21it, 77);
-    stdlist.insert(stdit, 77);
-    ASSERT_EQ(s21list.front(), stdlist.front());
-    ++s21it;
-    s21list.insert(s21it, 99);
-    s21list.erase(s21it);
-    ASSERT_EQ(s21list.size(), 3);
-}
-}  // namespace bgreydon

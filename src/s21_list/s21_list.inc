@@ -1,13 +1,8 @@
 // #include "s21_list.h"
-#include <cstddef>
 #include <ostream>
 #include <initializer_list>
 #include <iostream>
 #include <climits>
-#include <type_traits>
-#include <utility>
-
-#include "s21_list.h"
 
 namespace s21 {
 
@@ -30,51 +25,70 @@ namespace s21 {
     }
 
     template <typename T>
-    list<T>::list(): list(0) {}
-
-    template <typename T>
-    list<T>::list(size_t size) {
-      size_ = 0;
-      head_ = back_ = nullptr;
-      for (size_type i = 0; i < size; ++i) {
-        push_back(T());
-      }
+    list<T>::list(): size_(0) {
+        head_ = new node();
+        head_-> pNext = nullptr;
+        head_-> pPrev = nullptr;
+        last_node();
     }
 
     template <typename T>
-    list<T>::list(std::initializer_list<T> const& items) : list() {
-        for (const auto &data:items) {
-          push_back(data);
-        }
+    list<T>::list(size_t n) {
+        head_ = new node;
+        head_->pNext = head_;
+        head_->pPrev = nullptr;
+        size_ = 0;
+        for (size_t i = 0; i < n; i++)
+            push_back(0);
+    }
+
+    template <typename T>
+    list<T>::list(std::initializer_list<T> const& items) : size_(0) {
+        head_ = new node();
+        head_-> pNext = nullptr;
+        head_-> pPrev = nullptr;
+        for (const auto &data:items)
+            push_back(data);
     }
 
     template <typename T>
     list<T>::list(const list &l) : size_(0) {
-      for (list<T>::ListConstIterator at(l); at.itr; ++at) {
-        push_back(*at);
-      }
+        head_ = new node();
+        list<T>::ListIterator ptr(l);
+        while (ptr.itr) {
+            push_back(*ptr);
+            ptr++;
+        }
     }
 
     template <typename T>
-    list<T>::list(list &&l) : list() {
-      head_ = l.head_;
-      back_ = l.back_;
-      size_ = l.size_;
-      l.head_ = nullptr;
-      l.back_ = nullptr;
-      l.size_ = 0;
+    list<T>::list(list &&l) : size_(0) {
+        list<T> ptr(l);
+        l.free_data_list();
+        ptr.last_node();
+        *this = ptr;
     }
 
     template <typename T>
     void list<T>::push_back (T data) {
-      if (size_ == 0) {
-        head_ = new node(data, nullptr, nullptr);
-        back_ = head_;
-      } else {
-        back_->pNext = new node(data, nullptr, back_);
-        back_ = back_->pNext;
-      }
-      ++size_;
+        if (size_ == 0) {
+            head_->pNext = nullptr;
+            head_->pPrev = nullptr;
+            head_->data = data;
+            ++size_;
+        } else {
+            node* p = head_;
+            while (p->pNext != nullptr) {
+                p = p->pNext;
+            }
+            node* tmp = new node;
+            tmp->pPrev = p;
+            tmp->pNext = nullptr;
+            tmp->data = data;
+            p->pNext = tmp;
+            ++size_;
+        }
+        last_node();
     }
 
     template <typename T>
@@ -94,15 +108,27 @@ namespace s21 {
 
     template <typename T>
     void list<T>::clear() {
-      while(!empty()) {
-        pop_back();
-      }
+        if (empty() == 0){
+            node *p = head_;
+            while (p->pNext != nullptr) {
+                p = p->pNext;
+            }
+            while (p->pPrev != nullptr) {
+                p = p->pPrev;
+                delete p->pNext;
+                --size_;
+            }
+            delete p;
+            --size_;
+        } else {
+            delete head_;
+        }
     }
 
 
     template <typename T>
     void list<T>::free_data_list() {
-        if (!empty()){
+        if (empty() == 0){
             node *p = head_;
             while (p->pNext != nullptr) {
                 p = p->pNext;
@@ -120,40 +146,51 @@ namespace s21 {
 
     template <typename T>
     void list<T>::pop_back(){
-        if (size_ > 1) {
-          back_ = back_->pPrev;
-          delete back_->pNext;
-          back_->pNext = nullptr;
-        } else {
-          delete head_;
-          head_ = nullptr;
-        }
-        --size_;
+        list<T>::ListIterator ptr(*this);
+        ptr.end->pPrev->pNext = nullptr;
+        ptr.end->free_memory();
+        size_--;
+        last_node();
     }
 
     template <typename T>
-    void list<T>::push_front (T data) {
-      if (size_ == 0) {
-        head_ = new node(data, nullptr, nullptr);
-        back_ = head_;
-      } else {
-        head_->pPrev = new node(data, head_, nullptr);
-        head_ = head_->pPrev;
-      }
-      ++size_;
+    void list<T>::push_front(T data) {
+        if (size_ == 0) {
+            head_ = new node;
+            head_->pNext = nullptr;
+            head_->pPrev = nullptr;
+            head_->data = data;
+            ++size_;
+        } else {
+            // node *p = head_;
+            // node *first = new node;
+            // tmp->pPrev = p;
+            // tmp->pNext = nullptr;
+            // tmp->data = data;
+            // p->pNext = tmp;
+            // ++size_;
+            node *second = new node;
+            second->data = head_->data;
+            second->pNext = head_->pNext;
+            second->pPrev = head_;
+
+            head_->data = data;
+            head_->pPrev = nullptr;
+            head_->pNext = second;
+            size_++;
+        }
     }
 
     template <typename T>
     void list<T>::pop_front() {
         if (size_ > 1) {
-          head_ = head_->pNext;
-          delete head_->pPrev;
-          head_->pPrev = nullptr;
+            head_ = head_->pNext;
+            head_->pPrev->free_memory();
+            head_->pPrev = nullptr;
         } else {
-          delete head_;
-          head_ = nullptr;
+            head_->free_memory();
         }
-        --size_;
+        size_--;
     }
 
     template <typename T>
@@ -171,7 +208,8 @@ namespace s21 {
 
     template <typename T>
     list<T>& list<T>::operator=(list& other) {
-        clear();
+        this->free_data_list();
+        head_ = new node();
         list<T>::ListIterator ptr(other);
         while (ptr.itr) {
             push_back(*ptr);
@@ -195,17 +233,15 @@ namespace s21 {
 
     template <typename T>
     void list<T>::reverse() {
-        list<T> newList;
-        list<T>::ListIterator at = begin();
-        for (size_type i = 0; i < size_; ++i, at++) {
-          newList.push_front(at.itr->data);
+        list<T> ptr;
+        list<T>::ListIterator tmp = this->begin();
+        for (int count = size_; count > 0; tmp++) {
+            ptr.push_front(*tmp);
+            count--;
         }
-        *this = newList;
+        *this = ptr;
     }
 
-// bgreydon
-// на сегодня я уже всё, остальные ошибки исправил, из тестов это последняя
-// функция
     template <typename T>
     void list<T>::unique() {
         list<T>::ListIterator ptr = this->begin();
@@ -266,26 +302,30 @@ namespace s21 {
 
     template <typename T>
     void list<T>::swap(list& other) {
-      std::swap(head_, other.head_);
-      std::swap(back_, other.back_);
-      std::swap(size_, other.size_);
+        node* tmp;
+        tmp = other.head_;
+        other.head_ = head_;
+        head_ = tmp;
+        int tmp_size = other.size_;
+        other.size_ = size_;
+        size_ = tmp_size;
     }
 
     template <typename T>
     void list<T>::erase(typename list<T>::ListIterator pos) {
-      if (pos.itr->pPrev != nullptr) {
-        pos.itr->pPrev->pNext = pos.itr->pNext;
-      } else {
-        head_ = pos.itr->pNext;
-      }
+        if (pos.itr == pos.end) {
+            pos--;
+            pos.itr->pNext = nullptr;
+            size_--;
+        } else if (pos.itr == pos.first) {
+            pop_front();
+        } else {
+            pos.itr->pPrev->pNext = pos.itr->pNext;
+            pos.itr->pNext->pPrev = pos.itr->pPrev->pPrev;
+            pos.itr->pPrev->free_memory();
+            size_--;
+        }
 
-      if (pos.itr->pNext != nullptr) {
-        pos.itr->pNext->pPrev = pos.itr->pPrev;
-      } else {
-        back_ = pos.itr->pPrev;
-      }
-      --size_;
-      delete pos.itr;
     }
 
     template <typename T>
@@ -379,15 +419,15 @@ namespace s21 {
 
     template <typename T>
     typename list<T>::ListIterator list<T>::insert (ListIterator pos, const T& value) {
-        node* element = new node(value, pos.itr, pos.itr->pPrev);
-        pos.itr->pPrev = element;
-        if (element->pPrev != nullptr) {
-          element->pPrev->pNext = element;
-        } else {
-          head_ = element;
-        }
-        --pos;
-        ++size_;
+        node* element = new node;
+        element->data = pos.itr->data;
+        pos.itr->data = value;
+        element->pPrev = pos.itr;
+        element->pNext = pos.itr->pNext;
+        pos.itr->pNext->pPrev = element;
+        pos.itr->pNext = element;
+        pos++;
+        size_++;
         return pos;
     }
 
