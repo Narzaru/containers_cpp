@@ -5,10 +5,11 @@
 namespace s21 {
 
     template <typename T, class s21_queue = s21::list<T>>
-    class queue {
-    private:
+class queue {
+ private:
         s21_queue A;
-    public:
+
+ public:
         using value_type = typename s21_queue::value_type;
         using reference = typename s21_queue::reference;
         using const_reference = typename s21_queue::const_reference;
@@ -19,7 +20,7 @@ namespace s21 {
         queue(const queue &q): A(q.A) {};
         queue(queue &&q): A(std::move(q.A)) {};
         ~queue() {
-        };
+        }
 
         queue<T>& operator=(queue &&q) {
             this->A = q.A;
@@ -41,9 +42,9 @@ namespace s21 {
         }
         size_type size() {
             return A.size();
-        };
-    };
+        }
+};
 
-} // namespace s21
+}  // namespace s21
 
-#endif // SRC_S21_QUEUE_S21_QUEUE_H_
+#endif  // SRC_S21_QUEUE_S21_QUEUE_H_
