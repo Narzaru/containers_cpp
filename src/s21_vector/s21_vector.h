@@ -1,6 +1,9 @@
 #ifndef SRC_S21_VECTOR_S21_VECTOR_H_
 #define SRC_S21_VECTOR_S21_VECTOR_H_
 
+#include <cstddef>
+#include <initializer_list>
+#include <limits>
 #include <stdexcept>
 
 namespace s21 {
@@ -20,8 +23,8 @@ class vector {
   vector(const vector &other);
   vector(vector &&other) noexcept;
   ~vector();
-  vector &operator=(const vector &other);
-  vector &operator=(vector &&other) noexcept;
+  vector<value_type> &operator=(const vector &other);
+  vector<value_type> &operator=(vector &&other) noexcept;
 
   reference at(size_type position);
   const_reference at(size_type position) const;
@@ -39,7 +42,7 @@ class vector {
   iterator end();
   const_iterator end() const;
 
-  [[nodiscard]] bool empty() const;
+  bool empty() const;
   [[nodiscard]] size_type size() const;
   [[nodiscard]] size_type max_size() const;
   void reserve(size_type new_capacity);
