@@ -1,6 +1,5 @@
 #pragma once
 #include <cstddef>
-#include <initializer_list>
 
 typedef enum {
     RED,
@@ -21,8 +20,12 @@ namespace s21 {
         
 
         set<Key>();
+        set<Key>(std::initializer_list<Key> const &items);
+        set<Key>(const set<Key> &s);
+        set<Key>(set<Key> &&s);
         ~set() {
             clear();
+            delete nil;
         };
 
         bool empty() const;
@@ -54,7 +57,6 @@ namespace s21 {
             void free_node_recursive(Node*, Node*);
         };
 
-        Node *nil;
         Node *find_node_to_insert(const value_type& value);
         void rotate_left(Node *node);
         void rotate_right(Node *node);
@@ -107,15 +109,22 @@ namespace s21 {
         std::pair<iterator, bool> insert(const value_type& value);
         void erase(iterator pos);
         void erase_existing(iterator pos);
+        void copy_tree(set<Key> other);
+        void swap(set<Key>& other);
+        void merge(set<Key>& other);
 
         iterator find(const Key& key);
         bool contains(const Key& key);
+
+        set<Key>& operator=(set &&s);
         
 
      private:
         size_type size_;
         size_type max_size_;
         Node *root_;
+        Node *nil;
+        void set_initial_properties();
 
     };
 }

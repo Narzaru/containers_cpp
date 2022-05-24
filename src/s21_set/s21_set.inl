@@ -20,21 +20,78 @@ namespace s21 {
         node->value = 0;
         node->color = RED;
         delete node;
+        node = nullptr;
+    }
+
+    template <typename Key>
+    void set<Key>::set_initial_properties() {
+        nil = new Node();
+        root_ = nullptr;
+        max_size_ = std::numeric_limits<std::size_t>::max() / sizeof(Key);
     }
 
     template<typename Key>
     set<Key>::set() : size_(0) {
-        nil = new Node();
-        root_ = nullptr;
-        max_size_ = std::numeric_limits<std::size_t>::max() / sizeof(Key);
+        set_initial_properties();
+    }
+
+    template<typename Key>
+    set<Key>::set(std::initializer_list<Key> const &items) : size_(0) {
+        set_initial_properties();
+        for (const auto &data:items)
+            this->insert(data);
+    }
+
+    template <typename Key>
+    set<Key>::set(const set<Key> &s) : size_(0) {
+        set_initial_properties();
+        set<Key>::SetIterator ptr(s);
+        while (ptr.itr != ptr.end) {
+            insert(ptr.itr->value);
+            ++ptr;
+        }
+    };
+
+    template <typename Key>
+    set<Key>::set(set<Key> &&s) {
+        max_size_ = s.max_size_;
+        root_ = s.root_;
+        nil = s.nil;
+        size_ = s.size_;
+        s.root_ = nullptr;
+
+    }
+
+    template <typename Key>
+    void set<Key>::swap(set<Key>& other) {
+        set<Key> *temp;
+        Node *tmp = other.root_;
+        other.root_ = root_;
+        root_ = tmp;
+        tmp = other.nil;
+        other.nil = nil;
+        nil = tmp;
+        int tmp_size = other.size_;
+        other.size_ = size_;
+        size_ = tmp_size;
+    }
+
+    template <typename Key>
+    void set<Key>::merge(set<Key>& other) {
+        set<Key>::SetIterator ptr(other);
+        while (ptr.itr != ptr.end) {
+            insert(ptr.itr->value);
+            ++ptr;
+        }
     }
 
     template <typename Key>
     void set<Key>::clear() {
         if (root_) {
             root_->free_node_recursive(root_, nil);
+            size_ = 0;
         }
-        delete nil;
+        // delete nil;
     }
 
     template<typename Key>
