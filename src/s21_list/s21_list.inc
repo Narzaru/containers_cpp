@@ -10,15 +10,11 @@ namespace s21 {
     void list<T>::listNode::free_memory() {
         pNext = nullptr;
         pPrev = nullptr;
-        // data = 0; 
-        // data тоже надо очистить но я не знаю как потому что если массив то delete []  а если переменная то просто 0
     }
 
     template <typename T>
     void list<T>::last_node() {
         node* p = head_;
-        // head_->pNext = nullptr;
-        // head_->pPrev = nullptr;
         while (p->pNext != nullptr) {
                 p = p->pNext;
         }
@@ -26,31 +22,24 @@ namespace s21 {
     }
 
     template <typename T>
-    list<T>::list(): size_(0), head_(nullptr), back_(nullptr) {
-    }
+    list<T>::list(): size_(0), head_(nullptr), back_(nullptr) {}
 
     template <typename T>
     list<T>::list(size_t n) : size_(0) {
-        // head_ = new node;
-        // head_->pNext = nullptr;
-        // head_->pPrev = nullptr;
-        // size_ = 0;
-        for (size_t i = 0; i < n; i++)
+        for (size_t i = 0; i < n; i++) {
             push_back(0);
+        }
     }
 
     template <typename T>
     list<T>::list(std::initializer_list<T> const& items) : size_(0) {
-        // head_ = new node();
-        // head_-> pNext = nullptr;
-        // head_-> pPrev = nullptr;
-        for (const auto &data:items)
+        for (const auto &data:items) {
             push_back(data);
+        }
     }
 
     template <typename T>
     list<T>::list(const list &l) : size_(0) {
-        // head_ = new node();
         list<T>::ListIterator ptr(l);
         while (ptr.itr) {
             push_back(*ptr);
@@ -58,15 +47,14 @@ namespace s21 {
         }
     }
 
-    template <typename T>
+    template <typename T>               //менял что то 
     list<T>::list(list &&l) : size_(0) {
         if (&l != this) {
-        head_ = l.head_;
-        l.head_ = new node;
-        l.head_->pNext = l.head_;
-        l.head_->pPrev = l.head_;
-        size_ = l.size_;
-        l.size_ = 0;
+            head_ = l.head_;
+            size_ = l.size_;
+            l.head_ = nullptr;
+            l.back_ = back_;
+            l.size_ = 0;
         } else {
             head_ = new node;
             head_->pNext = nullptr;
@@ -77,8 +65,6 @@ namespace s21 {
     template <typename T>
     void list<T>::push_back (T data) {
         if (size_ == 0) {
-            // head_->pNext = nullptr;
-            // head_->pPrev = nullptr;
             this->head_ = new node;
             head_->data = data;
             ++size_;
@@ -114,7 +100,7 @@ namespace s21 {
 
     template <typename T>
     void list<T>::clear() {
-        if (empty() == false){
+        if (empty() == false) {
             node *p = head_;
             while (p->pNext != nullptr) {
                 p = p->pNext;
@@ -126,26 +112,6 @@ namespace s21 {
             }
             delete p;
             --size_;
-        } else {
-            delete head_;
-        }
-    }
-
-    template <typename T>
-    void list<T>::free_data_list() {
-        if (empty() == 0){
-            node *p = head_;
-            while (p->pNext != nullptr) {
-                p = p->pNext;
-            }
-            while (p->pPrev != nullptr) {
-                p = p->pPrev;
-                delete p->pNext;
-                --size_;
-            }
-            head_->pNext = nullptr;
-            head_->pPrev = nullptr;
-            --size_;
         }
     }
 
@@ -154,7 +120,6 @@ namespace s21 {
         list<T>::ListIterator ptr(*this);
         ptr.end->pPrev->pNext = nullptr;
         delete ptr.end;
-        // ptr.end->free_memory();
         size_--;
         last_node();
     }
@@ -168,15 +133,6 @@ namespace s21 {
             head_->data = data;
             ++size_;
         } else {
-            // node *second = new node;
-            // second->data = head_->data;
-            // second->pNext = head_->pNext;
-            // second->pPrev = head_;
-
-            // head_->data = data;
-            // head_->pPrev = nullptr;
-            // head_->pNext = second;
-            // size_++;
             node *first = new node;
             first->data = data;
             first->pPrev = nullptr;
@@ -192,14 +148,9 @@ namespace s21 {
         if (size_ > 1) {
             head_ = head_->pNext;
             delete head_->pPrev;
-            // head_->pPrev->free_memory();
             head_->pPrev = nullptr;
-        } else {
-            // list<T>::ListIterator ptr(*this);
-            // delete ptr.first;
-            // head_->free_memory();
-            // delete head_;
-            delete head_->pPrev;
+        } else if (size_ == 1){
+            delete head_;
         }
         size_--;
     }
@@ -208,13 +159,11 @@ namespace s21 {
     void list<T>::print_cont(){
         node *current = head_;
         int count = size_;
-        while (count != 0)
-        {
+        while (count != 0) {
             std::cout << current->data << std::endl;
             --count;
             current = current->pNext;
         }
-
     }
 
     template <typename T>
@@ -279,9 +228,7 @@ namespace s21 {
 
     template <typename T>
     void list<T>::sort() {
-
         list<T>::ListIterator ptr_i = begin();
-
         for (size_t i = 0 ; i < size_ - 1; ++i) {
             bool flag = true;
             for (size_t j = 0; j < size_ - i - 1; ++j, ++ptr_i) {
@@ -328,16 +275,12 @@ namespace s21 {
     template <typename T>
     void list<T>::erase(typename list<T>::ListIterator pos) {
         if (pos.itr == pos.end) {
-            // pos--;
-            // pos.itr->pNext = nullptr;
-            // size_--;
             pop_back();
         } else if (pos.itr == pos.first) {
             pop_front();
         } else {
             pos.itr->pPrev->pNext = pos.itr->pNext;
             pos.itr->pNext->pPrev = pos.itr->pPrev;
-            // pos.itr->pPrev->free_memory();
             delete pos.itr;
             size_--;
         }
@@ -351,7 +294,7 @@ namespace s21 {
         pos.itr->pNext = tmp.itr;
         tmp.itr->pPrev = pos.itr;
         size_ +=l.size_;
-        l.free_data_list();
+        l.clear();
     }
     
     // ITERATOR

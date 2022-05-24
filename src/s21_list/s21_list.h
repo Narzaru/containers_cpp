@@ -18,7 +18,6 @@ class list {
         size_t size();
         size_t max_size();
         void clear();
-        void free_data_list();
         void push_back(T data);
         void pop_back();
         void push_front(T data);
@@ -137,9 +136,9 @@ class list {
         void splice(const_iterator pos, list& other);
 
  private:
-        size_t size_;               // максимальный размер
+        size_t size_;
         node* head_;
-        node* back_;                // реализовать присваивание
+        node* back_;
         void last_node();
 };
 
