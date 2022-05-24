@@ -59,7 +59,7 @@ class list {
   };
   using node = list<T>::listNode;
 
-  struct ListIterator {
+  class ListIterator {
     node* first;
     node* end;
     node* itr;
