@@ -156,7 +156,7 @@ namespace s21 {
     }
 
     template <class T>
-    list<T> &list<T>::operator=(list &l) {
+    list<T> &list<T>::operator=(const list &l) {
         if (size_ != 0) {
             this->clear();
         }

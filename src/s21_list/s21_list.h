@@ -37,7 +37,7 @@ class list {
         list<T>(list &&l);
         list(const list &l);
 
-        list<T> & operator=(list& l);
+        list<T> & operator=(const list& l);
         list<T> & operator=(list&& l);
 
         ~list() {
