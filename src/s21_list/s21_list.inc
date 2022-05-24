@@ -47,7 +47,7 @@ namespace s21 {
         }
     }
 
-    template <typename T>               //менял что то 
+    template <typename T>
     list<T>::list(list &&l) : size_(0) {
         if (&l != this) {
             head_ = l.head_;
@@ -155,19 +155,8 @@ namespace s21 {
         size_--;
     }
 
-    template <typename T>
-    void list<T>::print_cont(){
-        node *current = head_;
-        int count = size_;
-        while (count != 0) {
-            std::cout << current->data << std::endl;
-            --count;
-            current = current->pNext;
-        }
-    }
-
-    template <typename T>
-    list<T>& list<T>::operator=(list& l) {
+    template <class T>
+    list<T> &list<T>::operator=(list &l) {
         if (size_ != 0) {
             this->clear();
         }
@@ -176,6 +165,14 @@ namespace s21 {
             push_back(*ptr);
             ptr++;
         }
+        // l.clear();
+        return *this;
+    }
+
+    template <class T>
+    list<T> &list<T>::operator=(list &&l) {
+        *this = l;
+        l.clear();
         return *this;
     }
 
@@ -194,13 +191,13 @@ namespace s21 {
 
     template <typename T>
     void list<T>::reverse() {
-        list<T> ptr;
-        list<T>::ListIterator tmp = this->begin();
-        for (; ptr.size_ < size_ ;) {
-            ptr.push_front(*tmp);
+        list<T> ptr(*this);
+        list<T>::ListIterator tmp = ptr.begin();
+        this->clear();
+        for (; this->size_ < ptr.size_ ;) {
+            this->push_front(*tmp);
             tmp++;
         }
-        *this = ptr;
     }
 
     template <typename T>
@@ -252,23 +249,23 @@ namespace s21 {
     }
 
     template <typename T>
-    void list<T>::merge(list& l) {
+    void list<T>::merge(const list& other) {
         list<T>::iterator first = this->end();
-        list<T>::iterator second = l.begin();
-        first.end->pNext = l.head_;
-        l.head_->pPrev = first.itr;
-        size_+= l.size_;
+        list<T>::iterator second = other.begin();
+        first.end->pNext = other.head_;
+        other.head_->pPrev = first.itr;
+        size_+= other.size_;
         last_node();
     }
 
     template <typename T>
-    void list<T>::swap(list& l) {
+    void list<T>::swap(list& other) {
         node* tmp;
-        tmp = l.head_;
-        l.head_ = head_;
+        tmp = other.head_;
+        other.head_ = head_;
         head_ = tmp;
-        int tmp_size = l.size_;
-        l.size_ = size_;
+        int tmp_size = other.size_;
+        other.size_ = size_;
         size_ = tmp_size;
     }
 
@@ -287,7 +284,7 @@ namespace s21 {
     }
 
     template <typename T>
-    void list<T>::splice(const_iterator pos, list& l) {
+    void list<T>::splice(const_iterator pos, const list& l) {
         iterator tmp = l.begin();
         pos.itr->pNext->pPrev = tmp.end;
         tmp.end->pNext = pos.itr->pNext;
@@ -353,12 +350,12 @@ namespace s21 {
     }
 
     template <typename T>
-    bool list<T>::ListIterator:: operator== (const ListIterator& l) {
+    bool list<T>::ListIterator::operator== (const ListIterator& l) {
         return itr == l.itr;
     }
 
     template <typename T>
-    bool list<T>::ListIterator:: operator!= (const ListIterator& l) {
+    bool list<T>::ListIterator::operator!= (const ListIterator& l) {
         return itr != l.itr;
     }
 

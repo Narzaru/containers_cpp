@@ -13,7 +13,6 @@ class list {
         using const_reference = const T&;
         using size_type = size_t;
 
-        void print_cont();
         bool empty();
         size_t size();
         size_t max_size();
@@ -26,18 +25,20 @@ class list {
         void swap(list& other);
         void unique();
         void sort();
-        void merge(list& other);
+        void merge(const list& other);
 
         T& front() const;
         T& back() const;
 
-        list& operator=(list& other);
 
         list<T>();
         list<T>(size_t n);
         list<T>(std::initializer_list<T> const& items);
         list<T>(list &&l);
         list(const list &l);
+
+        list<T> & operator=(list& l);
+        list<T> & operator=(list&& l);
 
         ~list() {
             clear();
@@ -133,7 +134,7 @@ class list {
 
         const_iterator cbegin() const;
         const_iterator cend() const;
-        void splice(const_iterator pos, list& other);
+        void splice(const_iterator pos, const list& other);
 
  private:
         size_t size_;
