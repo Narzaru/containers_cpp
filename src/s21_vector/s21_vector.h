@@ -53,6 +53,16 @@ class vector {
   void pop_back();
   void swap(vector &other);
 
+  template <typename... Args>
+  inline iterator emplace(iterator pos, Args &&...args) {
+    return insert(pos, value_type(std::forward<Args>(args)...));
+  }
+
+  template <typename... Args>
+  inline void emplace_back(Args &&...args) {
+    push_back(value_type(std::forward<Args>(args)...));
+  }
+
  private:
   iterator array_{};
   size_type size_{};

@@ -28,7 +28,7 @@ TEST(constructors, size_constructor_test_3) {
 TEST(constructors, size_constructor_test_4) {
   ASSERT_THROW(
       s21::vector<double> vec(
-          std::numeric_limits<std::size_t>::max() / sizeof(double) + 1),
+          std::numeric_limits<unsigned long>::max() / sizeof(double) + 1),
       std::length_error);
 }
 
@@ -288,15 +288,14 @@ TEST(size_capacity, size_capacity_3) {
 }
 
 TEST(size_capacity, max_size_1) {
-  s21::vector<s21::vector<int>> vec;
-  ASSERT_EQ(vec.max_size(),
-            std::numeric_limits<std::size_t>::max() / sizeof(s21::vector<int>));
+  s21::vector<long> vec;
+  ASSERT_EQ(vec.max_size(), std::numeric_limits<long>::max() / sizeof(long));
 }
 }  // namespace vector_size_capacity_suite
 
 namespace vector_resize_suite {
 TEST(resize, reserve_1) {
-  std::vector<int> vec;
+  s21::vector<int> vec;
   vec.reserve(100);
   ASSERT_EQ(vec.size(), 0);
   ASSERT_EQ(vec.capacity(), 100);
@@ -310,8 +309,8 @@ TEST(resize, reserve_2) {
 }
 
 TEST(resize, reserve_3) {
-  std::vector<int> vec({1, 2, 3, 4, 5});
-  std::vector<int> example({1, 2, 3, 4, 5});
+  s21::vector<int> vec({1, 2, 3, 4, 5});
+  s21::vector<int> example({1, 2, 3, 4, 5});
   vec.reserve(100);
   ASSERT_EQ(vec.size(), 5);
   ASSERT_EQ(vec.capacity(), 100);
@@ -390,3 +389,34 @@ TEST(access, begin_end_2) {
   ASSERT_EQ(*(vec.end() - 1), 1);
 }
 }  // namespace vector_access_suite
+
+template <typename T>
+void test(T &&val) {
+  std::cout << val;
+}
+
+namespace emplace_suite {
+TEST(emplace, emplace_1) {
+  s21::vector<s21::vector<int>> vec;
+  vec.emplace(vec.begin(), std::initializer_list<int>({1, 2, 3, 4}));
+  ASSERT_EQ(vec[0][3], 4);
+}
+
+TEST(emplace, emplace_2) {
+  s21::vector<int> vec{1, 2, 3, 4};
+  vec.emplace(vec.begin(), 0);
+  ASSERT_EQ(vec[0], 0);
+}
+
+TEST(emplace, emplace_3) {
+  s21::vector<s21::vector<int>> vec;
+  vec.emplace_back(std::initializer_list<int>({1, 2, 3, 4}));
+  ASSERT_EQ(vec[0][3], 4);
+}
+
+TEST(emplace, emplace_4) {
+  s21::vector<int> vec{1, 2, 3, 4};
+  vec.emplace_back(5);
+  ASSERT_EQ(vec.back(), 5);
+}
+} // namespace emplace_suite

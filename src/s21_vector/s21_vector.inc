@@ -1,6 +1,7 @@
 #include "limits"
 
 #include "s21_vector.h"
+#include <cstdint>
 
 namespace s21 {
 
@@ -42,10 +43,11 @@ template <typename T>
 vector<T> &vector<T>::operator=(const vector<T> &other) {
   if (capacity_ != other.capacity_) {
     capacity_ = other.capacity_;
-    realloc_array(*this, capacity_);
+    realloc_array(capacity_);
   }
   std::copy(other.begin(), other.end(), begin());
   size_ = other.size_;
+  return *this;
 }
 
 template <typename T>
@@ -149,7 +151,7 @@ typename vector<T>::size_type vector<T>::size() const {
 
 template <typename T>
 typename vector<T>::size_type vector<T>::max_size() const {
-  return std::numeric_limits<size_type>::max() / sizeof(T);
+  return PTRDIFF_MAX / sizeof(T);
 }
 
 template <typename T>
@@ -196,9 +198,9 @@ T *vector<T>::insert(T *pos, const T &value) {
     realloc_and_copy(capacity_ == 0 ? 1 : capacity_ * 2);
   }
   for (size_type i = size_; i != insert_position; --i) {
-    array_[i] = array_[i - 1];
+    array_[i] = std::move(array_[i - 1]);
   }
-  array_[insert_position] = value;
+  array_[insert_position] = std::move(value);
   size_ += 1;
   return pos;
 }
