@@ -30,7 +30,6 @@ class list {
         T& front() const;
         T& back() const;
 
-
         list<T>();
         list<T>(size_t n);
         list<T>(std::initializer_list<T> const& items);
@@ -98,7 +97,6 @@ class list {
 
         iterator begin();
         iterator end();
-        iterator insert(iterator pos, const_reference value);
         void erase(iterator pos);
 
     class ListConstIterator {
@@ -136,6 +134,13 @@ class list {
         const_iterator cend() const;
         void splice(const_iterator pos, const list& other);
 
+        iterator insert(iterator pos, const_reference value);
+        iterator insert(const_iterator pos, list<T>&& other);
+
+        template <typename... Args>
+        void emplace(const_iterator pos, Args&&... args);
+        // void emplace_back(Args&&... args);
+        // void emplace_front(Args&&... args);
  private:
         size_t size_;
         node* head_;

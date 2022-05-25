@@ -165,7 +165,6 @@ namespace s21 {
             push_back(*ptr);
             ptr++;
         }
-        // l.clear();
         return *this;
     }
 
@@ -374,17 +373,46 @@ namespace s21 {
     }
 
     template <typename T>
-    typename list<T>::ListIterator list<T>::insert (ListIterator pos, const T& value) {
+    typename list<T>::iterator list<T>::insert (ListIterator pos, const T& value) {         // что если вставить в последний элемент или в первый
         node* element = new node;
         element->data = pos.itr->data;
         pos.itr->data = value;
         element->pPrev = pos.itr;
         element->pNext = pos.itr->pNext;
-        pos.itr->pNext->pPrev = element;
+        if(pos.itr->pNext != nullptr) pos.itr->pNext->pPrev = element;
         pos.itr->pNext = element;
-        pos++;
+        pos++; 
         size_++;
         return pos;
+    }
+
+    /**
+    * @brief перегрузка для emplace
+    * 
+    * @tparam T 
+    * @param pos 
+    * @param other 
+    * @return list<T>::iterator 
+    */
+    template <typename T>
+    typename list<T>::iterator list<T>::insert (ListConstIterator pos, list<T>&& other) {
+        iterator result = begin();
+        iterator ptr = other.begin();
+        for (; result.itr != pos.itr; ++result) {}
+        for (; ptr.itr != nullptr ;) {
+            insert(result, *ptr);
+            ptr++;
+            result++;
+        }
+        return result;
+    }
+
+    template <typename T>
+    template <typename... Args>
+    void list<T>::emplace(ListConstIterator pos, Args&&... args) {
+        std::initializer_list<T> lst = {args...};
+        list<T> tmp(lst);
+        insert(pos, std::move(tmp));
     }
 
     // CONST ITERATOR
