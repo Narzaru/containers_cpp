@@ -44,7 +44,8 @@ TEST(list_constructor_suit, move_constructor) {
 
 TEST(list_constructor_suit, move_operator_constructor) {
     s21::list<int> s21list{1, 2, 3};
-    s21::list<int> s21listMoved = std::move(s21list);
+    s21::list<int> s21listMoved;
+    s21listMoved = std::move(s21list);
     ASSERT_TRUE(s21list.empty());
     ASSERT_FALSE(s21listMoved.empty());
 }
@@ -181,20 +182,20 @@ TEST(list_change_suit, unique) {
     }
 }
 
-// TEST(bonus_suit, emplace) {
-//     s21::list<int> s21list{1, 2, 3};
-//     s21::list<int> check{1, 55, 44, 33, 2, 3};
-//     s21::list<int>::ListIterator s21it = s21list.begin();
-//     ++s21it;
-//     s21list.emplace(s21it, 33, 44, 55);
-//     s21::list<int>::ListIterator ch1 = s21list.begin();
-//     s21::list<int>::ListIterator ch2 = check.begin();
-//     while (ch1.itr) {
-//         ASSERT_EQ(*ch1, *ch2);
-//         ++ch1;
-//         ++ch2;
-//     }
-// }
+TEST(bonus_suit, emplace) {
+    s21::list<int> s21list{1, 2, 3};
+    s21::list<int> check{1, 33, 44, 55, 2, 3};
+    s21::list<int>::ListConstIterator s21it = s21list.cbegin();
+    ++s21it;
+    s21list.emplace(s21it, 33, 44, 55);
+    s21::list<int>::ListIterator ch1 = s21list.begin();
+    s21::list<int>::ListIterator ch2 = check.begin();
+    while (ch1.itr) {
+        ASSERT_EQ(*ch1, *ch2);
+        ++ch1;
+        ++ch2;
+    }
+}
 
 // TEST(bonus_suit, emplace_back) {
 //     s21::list<int> s21list{1, 2, 3};
