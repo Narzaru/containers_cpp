@@ -139,8 +139,11 @@ class list {
 
         template <typename... Args>
         void emplace(const_iterator pos, Args&&... args);
-        // void emplace_back(Args&&... args);
-        // void emplace_front(Args&&... args);
+        template <typename... Args>
+        void emplace_back(Args&&... args);
+        template <typename... Args>
+        void emplace_front(Args&&... args);
+
  private:
         size_t size_;
         node* head_;

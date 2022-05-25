@@ -197,28 +197,58 @@ TEST(bonus_suit, emplace) {
     }
 }
 
-// TEST(bonus_suit, emplace_back) {
-//     s21::list<int> s21list{1, 2, 3};
-//     s21::list<int> check{1, 2, 3, 33, 44, 55};
-//     s21list.emplace_back(33, 44, 55);
-//     s21::list<int>::ListIterator ch1 = s21list.begin();
-//     s21::list<int>::ListIterator ch2 = check.begin();
-//     while (ch1.iter) {
-//         ASSERT_EQ(*ch1, *ch2);
-//         ++ch1;
-//         ++ch2;
-//     }
-// }
+TEST(bonus_suit, emplace_2) {
+    s21::list<int> s21list{1, 2, 3};
+    s21::list<int> check{1, 2, 3, 33, 44, 55};
+    s21::list<int>::ListConstIterator s21it = s21list.cend();
+    s21list.emplace(s21it, 33, 44, 55);
+    s21::list<int>::ListIterator ch1 = s21list.begin();
+    s21::list<int>::ListIterator ch2 = check.begin();
+    while (ch1.itr) {
+        ASSERT_EQ(*ch1, *ch2);
+        ++ch1;
+        ++ch2;
+    }
+    ASSERT_EQ(s21list.size(), check.size());
+}
 
-// TEST(bonus_suit, emplace_front) {
-//     s21::list<int> s21list{1, 2, 3};
-//     s21::list<int> check{5, 5, 5, 1, 2, 3};
-//     s21list.emplace_front(5, 5, 5);
-//     s21::list<int>::ListIterator ch1 = s21list.begin();
-//     s21::list<int>::ListIterator ch2 = check.begin();
-//     while (ch1.iter) {
-//         ASSERT_EQ(*ch1, *ch2);
-//         ++ch1;
-//         ++ch2;
-//     }
-// }
+TEST(bonus_suit, emplace_3) {
+    s21::list<int> s21list{1, 2, 3};
+    s21::list<int> check{33, 44, 55, 1, 2, 3};
+    s21::list<int>::ListConstIterator s21it = s21list.cbegin();
+    s21list.emplace(s21it, 33, 44, 55);
+    s21::list<int>::ListIterator ch1 = s21list.begin();
+    s21::list<int>::ListIterator ch2 = check.begin();
+    while (ch1.itr) {
+        ASSERT_EQ(*ch1, *ch2);
+        ++ch1;
+        ++ch2;
+    }
+    ASSERT_EQ(s21list.size(), check.size());
+}
+
+TEST(bonus_suit, emplace_back) {
+    s21::list<int> s21list{1, 2, 3};
+    s21::list<int> check{1, 2, 3, 33, 44, 55};
+    s21list.emplace_back(33, 44, 55);
+    s21::list<int>::ListIterator ch1 = s21list.begin();
+    s21::list<int>::ListIterator ch2 = check.begin();
+    while (ch1.itr) {
+        ASSERT_EQ(*ch1, *ch2);
+        ++ch1;
+        ++ch2;
+    }
+}
+
+TEST(bonus_suit, emplace_front) {
+    s21::list<int> s21list{1, 2, 3};
+    s21::list<int> check{5, 5, 5, 1, 2, 3};
+    s21list.emplace_front(5, 5, 5);
+    s21::list<int>::ListIterator ch1 = s21list.begin();
+    s21::list<int>::ListIterator ch2 = check.begin();
+    while (ch1.itr) {
+        ASSERT_EQ(*ch1, *ch2);
+        ++ch1;
+        ++ch2;
+    }
+}

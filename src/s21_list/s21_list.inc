@@ -373,16 +373,22 @@ namespace s21 {
     }
 
     template <typename T>
-    typename list<T>::iterator list<T>::insert (ListIterator pos, const T& value) {         // что если вставить в последний элемент или в первый
-        node* element = new node;
-        element->data = pos.itr->data;
-        pos.itr->data = value;
-        element->pPrev = pos.itr;
-        element->pNext = pos.itr->pNext;
-        if(pos.itr->pNext != nullptr) pos.itr->pNext->pPrev = element;
-        pos.itr->pNext = element;
-        pos++; 
-        size_++;
+    typename list<T>::iterator list<T>::insert (ListIterator pos, const T& value) {
+        if (pos.itr != pos.end) {
+            node* element = new node;
+            element->data = pos.itr->data;
+            pos.itr->data = value;
+            element->pPrev = pos.itr;
+            element->pNext = pos.itr->pNext;
+            pos.itr->pNext->pPrev = element;
+            pos.itr->pNext = element;
+            size_++;
+        } else if (pos.itr == pos.first) {
+            push_front(value);
+        } else {
+            push_back(value);
+        }
+        pos++;
         return pos;
     }
 
@@ -397,12 +403,11 @@ namespace s21 {
     template <typename T>
     typename list<T>::iterator list<T>::insert (ListConstIterator pos, list<T>&& other) {
         iterator result = begin();
-        iterator ptr = other.begin();
-        for (; result.itr != pos.itr; ++result) {}
+        iterator ptr = other.end();
+        for (; result.itr != pos.itr; ++result) {}        
         for (; ptr.itr != nullptr ;) {
             insert(result, *ptr);
-            ptr++;
-            result++;
+            ptr--;
         }
         return result;
     }
@@ -412,7 +417,24 @@ namespace s21 {
     void list<T>::emplace(ListConstIterator pos, Args&&... args) {
         std::initializer_list<T> lst = {args...};
         list<T> tmp(lst);
+        if (pos.itr == pos.end) {
+            tmp.reverse();
+        }
         insert(pos, std::move(tmp));
+    }
+
+    template <typename T>
+    template <typename... Args>
+    void list<T>::emplace_back(Args&&... args) {
+        ListConstIterator pos = this->cend();
+        emplace(pos, args...);
+    }
+
+    template <typename T>
+    template <typename... Args>
+    void list<T>::emplace_front(Args&&... args) {
+        ListConstIterator pos = this->cbegin();
+        emplace(pos, args...);
     }
 
     // CONST ITERATOR
