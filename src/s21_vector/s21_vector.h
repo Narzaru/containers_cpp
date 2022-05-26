@@ -56,6 +56,17 @@ class vector {
   void pop_back();
   void swap(vector &other);
 
+  // This strange entry works like this.
+  // Somewhere in a programm:
+  // vector.emplace_back(10, 20.0) =>
+  // push_back(object_constructor(std::forward<Args>(10, 20.0)...)) =>
+  // push_back(object_constructor(std::forward<int &>(10), std::forward<double
+  // &>(10));
+  // This means that the object is constructed at the call site without
+  // unnecessary copying.
+
+  // Args && - not rvalue reference.
+  // https://clck.ru/iNGcb Reference collapsing
   template <typename... Args>
   inline iterator emplace(iterator pos, Args &&...args) {
     return insert(pos, value_type(std::forward<Args>(args)...));
