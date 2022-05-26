@@ -1,6 +1,6 @@
 CC := g++
 STD := -std=c++17
-CFLAG := -Wall -Wextra -Wshadow
+CFLAG := -Wall -Wextra -Wshadow -pedantic
 
 FSANITIZE_DEBUG := True
 ifeq ($(shell uname), Linux)
@@ -15,9 +15,11 @@ INCLUDE := $(addprefix -I,$(INCLUDE_PATHS))
 
 TEST_FILES := $(addprefix ./tests/,\
 	test.cc\
+	array.cc\
 	vector.cc\
 	list.cc\
-	queue.cc)
+	queue.cc\
+	stack.cc)
 
 all: test
 

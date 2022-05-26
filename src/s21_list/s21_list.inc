@@ -292,7 +292,7 @@ namespace s21 {
         size_ +=l.size_;
         l.clear();
     }
-    
+
     // ITERATOR
 
     template <typename T>
