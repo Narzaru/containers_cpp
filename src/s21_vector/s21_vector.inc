@@ -198,7 +198,7 @@ T *vector<T>::insert(T *pos, const T &value) {
   for (size_type i = size_; i != insert_position; --i) {
     array_[i] = std::move(array_[i - 1]);
   }
-  array_[insert_position] = std::move(value);
+  array_[insert_position] = value;
   size_ += 1;
   return pos;
 }
