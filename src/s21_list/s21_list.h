@@ -13,12 +13,10 @@ class list {
         using const_reference = const T&;
         using size_type = size_t;
 
-        void print_cont();
         bool empty();
         size_t size();
         size_t max_size();
         void clear();
-        void free_data_list();
         void push_back(T data);
         void pop_back();
         void push_front(T data);
@@ -27,18 +25,19 @@ class list {
         void swap(list& other);
         void unique();
         void sort();
-        void merge(list& other);
+        void merge(const list& other);
 
         T& front() const;
         T& back() const;
-
-        list& operator=(list& other);
 
         list<T>();
         list<T>(size_t n);
         list<T>(std::initializer_list<T> const& items);
         list<T>(list &&l);
         list(const list &l);
+
+        list<T> & operator=(const list& l);
+        list<T> & operator=(list&& l);
 
         ~list() {
             clear();
@@ -98,7 +97,6 @@ class list {
 
         iterator begin();
         iterator end();
-        iterator insert(iterator pos, const_reference value);
         void erase(iterator pos);
 
     class ListConstIterator {
@@ -134,12 +132,22 @@ class list {
 
         const_iterator cbegin() const;
         const_iterator cend() const;
-        void splice(const_iterator pos, list& other);
+        void splice(const_iterator pos, const list& other);
+
+        iterator insert(iterator pos, const_reference value);
+        iterator insert(const_iterator pos, list<T>&& other);
+
+        template <typename... Args>
+        void emplace(const_iterator pos, Args&&... args);
+        template <typename... Args>
+        void emplace_back(Args&&... args);
+        template <typename... Args>
+        void emplace_front(Args&&... args);
 
  private:
-        size_t size_;               // максимальный размер
+        size_t size_;
         node* head_;
-        node* back_;                // реализовать присваивание
+        node* back_;
         void last_node();
 };
 
