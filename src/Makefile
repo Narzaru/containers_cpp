@@ -15,6 +15,7 @@ INCLUDE := $(addprefix -I,$(INCLUDE_PATHS))
 
 TEST_FILES := $(addprefix ./tests/,\
 	test.cc\
+	array.cc\
 	vector.cc\
 	list.cc\
 	queue.cc\
