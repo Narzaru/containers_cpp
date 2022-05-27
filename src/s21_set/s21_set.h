@@ -17,15 +17,18 @@ namespace s21 {
         using size_type = std::size_t;
 
         void clear();
+        void free_set();
         
 
         set<Key>();
         set<Key>(std::initializer_list<Key> const &items);
         set<Key>(const set<Key> &s);
         set<Key>(set<Key> &&s);
+        set<Key> & operator=(const set<Key>& s);
+        set<Key> & operator=(set<Key>&& s);
+
         ~set() {
-            clear();
-            delete nil;
+            free_set();
         };
 
         bool empty() const;
@@ -86,8 +89,8 @@ namespace s21 {
                 first = find_lowest_child(other.root_);
                 Node *highest_value = find_highest_child(other.root_);
                 end = nil;
-                nil->value = highest_value->value;
-                nil->parent = highest_value;
+                if (highest_value) nil->value = highest_value->value;
+                if (nil) nil->parent = highest_value;
                 itr = first;
             }
 
@@ -106,17 +109,30 @@ namespace s21 {
         iterator begin();
         iterator end();
 
+        class SetConstIterator : public SetIterator {
+         public:
+            SetConstIterator() {
+            };
+
+            ~SetConstIterator() {
+            }
+
+            explicit SetConstIterator(const set<Key>& other) : SetIterator(other) {
+            }
+        };
+        using const_iterator = SetConstIterator;
+        const_iterator cbegin() const;
+        const_iterator cend() const;
+
+
         std::pair<iterator, bool> insert(const value_type& value);
         void erase(iterator pos);
         void erase_existing(iterator pos);
-        void copy_tree(set<Key> other);
         void swap(set<Key>& other);
         void merge(set<Key>& other);
 
         iterator find(const Key& key);
         bool contains(const Key& key);
-
-        set<Key>& operator=(set &&s);
         
 
      private:
@@ -125,6 +141,7 @@ namespace s21 {
         Node *root_;
         Node *nil;
         void set_initial_properties();
+        void reset();
 
     };
 }

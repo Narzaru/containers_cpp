@@ -31,6 +31,17 @@ namespace constructors_suite {
         }
     }
 
+    TEST(constructors, move_constructor) {
+        s21::set<double> origin{1, 2, 3, 4, 5};
+        s21::set<double> copy = std::move(origin);
+        ASSERT_EQ(copy.size(), 5);
+        int i = 1;
+        for (auto it_copy = copy.begin(); it_copy != copy.end(); ++it_copy) {
+          ASSERT_EQ(*it_copy, i);
+          i++;
+        }
+    }
+
     TEST(insert, empty_constructor) {
       s21::set<double> set;
       std::pair<s21::set<double>::iterator, bool> pair(set.insert(10));
@@ -74,32 +85,51 @@ namespace constructors_suite {
       set.erase(it);
       ASSERT_FALSE(set.contains(15));
       ASSERT_EQ(set.size(), 4);
-      // for (it = set.begin(); it != set.end(); ++it) {
-      //   cout << *it << endl;
-      // }
-      // ++it;
-      //   cout << *it << endl;
-      // ++it;
-      //   cout << *it << endl;
-      // ++it;
-      //   cout << *it << endl;
-      // ++it;
-      //   cout << *it << endl;
+    }
 
-    // for (it = set.end(); it != set.begin(); --it) {
-    //     cout << *it << endl;
-    // }
-    // cout << *it << endl;
-    // --it;
-    // cout << *it << endl;
-    // --it;
-    // cout << *it << endl;
-    // --it;
-    // cout << *it << endl;
-    // --it;
-    // cout << *it << endl;
-    // --it;
+    TEST(insert, strings) {
+      s21::set<std::string> set;
+      // std::pair<s21::set<double>::iterator, bool> pair(set.insert(10));
+      std::string words [] = {"", "aboba", "b", "ba", "boba", "oba"};
+      set.insert("aboba");
+      set.insert("aboba");
+      ASSERT_EQ(set.size(), 1);
+      set.insert("boba");
+      set.insert("oba");
+      set.insert("ba");
+      set.insert("b");
+      set.insert("");
+      ASSERT_EQ(set.size(), 6);
+      int i = 0;
+      for (auto it = set.begin(); it != set.end(); ++it) {
+        ASSERT_EQ(*it, words[i]);
+        i++;
+      }
+      auto it_const = set.cbegin();
+      ++it_const;
+      cout << *it_const << endl;
+    }
 
+    TEST (erase, empty_constructor) {
+      s21::set<double> set;
+      auto it = set.begin();
+      set.erase(it);
+      ++it;
+      EXPECT_THROW(*it, std::out_of_range);
+    }
+
+    TEST (erase, erase_using_iterator) {
+      s21::set<double> set;
+      set.insert(10);
+      set.insert(15);
+      set.insert(20);
+      set.insert(18);
+      set.insert(8);
+      set.insert(1);
+
+      auto it = set.begin();
+      set.erase(it);
+      ASSERT_EQ(set.size(), 5);
     }
 
     TEST(modifiers, swap) {
@@ -126,6 +156,60 @@ namespace constructors_suite {
         ASSERT_TRUE(set1.contains(6));
         ASSERT_TRUE(set1.contains(7));
         ASSERT_TRUE(set2.contains(6));
+    }
+
+    TEST(operators, equal) {
+        s21::set<double> set1, set2;
+        set1.insert(5);
+        set2.insert(6);
+        set2.insert(7);
+        set1 = set2;
+        ASSERT_EQ(set1.size(), 2);
+        ASSERT_EQ(set2.size(), 2);
+        ASSERT_FALSE(set1.contains(5));
+        ASSERT_TRUE(set1.contains(7));
+        ASSERT_TRUE(set2.contains(6));
+    }
+
+    TEST(operators, move) {
+        s21::set<double> set1, set2;
+        set1.insert(5);
+        set2.insert(6);
+        set2.insert(7);
+        set1 = std::move(set2);
+        ASSERT_EQ(set1.size(), 2);
+        ASSERT_EQ(set2.size(), 0);
+        ASSERT_FALSE(set1.contains(5));
+        ASSERT_TRUE(set1.contains(7));
+        ASSERT_FALSE(set2.contains(6));
+        auto it = set2.begin();
+        EXPECT_THROW(*it, std::out_of_range);
+    }
+
+    TEST(iterators, iterator) {
+        s21::set<double> set1;
+        double numbers [] = {5, 6, 7};
+        set1.insert(6);
+        set1.insert(5);
+        set1.insert(7);
+        int i = 0;
+        for (auto it = set1.begin(); it != set1.end(); ++it) {
+            ASSERT_EQ(*it, numbers[i]);
+            i++;
+        }
+    }
+
+    TEST(iterators, const_iterator) {
+        s21::set<double> set1;
+        double numbers [] = {5, 6, 7};
+        set1.insert(6);
+        set1.insert(5);
+        set1.insert(7);
+        int i = 0;
+        for (auto it = set1.cbegin(); it != set1.cend(); ++it) {
+            ASSERT_EQ(*it, numbers[i]);
+            i++;
+        }
     }
 }
 

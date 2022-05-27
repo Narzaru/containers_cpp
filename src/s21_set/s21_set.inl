@@ -1,11 +1,18 @@
 namespace s21 {
     template <typename Key>
+    void set<Key>::free_set() {
+        clear();
+        delete nil;
+        nil = nullptr;
+    }
+
+    template <typename Key>
     void set<Key>::Node::free_node() {
         parent = nullptr;
         left_child = nullptr;
         right_child = nullptr;
-        key = 0;
-        value = 0;
+        key = key_type();
+        value = value_type();
         color = RED;
     }
 
@@ -16,9 +23,9 @@ namespace s21 {
         if (node->right_child != nil) free_node_recursive(node->right_child, nil);
         node->left_child = nullptr;
         node->right_child = nullptr;
-        node->key = 0;
-        node->value = 0;
-        node->color = RED;
+        // node->key = key_type();
+        // node->value = value_type();
+        // node->color = RED;
         delete node;
         node = nullptr;
     }
@@ -28,6 +35,16 @@ namespace s21 {
         nil = new Node();
         root_ = nullptr;
         max_size_ = std::numeric_limits<std::size_t>::max() / sizeof(Key);
+    }
+
+    template <typename Key>
+    void set<Key>::reset() {
+        if (root_ != nullptr) {
+            clear();
+            delete nil;
+            nil = nullptr;
+        }
+        if (nil == nullptr) set_initial_properties();
     }
 
     template<typename Key>
@@ -47,7 +64,7 @@ namespace s21 {
         set_initial_properties();
         set<Key>::SetIterator ptr(s);
         while (ptr.itr != ptr.end) {
-            insert(ptr.itr->value);
+            insert(*ptr);
             ++ptr;
         }
     };
@@ -59,6 +76,31 @@ namespace s21 {
         nil = s.nil;
         size_ = s.size_;
         s.root_ = nullptr;
+        s.nil = nullptr;
+    }
+
+    template <typename Key>
+    set<Key> &set<Key>::operator=(const set<Key> &s) {
+        reset();
+        set<Key>::SetIterator ptr(s);
+        while (ptr.itr != ptr.end) {
+            insert(*ptr);
+            ++ptr;
+        }
+        return *this;
+    }
+
+    template <typename Key>
+    set<Key> &set<Key>::operator=(set<Key> &&s) {
+        free_set();
+        root_ = s.root_;
+        nil = s.nil;
+        size_ = s.size_;
+        max_size_ = s.max_size_;
+        s.root_ = nullptr;
+        s.nil = nullptr;
+        s.size_ = 0;
+        return *this;
 
     }
 
@@ -131,6 +173,19 @@ namespace s21 {
         return iter;
     }
 
+     template<typename Key>
+    typename set<Key>::const_iterator set<Key>::cbegin() const {
+        const_iterator iter(*this);
+        return iter;
+    }
+
+    template<typename Key>
+    typename set<Key>::const_iterator set<Key>::cend() const {
+        const_iterator iter(*this);
+        iter.itr = iter.end;
+        return iter;
+    }
+
     template<typename Key>
     bool set<Key>::empty() const {
         return size_ == 0;
@@ -180,10 +235,11 @@ namespace s21 {
     }
 
     template<typename Key>
-    void set<Key>::erase(iterator pos) {
-        if (pos.itr != pos.end) {
+    void set<Key>::erase(typename set<Key>::SetIterator pos) {
+        if (pos.itr && pos.itr != pos.end) {
             erase_existing(pos);
             size_--;
+            // pos.itr = nullptr;
         }
     }
 
@@ -247,9 +303,9 @@ namespace s21 {
     template<typename Key>
     typename set<Key>::Node *set<Key>::find_node_to_insert(const value_type& value) {
         Node *current_node = root_;
-        while (current_node->value > value && current_node->left_child != nil || current_node->value < value && current_node->right_child != nil) {
-            if (current_node->value > value) current_node = current_node->left_child;
-            if (current_node->value < value) current_node = current_node->right_child;
+        while (current_node->key > value && current_node->left_child != nil || current_node->key < value && current_node->right_child != nil) {
+            if (current_node->key > value) current_node = current_node->left_child;
+            else current_node = current_node->right_child;
         }
         return current_node;
     }
@@ -395,6 +451,28 @@ namespace s21 {
         
     }
 
+    template<typename Key>
+    typename set<Key>::iterator set<Key>::find(const Key& key) {
+        iterator result = this->begin();
+        if (root_ && root_ != nil) {
+            Node *current_node = root_;
+            while (current_node->key != key && (current_node->left_child != nil && current_node->key > key || current_node->right_child != nil && current_node->key < key)) {
+                if (current_node->key > key) current_node = current_node->left_child;
+                else current_node = current_node->right_child;
+            }
+            if (current_node->key == key) result.itr = current_node;
+            else result.itr = result.end;
+            
+        }
+        return result;
+    }
+
+    template<typename Key>
+    bool set<Key>::contains(const Key& key) {
+        iterator current = find(key);
+        return current.end && current.itr != current.end;
+    }
+
     // ITERATOR
 
     template <typename Key>
@@ -415,26 +493,28 @@ namespace s21 {
     template <typename Key>
     Key& set<Key>::SetIterator::operator* () const {
         if (itr == nullptr) {
-            // бросить исключение
+            throw std::out_of_range("Container is empty");
         }
         return itr->value;
     }
 
     template <typename Key>
     typename set<Key>::SetIterator set<Key>::SetIterator::operator++() {
-        Node *parent = itr->parent;
-        if (itr != nil) {
-            if (itr->right_child != nil) {
-                itr = itr->right_child;
-                if (itr->left_child != nil) itr = find_lowest_child(itr->left_child);
-            } else if (!parent) {
-                itr = end;
-            } else if (parent->left_child == itr) {
-                itr = itr->parent;
-            } else if (parent->right_child == itr) {
-                Node *higher_volume_parent = find_higher_volume_parent(parent);
-                if (higher_volume_parent) itr = higher_volume_parent;
-                else itr = end;
+        if (itr && itr->left_child) {
+            Node *parent = itr->parent;
+            if (itr != nil) {
+                if (itr->right_child != nil) {
+                    itr = itr->right_child;
+                    if (itr->left_child != nil) itr = find_lowest_child(itr->left_child);
+                } else if (!parent) {
+                    itr = end;
+                } else if (parent->left_child == itr) {
+                    itr = itr->parent;
+                } else if (parent->right_child == itr) {
+                    Node *higher_volume_parent = find_higher_volume_parent(parent);
+                    if (higher_volume_parent) itr = higher_volume_parent;
+                    else itr = end;
+                }
             }
         }
         return *this;
@@ -487,26 +567,53 @@ namespace s21 {
         return current_node;
     }
 
-    template<typename Key>
-    typename set<Key>::iterator set<Key>::find(const Key& key) {
-        iterator result = this->begin();
-        if (root_ != nil) {
-            Node *current_node = root_;
-            while (current_node->key != key && (current_node->left_child != nil && current_node->key > key || current_node->right_child != nil && current_node->key < key)) {
-                if (current_node->key > key) current_node = current_node->left_child;
-                else current_node = current_node->right_child;
-            }
-            if (current_node->key == key) result.itr = current_node;
-            else result.itr = result.end;
-            
-        }
-        return result;
-    }
+    // CONST ITERATOR
 
-    template<typename Key>
-    bool set<Key>::contains(const Key& key) {
-        iterator current = find(key);
-        return current.itr != current.end;
-    }
+    // template <typename Key>
+    // typename set<Key>::SetConstIterator set<Key>::SetConstIterator::operator++() {
+    //     if (itr && itr->left_child) {
+    //         Node *parent = itr->parent;
+    //         if (itr != nil) {
+    //             if (itr->right_child != nil) {
+    //                 itr = itr->right_child;
+    //                 if (itr->left_child != nil) itr = find_lowest_child(itr->left_child);
+    //             } else if (!parent) {
+    //                 itr = end;
+    //             } else if (parent->left_child == itr) {
+    //                 itr = itr->parent;
+    //             } else if (parent->right_child == itr) {
+    //                 Node *higher_volume_parent = find_higher_volume_parent(parent);
+    //                 if (higher_volume_parent) itr = higher_volume_parent;
+    //                 else itr = end;
+    //             }
+    //         }
+    //     }
+    //     return *this;
+    // }
+
+
+    // template <typename Key>
+    // typename set<Key>::SetConstIterator set<Key>::SetConstIterator::operator--() {
+    //     Node *parent = itr->parent;
+    //     if (itr == end) {
+    //         itr = itr->parent;
+    //     } else {
+    //         if (itr->left_child != nil) {
+    //             itr = itr->left_child;
+    //             if (itr->left_child != nil) itr = find_highest_child(itr->right_child);
+    //         } else if (!parent) {
+    //             itr = end;
+    //         } else if (parent->right_child == itr) {
+    //             itr = itr->parent;
+    //         } else if (parent->left_child == itr ) {
+    //             Node *lower_volume_parent = find_lower_volume_parent(parent);
+    //             if (lower_volume_parent) itr = lower_volume_parent;
+    //             else itr = end;
+    //         }
+    //     }
+    //     return *this;
+    // }
+
+
 
 }
