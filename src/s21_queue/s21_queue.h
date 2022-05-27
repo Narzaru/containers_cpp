@@ -4,7 +4,7 @@
 
 namespace s21 {
 
-    template <typename T, class s21_queue = s21::list<T>>
+template <typename T, class s21_queue = s21::list<T>>
 class queue {
  private:
         s21_queue A;
