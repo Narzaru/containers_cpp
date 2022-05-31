@@ -388,7 +388,9 @@ namespace s21 {
         } else {
             push_back(value);
         }
-        pos++;
+        if (pos.itr != nullptr) {
+            pos++;
+        }
         return pos;
     }
 
@@ -432,7 +434,7 @@ namespace s21 {
 
     template <typename T>
     template <typename... Args>
-    void list<T>::emplace_front(Args&&... args) {
+    void list<T>::emplace_front(Args&&... args) {       
         ListConstIterator pos = this->cbegin();
         emplace(pos, args...);
     }
