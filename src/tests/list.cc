@@ -227,6 +227,13 @@ TEST(bonus_suit, emplace_3) {
     ASSERT_EQ(s21list.size(), check.size());
 }
 
+TEST(bonus_suit, emplace_4) {
+    s21::list<std::list<int>> s21list;
+    s21::list<int> example({1, 2, 3, 4});
+    s21list.emplace_front(std::initializer_list<int>({1, 2, 3, 4}));
+    std::equal(s21list.front().begin(), s21list.front().end(), example.begin());
+}
+
 TEST(bonus_suit, emplace_back) {
     s21::list<int> s21list{1, 2, 3};
     s21::list<int> check{1, 2, 3, 33, 44, 55};
