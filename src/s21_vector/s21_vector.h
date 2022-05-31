@@ -28,25 +28,25 @@ class vector {
 
   reference at(size_type position);
   const_reference at(size_type position) const;
-  reference operator[](size_type position);
-  const_reference operator[](size_type position) const;
-  reference front();
-  const_reference front() const;
-  reference back();
-  const_reference back() const;
+  reference operator[](size_type position) noexcept;
+  const_reference operator[](size_type position) const noexcept;
+  reference front() noexcept;
+  const_reference front() const noexcept;
+  reference back() noexcept;
+  const_reference back() const noexcept;
 
-  iterator data();
-  const_iterator data() const;
-  iterator begin();
-  const_iterator begin() const;
-  iterator end();
-  const_iterator end() const;
+  iterator data() noexcept;
+  const_iterator data() const noexcept;
+  iterator begin() noexcept;
+  const_iterator begin() const noexcept;
+  iterator end() noexcept;
+  const_iterator end() const noexcept;
 
-  bool empty() const;
-  [[nodiscard]] size_type size() const;
-  [[nodiscard]] size_type max_size() const;
+  bool empty() const noexcept;
+  [[nodiscard]] size_type size() const noexcept;
+  [[nodiscard]] size_type max_size() const noexcept;
   void reserve(size_type new_capacity);
-  [[nodiscard]] size_type capacity() const;
+  [[nodiscard]] size_type capacity() const noexcept;
   void shrink_to_fit();
 
   void clear();
