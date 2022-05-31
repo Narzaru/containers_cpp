@@ -9,7 +9,7 @@ ifeq ($(shell uname), Linux)
 	endif
 endif
 
-GTEST_LIBS := -lgtest
+GTEST_LIBS := -lgtest -pthread
 INCLUDE_PATHS := . s21_list s21_queue s21_vector tests
 INCLUDE := $(addprefix -I,$(INCLUDE_PATHS))
 
@@ -33,8 +33,11 @@ test: clean
 linter:
 	@clear
 	@cp ../materials/linters/CPPLINT.cfg .
+	@find . -name "*.cc" -exec python3 ../materials/linters/cpplint.py {} \;
 	@find . -name "*.cpp" -exec python3 ../materials/linters/cpplint.py {} \;
+	@find . -name "*.inc" -exec python3 ../materials/linters/cpplint.py {} \;
 	@find . -name "*.h" -exec python3 ../materials/linters/cpplint.py {} \;
+	@find . -name "*.hpp" -exec python3 ../materials/linters/cpplint.py {} \;
 	@rm -f CPPLINT.cfg
 
 
