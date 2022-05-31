@@ -419,4 +419,4 @@ TEST(emplace, emplace_4) {
   vec.emplace_back(5);
   ASSERT_EQ(vec.back(), 5);
 }
-} // namespace emplace_suite
+}  // namespace emplace_suite

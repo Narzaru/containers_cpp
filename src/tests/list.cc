@@ -136,7 +136,7 @@ TEST(list_sort_suit, sort) {
 TEST(list_iter_suit, iter_end) {
     s21::list<int> s21list{3, 5, 1, 4, 6, 2};
     s21::list<int>::ListIterator s21it = s21list.end();
-    int area [] = {2, 6, 4, 1, 5, 3};
+    int area[] = {2, 6, 4, 1, 5, 3};
     int i = 0;
     while (s21it.itr != s21it.first) {
         ASSERT_EQ(*(s21it--), area[i++]);
