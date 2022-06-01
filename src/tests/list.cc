@@ -162,7 +162,7 @@ TEST(list_change_suit, reverse) {
     s21::list<int>::ListConstIterator s21it;
     s21it = s21list.cbegin();
     std::list<int>::const_iterator stdit = stdlist.cbegin();
-    while (s21it.itr) {
+    while (s21it.A.itr != s21it.A.end) {
         ASSERT_EQ(*s21it, *stdit);
         ++s21it;
         ++stdit;

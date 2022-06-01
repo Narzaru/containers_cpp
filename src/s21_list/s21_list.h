@@ -99,41 +99,63 @@ class list {
         iterator end();
         void erase(iterator pos);
 
-    class ListConstIterator {
+    class ListConstIterator  {
      public:
-            node* first;
-            node* end;
-            node* itr;
+        list::iterator A;
 
-            ListConstIterator() {
-                first = nullptr;
-                end = nullptr;
-                itr = nullptr;
-            }
-            explicit ListConstIterator(const list<T>& other) {
-                first = other.head_;
-                end = other.back_;
-                itr = other.head_;
-            }
-            ~ListConstIterator() {
-                free_iterator();
-            }
+        ListConstIterator() {
+        }
 
-            void free_iterator();
-            T operator*() const;
-            ListConstIterator operator++();
-            ListConstIterator operator++(int);
-            ListConstIterator operator--();
-            ListConstIterator operator--(int);
-            bool operator==(const ListConstIterator& other);
-            bool operator!=(const ListConstIterator& other);
+        explicit ListConstIterator(const list<T>& other) : A(other) {
+        }
+
+        ListConstIterator(const ListIterator other) {
+            A.first = other.first;
+            A.itr = other.itr;
+            A.end = other.end;
+        }
+
+        ~ListConstIterator() {
+        }
+
+        T operator*() const {
+            return *A;
+        }
+
+        ListConstIterator operator++() {
+            return ++A;
+        }
+
+        ListConstIterator operator++(int) {
+            return A++;
+        }
+
+        ListConstIterator operator--() {
+            return --A;
+        }
+
+        ListConstIterator operator--(int) {
+            return A--;
+        }
+
+        bool operator==(const ListConstIterator& other) {
+            return this->A.itr == other.A.itr;
+        }
+
+        bool operator!=(const ListConstIterator& other) {
+            return this->A.itr != other.A.itr;
+        }
     };
         using const_iterator = typename list<T>::ListConstIterator;
 
-        const_iterator cbegin() const;
-        const_iterator cend() const;
-        void splice(const_iterator pos, const list& other);
+        const_iterator cbegin() {
+            return begin();
+        }
+        const_iterator cend() {
+            return end();
+        }
 
+        void splice(const_iterator pos, const list& other);
         iterator insert(iterator pos, const_reference value);
         iterator insert(const_iterator pos, list<T>&& other);
 

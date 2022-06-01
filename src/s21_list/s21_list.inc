@@ -141,6 +141,7 @@ namespace s21 {
             head_ = first;
             ++size_;
         }
+        last_node();
     }
 
     template <typename T>
@@ -405,7 +406,7 @@ namespace s21 {
     typename list<T>::iterator list<T>::insert(ListConstIterator pos, list<T>&& other) {
         iterator result = begin();
         iterator ptr = other.end();
-        for (; result.itr != pos.itr; ++result) {}
+        for (; result.itr != pos.A.itr; ++result) {}
         for (; ptr.itr != nullptr ;) {
             insert(result, *ptr);
             ptr--;
@@ -418,7 +419,7 @@ namespace s21 {
     void list<T>::emplace(ListConstIterator pos, Args&&... args) {
         std::initializer_list<T> lst = {args...};
         list<T> tmp(lst);
-        if (pos.itr == pos.end) {
+        if (pos.A.itr == pos.A.end) {
             tmp.reverse();
         }
         insert(pos, std::move(tmp));
@@ -436,85 +437,6 @@ namespace s21 {
     void list<T>::emplace_front(Args&&... args) {
         ListConstIterator pos = this->cbegin();
         emplace(pos, args...);
-    }
-
-    // CONST ITERATOR
-
-    template <typename T>
-    void list<T>::ListConstIterator::free_iterator() {
-        first = nullptr;
-        end = nullptr;
-        itr = nullptr;
-    }
-
-    template <typename T>
-    T list<T>::ListConstIterator::operator*() const {
-        if (itr == nullptr) {
-            // бросить исключение
-        }
-        return itr->data;
-    }
-
-    template <typename T>
-    typename list<T>::ListConstIterator list<T>::ListConstIterator::operator++ () {
-        if (itr == nullptr) {
-            // бросить исключение
-        }
-        itr = itr->pNext;
-        return *this;
-    }
-
-    template <typename T>
-    typename list<T>::ListConstIterator list<T>::ListConstIterator::operator++ (int) {
-        if (itr == nullptr) {
-            // бросить исключение
-        }
-        const_iterator ptr = *this;
-        itr = itr->pNext;
-        return ptr;
-    }
-
-    template <typename T>
-    typename list<T>::ListConstIterator list<T>::ListConstIterator::operator-- () {
-        if (itr == nullptr) {
-            // бросить исключение
-        }
-        itr = itr->pPrev;
-        return *this;
-    }
-
-    template <typename T>
-    typename list<T>::ListConstIterator list<T>::ListConstIterator::operator-- (int) {
-        if (itr == nullptr) {
-            // бросить исключение
-        }
-        const_iterator ptr = *this;
-        itr = itr->pPrev;
-        return ptr;
-    }
-
-    template <typename T>
-    bool list<T>::ListConstIterator:: operator== (const ListConstIterator& l) {
-        return itr == l.itr;
-    }
-
-    template <typename T>
-    bool list<T>::ListConstIterator:: operator!= (const ListConstIterator& l) {
-        return itr != l.itr;
-    }
-
-    template <typename T>
-    typename list<T>::const_iterator  list<T>::cbegin() const {
-        return ListConstIterator(*this);
-    }
-
-    template <typename T>
-    typename list<T>::const_iterator  list<T>::cend() const {
-        ListConstIterator tmp(*this);
-        while (tmp.itr != tmp.end) {
-            tmp++;
-        }
-        return ListConstIterator(tmp);
     }
 
 }  // namespace s21
