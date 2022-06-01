@@ -120,7 +120,7 @@ class list {
             }
 
             void free_iterator();
-            T& operator*() const;
+            T operator*() const;
             ListConstIterator operator++();
             ListConstIterator operator++(int);
             ListConstIterator operator--();

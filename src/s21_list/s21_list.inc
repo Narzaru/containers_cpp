@@ -448,7 +448,7 @@ namespace s21 {
     }
 
     template <typename T>
-    T& list<T>::ListConstIterator::operator*() const {
+    T list<T>::ListConstIterator::operator*() const {
         if (itr == nullptr) {
             // бросить исключение
         }
