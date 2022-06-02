@@ -39,7 +39,7 @@ namespace s21 {
     }
 
     template <typename T>
-    list<T>::list(const list &l) : size_(0) {
+    list<T>::list(const list<T> &l) : size_(0) {
         list<T>::ListIterator ptr(l);
         while (ptr.itr) {
             push_back(*ptr);
@@ -48,7 +48,7 @@ namespace s21 {
     }
 
     template <typename T>
-    list<T>::list(list &&l) : size_(0) {
+    list<T>::list(list<T> &&l) : size_(0) {
         if (&l != this) {
             head_ = l.head_;
             size_ = l.size_;

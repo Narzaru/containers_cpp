@@ -8,93 +8,92 @@ namespace s21 {
 template <typename T>
 class list {
  public:
-        using value_type = T;
-        using reference = T&;
-        using const_reference = const T&;
-        using size_type = size_t;
+    using value_type = T;
+    using reference = T&;
+    using const_reference = const T&;
+    using size_type = size_t;
 
-        bool empty();
-        size_t size();
-        size_t max_size();
-        void clear();
-        void push_back(T data);
-        void pop_back();
-        void push_front(T data);
-        void pop_front();
-        void reverse();
-        void swap(list& other);
-        void unique();
-        void sort();
-        void merge(const list& other);
+    bool empty();
+    size_t size();
+    size_t max_size();
+    void clear();
+    void push_back(T data);
+    void pop_back();
+    void push_front(T data);
+    void pop_front();
+    void reverse();
+    void swap(list& other);
+    void unique();
+    void sort();
+    void merge(const list& other);
 
-        T& front() const;
-        T& back() const;
+    T& front() const;
+    T& back() const;
 
-        list<T>();
-        list<T>(size_t n);
-        list<T>(std::initializer_list<T> const& items);
-        list<T>(list &&l);
-        list(const list &l);
+    list<T>();
+    list<T>(size_t n);
+    list<T>(std::initializer_list<T> const& items);
+    list<T>(list &&l);
+    list(const list &l);
 
-        list<T> & operator=(const list& l);
-        list<T> & operator=(list&& l);
+    list<T> & operator=(const list& l);
+    list<T> & operator=(list&& l);
 
-        ~list() {
-            clear();
+    ~list() {
+        clear();
+    }
+
+    class listNode {
+     public:
+        T data;
+        listNode *pNext;
+        listNode *pPrev;
+
+        explicit listNode(T d_data = T(),
+        listNode *d_pNext = nullptr, listNode *d_pPrev = nullptr)
+        : data(d_data), pNext(d_pNext), pPrev(d_pPrev) {
+            this->data = data;
+            this->pNext = pNext;
+            this->pPrev = pPrev;
         }
 
-        class listNode {
-         public:
-            T data;
-            listNode *pNext;
-            listNode *pPrev;
-
-            explicit listNode(T d_data = T(),
-            listNode *d_pNext = nullptr, listNode *d_pPrev = nullptr)
-            : data(d_data), pNext(d_pNext), pPrev(d_pPrev) {
-                this->data = data;
-                this->pNext = pNext;
-                this->pPrev = pPrev;
-            }
-
-            ~listNode() {
-                free_memory();
-            }
-            void free_memory();
-        };
-        typedef list<T>::listNode node;
+        ~listNode() {
+            free_memory();
+        }
+        void free_memory();
+    };
+    typedef list<T>::listNode node;
 
     class ListIterator {
      public:
-            node* first;
-            node* end;
-            node* itr;
+        node* first;
+        node* end;
+        node* itr;
 
-            ListIterator() {
-                first = nullptr;
-                end = nullptr;
-                itr = nullptr;
-            }
-            explicit ListIterator(const list<T>& other) {
-                first = other.head_;
-                end = other.back_;
-                itr = other.head_;
-            }
-            ~ListIterator() {
-                free_iterator();
-            }
-            void swap_elements(ListIterator pos);
-            void free_iterator();
-            T& operator*() const;
-            ListIterator operator++();
-            ListIterator operator++(int);
-            ListIterator operator--();
-            ListIterator operator--(int);
-            bool operator==(const ListIterator& other);
-            bool operator!=(const ListIterator& other);
+        ListIterator() {
+            first = nullptr;
+            end = nullptr;
+            itr = nullptr;
+        }
+        explicit ListIterator(const list<T>& other) {
+            first = other.head_;
+            end = other.back_;
+            itr = other.head_;
+        }
+        ~ListIterator() {
+            free_iterator();
+        }
+        void swap_elements(ListIterator pos);
+        void free_iterator();
+        T& operator*() const;
+        ListIterator operator++();
+        ListIterator operator++(int);
+        ListIterator operator--();
+        ListIterator operator--(int);
+        bool operator==(const ListIterator& other);
+        bool operator!=(const ListIterator& other);
     };
         using iterator = typename list<T>::ListIterator;
-
         iterator begin();
         iterator end();
         void erase(iterator pos);
@@ -103,68 +102,44 @@ class list {
      public:
         list::iterator A;
 
-        ListConstIterator() {
-        }
-
+        ListConstIterator() {}
         explicit ListConstIterator(const list<T>& other) : A(other) {
         }
-
-        ListConstIterator(const ListIterator other) {
+        explicit ListConstIterator(const ListIterator& other) {
             A.first = other.first;
             A.itr = other.itr;
             A.end = other.end;
         }
+        ~ListConstIterator() {}
 
-        ~ListConstIterator() {
-        }
-
-        T operator*() const {
-            return *A;
-        }
-
-        ListConstIterator operator++() {
-            return ++A;
-        }
-
-        ListConstIterator operator++(int) {
-            return A++;
-        }
-
-        ListConstIterator operator--() {
-            return --A;
-        }
-
-        ListConstIterator operator--(int) {
-            return A--;
-        }
+        T operator*() const {return *A;}
+        ListConstIterator operator++() {return (ListConstIterator)++A;}
+        ListConstIterator operator++(int) {return A++;}
+        ListConstIterator operator--() {return --A;}
+        ListConstIterator operator--(int) {return A--;}
 
         bool operator==(const ListConstIterator& other) {
             return this->A.itr == other.A.itr;
         }
-
         bool operator!=(const ListConstIterator& other) {
             return this->A.itr != other.A.itr;
         }
     };
-        using const_iterator = typename list<T>::ListConstIterator;
+    using const_iterator = typename list<T>::ListConstIterator;
 
-        const_iterator cbegin() {
-            return begin();
-        }
-        const_iterator cend() {
-            return end();
-        }
+    const_iterator cbegin() {return (ListConstIterator)begin();}
+    const_iterator cend() {return (ListConstIterator)end();}
 
-        void splice(const_iterator pos, const list& other);
-        iterator insert(iterator pos, const_reference value);
-        iterator insert(const_iterator pos, list<T>&& other);
+    void splice(const_iterator pos, const list& other);
+    iterator insert(iterator pos, const_reference value);
+    iterator insert(const_iterator pos, list<T>&& other);
 
-        template <typename... Args>
-        void emplace(const_iterator pos, Args&&... args);
-        template <typename... Args>
-        void emplace_back(Args&&... args);
-        template <typename... Args>
-        void emplace_front(Args&&... args);
+    template <typename... Args>
+    void emplace(const_iterator pos, Args&&... args);
+    template <typename... Args>
+    void emplace_back(Args&&... args);
+    template <typename... Args>
+    void emplace_front(Args&&... args);
 
  private:
         size_t size_;
