@@ -305,7 +305,7 @@ namespace s21 {
     template <typename T>
     T& list<T>::ListIterator::operator* () const {
         if (itr == nullptr) {
-            // бросить исключение
+            throw std::invalid_argument("attempt to dereference a null pointer");
         }
         return itr->data;
     }
@@ -313,7 +313,7 @@ namespace s21 {
     template <typename T>
     typename list<T>::ListIterator list<T>::ListIterator::operator++ () {
         if (itr == nullptr) {
-            // бросить исключение
+            throw std::invalid_argument("attempt to dereference a null pointer");
         }
         itr = itr->pNext;
         return *this;
@@ -322,7 +322,7 @@ namespace s21 {
     template <typename T>
     typename list<T>::ListIterator list<T>::ListIterator::operator++ (int) {
         if (itr == nullptr) {
-            // бросить исключение
+            throw std::invalid_argument("attempt to dereference a null pointer");
         }
         iterator ptr = *this;
         itr = itr->pNext;
@@ -332,7 +332,7 @@ namespace s21 {
     template <typename T>
     typename list<T>::ListIterator list<T>::ListIterator::operator-- () {
         if (itr == nullptr) {
-            // бросить исключение
+            throw std::invalid_argument("attempt to dereference a null pointer");
         }
         itr = itr->pPrev;
         return *this;
@@ -341,7 +341,7 @@ namespace s21 {
     template <typename T>
     typename list<T>::ListIterator list<T>::ListIterator::operator-- (int) {
         if (itr == nullptr) {
-            // бросить исключение
+            throw std::invalid_argument("attempt to dereference a null pointer");
         }
         iterator ptr = *this;
         itr = itr->pPrev;
