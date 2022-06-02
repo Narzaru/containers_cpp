@@ -12,13 +12,13 @@ namespace constructors_suite {
 }
 
 namespace insert_suite {
-    TEST(insert, empty_constructor) {
+    TEST(insert, insert_several) {
         s21::sorted_tree<int, std::string> tree;
-        tree.insert_pair(std::make_pair(1, "One_first"));
-        tree.insert_pair(std::make_pair(2, "Two"));
-        tree.insert_pair(std::make_pair(1, "One_second"));
-        tree.insert_pair(std::make_pair(0, "Zero"));
-        tree.insert_pair(std::make_pair(1, "One_third"));
+        // tree.insert_pair(std::make_pair(1, "One_first"));
+        // tree.insert_pair(std::make_pair(2, "Two"));
+        // tree.insert_pair(std::make_pair(1, "One_second"));
+        // tree.insert_pair(std::make_pair(0, "Zero"));
+        // tree.insert_pair(std::make_pair(1, "One_third"));
         ASSERT_EQ(tree.size(), 5);
         // for (auto it = tree.begin(); it != tree.end(); ++it) {
         //   cout << (*it).first << endl;
@@ -32,13 +32,13 @@ namespace insert_suite {
 }
 
 namespace erase_suite {
-    TEST(insert, empty_constructor) {
+    TEST(erase, empty_constructor) {
         s21::sorted_tree<int, std::string> tree;
-        tree.insert_pair(std::make_pair(1, "One_first"));
-        tree.insert_pair(std::make_pair(2, "Two"));
-        tree.insert_pair(std::make_pair(1, "One_second"));
-        tree.insert_pair(std::make_pair(0, "Zero"));
-        tree.insert_pair(std::make_pair(1, "One_third"));
+        // tree.insert_pair(std::make_pair(1, "One_first"));
+        // tree.insert_pair(std::make_pair(2, "Two"));
+        // tree.insert_pair(std::make_pair(1, "One_second"));
+        // tree.insert_pair(std::make_pair(0, "Zero"));
+        // tree.insert_pair(std::make_pair(1, "One_third"));
         
         tree.erase(tree.find(1));
         ASSERT_EQ(tree.size(), 4);

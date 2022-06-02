@@ -27,7 +27,7 @@ namespace s21 {
     template<typename Key, typename Value>
     sorted_tree<Key, Value> &sorted_tree<Key, Value>::operator=(const sorted_tree<Key, Value> &other) {
         reset();
-        sorted_tree<Key, Value>::Iterator ptr(s);
+        sorted_tree<Key, Value>::Iterator ptr(other);
         while (ptr.itr != ptr.end) {
             insert(*ptr);
             ++ptr;
@@ -36,15 +36,15 @@ namespace s21 {
     }
 
     template<typename Key, typename Value>
-    sorted_tree<Key, Value> &sorted_tree<Key, Value>::operator=(sorted_tree<Key, Value> &&sorted_tree) {
+    sorted_tree<Key, Value> &sorted_tree<Key, Value>::operator=(sorted_tree<Key, Value> &&other) {
         free_sorted_tree();
-        root_ = s.root_;
-        nil = s.nil;
-        size_ = s.size_;
-        max_size_ = s.max_size_;
-        s.root_ = nullptr;
-        s.nil = nullptr;
-        s.size_ = 0;
+        root_ = other.root_;
+        nil = other.nil;
+        size_ = other.size_;
+        max_size_ = other.max_size_;
+        other.root_ = nullptr;
+        other.nil = nullptr;
+        other.size_ = 0;
         return *this;
     }
 

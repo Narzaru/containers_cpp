@@ -13,8 +13,8 @@ namespace s21 {
         using key_type = Key;
         using mapped_type = Value;
         using value_type = std::pair<key_type, mapped_type>;
-        // using reference = value_type &;
-        // using const_reference = const value_type &;
+        using reference = value_type &;
+        using const_reference = const value_type &;
         using size_type = std::size_t;
 
         void clear();
@@ -22,7 +22,7 @@ namespace s21 {
         
 
         sorted_tree();
-        sorted_tree(std::initializer_list<value_type> const &items);
+        // sorted_tree(std::initializer_list<value_type> const &items);
         sorted_tree(const sorted_tree<Key, Value> &other);
         sorted_tree(sorted_tree<Key, Value> &&other);
         sorted_tree& operator=(const sorted_tree<Key, Value>& other);
@@ -93,6 +93,7 @@ namespace s21 {
                 current_node_iteration = 1;
                 nil = other.nil;
                 first = find_lowest_child(other.root_);
+                if (!first) first = nil;
                 Node *highest_value = find_highest_child(other.root_);
                 end = nil;
                 if (highest_value) nil->value = highest_value->value;
@@ -131,7 +132,7 @@ namespace s21 {
         const_iterator cend() const;
 
 
-        iterator insert_pair(const value_type& value);
+        // iterator insert_pair(const value_type& value);
         void erase(iterator pos);
         void erase_existing(iterator pos);
         void swap(sorted_tree<Key, Value>& other);
@@ -145,12 +146,13 @@ namespace s21 {
         size_type size_;
         size_type max_size_;
         Node *root_;
-        Node *nil;
+        // Node *nil;
         void set_initial_properties();
         void reset();
 
-    //  protected:
-    //     Node *nil;
+     protected:
+        Node *nil;
+        iterator insert_pair(const value_type& value);
 
     };
 }
