@@ -4,34 +4,31 @@
 #include "../s21_sorted_tree/s21_sorted_tree.h"
 
 namespace s21 {
-    template <typename Key, typename T>
-    class map : public sorted_tree<Key, T> {
+    template <typename Key, typename Value>
+    class map : public sorted_tree<Key, Value> {
     
      public:
-        using value_type = std::pair<Key, T>;
-        using iterator = typename sorted_tree<Key, T>::Iterator;
+        using value_type = std::pair<Key, Value>;
+        using iterator = typename sorted_tree<Key, Value>::Iterator;
         
         // Map Member functions
-        map<Key, T>();
-        map<Key, T>(std::initializer_list<value_type> const &items);
+        map<Key, Value>();
+        map<Key, Value>(std::initializer_list<value_type> const &items);
         map(const map &m);
         map(map &&m);
         ~map();
-        map<Key, T> & operator=(map &&m);
+        map<Key, Value> & operator=(map &&m);
 
         // Map Element access
-        T& at(const Key& key);
-        T& operator[](const Key& key);
+        Value& at(const Key& key);
+        Value& operator[](const Key& key);
    
         // Map Modifiers
         std::pair<iterator, bool> insert(const value_type& value);
-        std::pair<iterator, bool> insert(const Key& key, const T& obj);
-        std::pair<iterator, bool> insert_or_assign(const Key& key, const T& obj);
+        std::pair<iterator, bool> insert(const Key& key, const Value& obj);
+        std::pair<iterator, bool> insert_or_assign(const Key& key, const Value& obj);
 
         void merge(map& other);
-
-     
-
     };
     
 

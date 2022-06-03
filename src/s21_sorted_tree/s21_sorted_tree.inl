@@ -1,11 +1,11 @@
 namespace s21 {
     template<typename Key, typename Value>
-    sorted_tree<Key, Value>::sorted_tree() : size_(0) {
+    sorted_tree<Key, Value>::sorted_tree() {
         set_initial_properties();
     }
 
     template <typename Key, typename Value>
-    sorted_tree<Key, Value>::sorted_tree(const sorted_tree<Key, Value> &other) : size_(0) {
+    sorted_tree<Key, Value>::sorted_tree(const sorted_tree<Key, Value> &other) {
         set_initial_properties();
         sorted_tree<Key, Value>::Iterator ptr(other);
         while (ptr.itr != ptr.end) {
@@ -13,6 +13,13 @@ namespace s21 {
             ++ptr;
         }
     };
+
+    // template <class Key, class Value>
+    // sorted_tree<Key, Value>::sorted_tree(std::initializer_list<value_type> const &items) {
+    //     set_initial_properties();
+    //     for (const auto &data:items)
+    //         this->insert_pair(data);
+    // }
 
     template<typename Key, typename Value>
     sorted_tree<Key, Value>::sorted_tree(sorted_tree<Key, Value> &&other) {
@@ -69,6 +76,7 @@ namespace s21 {
     void sorted_tree<Key, Value>::set_initial_properties() {
         nil = new Node();
         root_ = nullptr;
+        size_ = 0;
         max_size_ = std::numeric_limits<size_type>::max() / sizeof(Key);
     }
 

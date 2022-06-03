@@ -40,16 +40,16 @@ namespace erase_suite {
         // tree.insert_pair(std::make_pair(0, "Zero"));
         // tree.insert_pair(std::make_pair(1, "One_third"));
         
-        tree.erase(tree.find(1));
-        ASSERT_EQ(tree.size(), 4);
-        for (auto it = tree.begin(); it != tree.end(); ++it) {
-          cout << (*it).first << endl;
-        }
-        tree.erase(tree.find(0));
-        ASSERT_EQ(tree.size(), 3);
-        for (auto it = tree.begin(); it != tree.end(); ++it) {
-          cout << (*it).first << endl;
-        }
+        // tree.erase(tree.find(1));
+        // ASSERT_EQ(tree.size(), 4);
+        // for (auto it = tree.begin(); it != tree.end(); ++it) {
+        //   cout << (*it).first << endl;
+        // }
+        // tree.erase(tree.find(0));
+        // ASSERT_EQ(tree.size(), 3);
+        // for (auto it = tree.begin(); it != tree.end(); ++it) {
+        //   cout << (*it).first << endl;
+        // }
     }
 }
 

@@ -18,8 +18,6 @@ namespace s21 {
         using size_type = std::size_t;
 
         void clear();
-        void free_sorted_tree();
-        
 
         sorted_tree();
         // sorted_tree(std::initializer_list<value_type> const &items);
@@ -134,11 +132,9 @@ namespace s21 {
 
         // iterator insert_pair(const value_type& value);
         void erase(iterator pos);
-        void erase_existing(iterator pos);
         void swap(sorted_tree<Key, Value>& other);
         void merge(sorted_tree<Key, Value>& other);
 
-        iterator find(const Key& key);
         bool contains(const Key& key);
         
 
@@ -147,13 +143,16 @@ namespace s21 {
         size_type max_size_;
         Node *root_;
         // Node *nil;
-        void set_initial_properties();
+        // void set_initial_properties();
         void reset();
+        void free_sorted_tree();
+        void erase_existing(iterator pos);
+        void set_initial_properties();
 
      protected:
         Node *nil;
         iterator insert_pair(const value_type& value);
-
+        iterator find(const Key& key);
     };
 }
 
