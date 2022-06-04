@@ -570,4 +570,31 @@ namespace s21 {
         return current_node;
     }
 
+    // MULTISET FUNCTIONS
+    template <typename Key, typename Value>
+    std::pair<typename sorted_tree<Key, Value>::iterator, typename sorted_tree<Key, Value>::iterator> equal_range(const Key& key) {
+        return std::pair(lower_bound(key), upper_bound(key));
+    }
+
+    template <typename Key, typename Value>
+    typename sorted_tree<Key, Value>::iterator sorted_tree<Key, Value>::lower_bound(const Key& key) {
+        iterator result = this->begin();
+        while (result != this->end()) {
+            if ((*result).first >= key) break;
+            ++result;
+        }
+        return result;
+    }
+
+    template <typename Key, typename Value>
+    typename sorted_tree<Key, Value>::iterator sorted_tree<Key, Value>::upper_bound(const Key& key) {
+        iterator result = this->begin();
+        while (result != this->end()) {
+            if ((*result).first > key) break;
+            ++result;
+        }
+        return result;
+    }
+
+
 }
