@@ -24,8 +24,7 @@ class list {
     void reverse();
     void swap(list& other);
     void unique();
-    void sort();
-    void merge(const list& other);
+    void merge(list& other);
 
     T& front() const;
     T& back() const;
@@ -52,9 +51,6 @@ class list {
         explicit listNode(T d_data = T(),
         listNode *d_pNext = nullptr, listNode *d_pPrev = nullptr)
         : data(d_data), pNext(d_pNext), pPrev(d_pPrev) {
-            this->data = data;
-            this->pNext = pNext;
-            this->pPrev = pPrev;
         }
 
         ~listNode() {
@@ -114,9 +110,9 @@ class list {
 
         T operator*() const {return *A;}
         ListConstIterator operator++() {return (ListConstIterator)++A;}
-        ListConstIterator operator++(int) {return A++;}
-        ListConstIterator operator--() {return --A;}
-        ListConstIterator operator--(int) {return A--;}
+        ListConstIterator operator++(int) {return (ListConstIterator)A++;}
+        ListConstIterator operator--() {return (ListConstIterator)--A;}
+        ListConstIterator operator--(int) {return (ListConstIterator)A--;}
 
         bool operator==(const ListConstIterator& other) {
             return this->A.itr == other.A.itr;
@@ -130,7 +126,7 @@ class list {
     const_iterator cbegin() {return (ListConstIterator)begin();}
     const_iterator cend() {return (ListConstIterator)end();}
 
-    void splice(const_iterator pos, const list& other);
+    void splice(const_iterator pos, list& other); // NOLINT(*)
     iterator insert(iterator pos, const_reference value);
     iterator insert(const_iterator pos, list<T>&& other);
 
@@ -141,11 +137,14 @@ class list {
     template <typename... Args>
     void emplace_front(Args&&... args);
 
+    void sort();
+    // void sort(ListIterator ptr_L, ListIterator ptr_R);
  private:
         size_t size_;
         node* head_;
         node* back_;
         void last_node();
+        // list<T>::ListIterator list<T>::partition(ListIterator L, ListIterator R);
 };
 
 }  // namespace s21

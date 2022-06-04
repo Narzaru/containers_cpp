@@ -259,3 +259,55 @@ TEST(bonus_suit, emplace_front) {
         ++ch2;
     }
 }
+
+TEST(bonus_suit, splice_1) {
+    s21::list<int> s21list {1, 2, 3};
+    s21::list<int> s21list_ {10, 11, 12};
+    s21::list<int>::const_iterator tmp = s21list.cbegin();
+    s21::list<int> check {10, 11, 12, 1, 2, 3};
+
+    s21list.splice(tmp, s21list_);
+
+    s21::list<int>::ListIterator ch1 = s21list.begin();
+    s21::list<int>::ListIterator ch2 = check.begin();
+    while (ch1.itr) {
+        ASSERT_EQ(*ch1, *ch2);
+        ++ch1;
+        ++ch2;
+    }
+}
+
+TEST(bonus_suit, splice_2) {
+    s21::list<int> s21list {1, 2, 3};
+    s21::list<int> s21list_ {10, 11, 12};
+    s21::list<int>::const_iterator tmp = s21list.cend();
+    s21::list<int> check { 1, 2, 3, 10, 11, 12};
+
+    s21list.splice(tmp, s21list_);
+
+    s21::list<int>::ListIterator ch1 = s21list.begin();
+    s21::list<int>::ListIterator ch2 = check.begin();
+    while (ch1.itr) {
+        ASSERT_EQ(*ch1, *ch2);
+        ++ch1;
+        ++ch2;
+    }
+}
+
+TEST(bonus_suit, splice_3) {
+    s21::list<int> s21list {1, 2, 3};
+    s21::list<int> s21list_ {10, 11, 12};
+    s21::list<int>::const_iterator tmp = s21list.cbegin();
+    ++tmp;
+    s21::list<int> check { 1, 10, 11, 12, 2, 3};
+
+    s21list.splice(tmp, s21list_);
+
+    s21::list<int>::ListIterator ch1 = s21list.begin();
+    s21::list<int>::ListIterator ch2 = check.begin();
+    while (ch1.itr) {
+        ASSERT_EQ(*ch1, *ch2);
+        ++ch1;
+        ++ch2;
+    }
+}
