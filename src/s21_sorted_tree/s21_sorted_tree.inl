@@ -9,7 +9,7 @@ namespace s21 {
         set_initial_properties();
         sorted_tree<Key, Value>::Iterator ptr(other);
         while (ptr.itr != ptr.end) {
-            insert(*ptr);
+            insert_pair(*ptr);
             ++ptr;
         }
     };
@@ -36,7 +36,7 @@ namespace s21 {
         reset();
         sorted_tree<Key, Value>::Iterator ptr(other);
         while (ptr.itr != ptr.end) {
-            insert(*ptr);
+            insert_pair(*ptr);
             ++ptr;
         }
         return *this;

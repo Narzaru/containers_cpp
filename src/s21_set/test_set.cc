@@ -15,7 +15,7 @@ namespace constructors_suite {
         ASSERT_EQ(set.size(), 5);
         auto it = set.begin();
         for (int i = 1; i <= 5; i++) {
-          ASSERT_EQ(i, *it);
+          ASSERT_EQ(i, (*it).first);
           ++it;
         }
     }
@@ -37,19 +37,20 @@ namespace constructors_suite {
         ASSERT_EQ(copy.size(), 5);
         int i = 1;
         for (auto it_copy = copy.begin(); it_copy != copy.end(); ++it_copy) {
-          ASSERT_EQ(*it_copy, i);
+          ASSERT_EQ((*it_copy).first, i);
           i++;
         }
     }
+}
 
+namespace insert_suite {
     TEST(insert, empty_constructor) {
       s21::set<double> set;
       std::pair<s21::set<double>::iterator, bool> pair(set.insert(10));
       ASSERT_EQ(set.size(), 1);
-      double first = *pair.first;
+      double first = (*pair.first).first;
       ASSERT_EQ(first, 10);
       ASSERT_EQ(pair.second, true);
-
     }
 
     TEST(insert, insert_several_nodes) {
@@ -60,11 +61,10 @@ namespace constructors_suite {
       set.insert(15);
       set.insert(20);
       
-
       std::pair<s21::set<double>::iterator, bool> pair(set.insert(15));
-      double first = *pair.first;
+      double first = (*pair.first).first;
       s21::set<double>::iterator begin = set.begin();
-      ASSERT_EQ(*begin, 1);
+      ASSERT_EQ((*begin).first, 1);
       ASSERT_EQ(first, 15);
       ASSERT_EQ(pair.second, false);
       ASSERT_EQ(set.size(), 5);
@@ -72,7 +72,7 @@ namespace constructors_suite {
       s21::set<double>::iterator number = set.find(16);
       ASSERT_EQ(number.itr, number.end);
       number = set.find(15);
-      ASSERT_EQ(*number, 15);
+      ASSERT_EQ((*number).first, 15);
       number = set.find(14);
       ASSERT_EQ(number.itr, number.end);
 
@@ -102,20 +102,23 @@ namespace constructors_suite {
       ASSERT_EQ(set.size(), 6);
       int i = 0;
       for (auto it = set.begin(); it != set.end(); ++it) {
-        ASSERT_EQ(*it, words[i]);
+        ASSERT_EQ((*it).first, words[i]);
         i++;
       }
-      auto it_const = set.cbegin();
-      ++it_const;
-      cout << *it_const << endl;
+      // auto it_const = set.cbegin();
+      // ++it_const;
+      // cout << *it_const << endl;
     }
+}
 
+namespace erase_suite {
     TEST (erase, empty_constructor) {
       s21::set<double> set;
       auto it = set.begin();
+      auto end = set.end();
       set.erase(it);
       ++it;
-      EXPECT_THROW(*it, std::out_of_range);
+      ASSERT_EQ(*it, *end);
     }
 
     TEST (erase, erase_using_iterator) {
@@ -131,7 +134,9 @@ namespace constructors_suite {
       set.erase(it);
       ASSERT_EQ(set.size(), 5);
     }
+}
 
+namespace modifiers_suite {
     TEST(modifiers, swap) {
         s21::set<double> set1, set2;
         set1.insert(5);
@@ -157,7 +162,10 @@ namespace constructors_suite {
         ASSERT_TRUE(set1.contains(7));
         ASSERT_TRUE(set2.contains(6));
     }
+}
 
+
+namespace operators_suite {
     TEST(operators, equal) {
         s21::set<double> set1, set2;
         set1.insert(5);
@@ -185,8 +193,10 @@ namespace constructors_suite {
         auto it = set2.begin();
         EXPECT_THROW(*it, std::out_of_range);
     }
+}
 
-    TEST(iterators, iterator) {
+namespace iterator_suite {
+    TEST(iterators, iterator_add) {
         s21::set<double> set1;
         double numbers [] = {5, 6, 7};
         set1.insert(6);
@@ -194,8 +204,24 @@ namespace constructors_suite {
         set1.insert(7);
         int i = 0;
         for (auto it = set1.begin(); it != set1.end(); ++it) {
-            ASSERT_EQ(*it, numbers[i]);
+            ASSERT_EQ((*it).first, numbers[i]);
             i++;
+        }
+    }
+
+    TEST(iterators, iterator_sub) {
+        s21::set<double> set1;
+        double numbers [] = {5, 6, 7};
+        int numbers_size = 3;
+        set1.insert(6);
+        set1.insert(5);
+        set1.insert(7);
+        int i = 2;
+        auto it = set1.end();
+        --it;
+        for (; it != set1.end(); --it) {
+            ASSERT_EQ((*it).first, numbers[i]);
+            i--;
         }
     }
 
@@ -207,15 +233,13 @@ namespace constructors_suite {
         set1.insert(7);
         int i = 0;
         for (auto it = set1.cbegin(); it != set1.cend(); ++it) {
-            ASSERT_EQ(*it, numbers[i]);
+            ASSERT_EQ((*it).first, numbers[i]);
             i++;
         }
     }
 }
 
 int main(int argc, char *argv[]) {
-  s21::set<double> set;
-
   testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();
 }

@@ -6,7 +6,7 @@ namespace s21 {
     map<Key, Value>::map(const map<Key, Value>& other) : sorted_tree<Key, Value>::sorted_tree(other) {}
 
     template <class Key, class Value>
-    map<Key, Value>::map(map<Key, Value>&& other) : sorted_tree<Key, Value>::sorted_tree(other) {}
+    map<Key, Value>::map(map<Key, Value>&& other) : sorted_tree<Key, Value>::sorted_tree(std::move(other)) {}
 
     template <class Key, class Value>
     map<Key, Value>::map(std::initializer_list<value_type> const &items) : sorted_tree<Key, Value>::sorted_tree() {
@@ -16,6 +16,12 @@ namespace s21 {
 
     template <class Key, class Value>
     map<Key, Value>::~map() {}
+
+    template <class Key, class Value>
+    map<Key, Value>& map<Key, Value>::operator=(const map& other) {
+        sorted_tree<Key, Value>::operator=(other);
+        return *this;
+    }
 
     template <class Key, class Value>
     map<Key, Value>& map<Key, Value>::operator=(map&& other) {

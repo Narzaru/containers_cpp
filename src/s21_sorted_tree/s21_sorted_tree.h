@@ -99,7 +99,7 @@ namespace s21 {
                 itr = first;
             }
 
-            value_type operator*() const;
+            virtual value_type operator*() const;
             Iterator operator++();
             Iterator operator--();
             bool operator==(const Iterator &other);
@@ -154,6 +154,6 @@ namespace s21 {
         iterator insert_pair(const value_type& value);
         iterator find(const Key& key);
     };
-}
+} // namespace s21
 
 #include "s21_sorted_tree.inl"

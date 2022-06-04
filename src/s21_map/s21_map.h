@@ -10,6 +10,7 @@ namespace s21 {
      public:
         using value_type = std::pair<Key, Value>;
         using iterator = typename sorted_tree<Key, Value>::Iterator;
+        using const_iterator = typename sorted_tree<Key, Value>::ConstIterator;
         
         // Map Member functions
         map<Key, Value>();
@@ -17,6 +18,7 @@ namespace s21 {
         map(const map &m);
         map(map &&m);
         ~map();
+        map<Key, Value> & operator=(const map &m);
         map<Key, Value> & operator=(map &&m);
 
         // Map Element access
