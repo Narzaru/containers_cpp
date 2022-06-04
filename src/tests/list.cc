@@ -162,7 +162,7 @@ TEST(list_change_suit, reverse) {
     s21::list<int>::ListConstIterator s21it;
     s21it = s21list.cbegin();
     std::list<int>::const_iterator stdit = stdlist.cbegin();
-    while (s21it.itr) {
+    while (s21it.A.itr != s21it.A.end) {
         ASSERT_EQ(*s21it, *stdit);
         ++s21it;
         ++stdit;
@@ -251,6 +251,58 @@ TEST(bonus_suit, emplace_front) {
     s21::list<int> s21list{1, 2, 3};
     s21::list<int> check{5, 5, 5, 1, 2, 3};
     s21list.emplace_front(5, 5, 5);
+    s21::list<int>::ListIterator ch1 = s21list.begin();
+    s21::list<int>::ListIterator ch2 = check.begin();
+    while (ch1.itr) {
+        ASSERT_EQ(*ch1, *ch2);
+        ++ch1;
+        ++ch2;
+    }
+}
+
+TEST(bonus_suit, splice_1) {
+    s21::list<int> s21list {1, 2, 3};
+    s21::list<int> s21list_ {10, 11, 12};
+    s21::list<int>::const_iterator tmp = s21list.cbegin();
+    s21::list<int> check {10, 11, 12, 1, 2, 3};
+
+    s21list.splice(tmp, s21list_);
+
+    s21::list<int>::ListIterator ch1 = s21list.begin();
+    s21::list<int>::ListIterator ch2 = check.begin();
+    while (ch1.itr) {
+        ASSERT_EQ(*ch1, *ch2);
+        ++ch1;
+        ++ch2;
+    }
+}
+
+TEST(bonus_suit, splice_2) {
+    s21::list<int> s21list {1, 2, 3};
+    s21::list<int> s21list_ {10, 11, 12};
+    s21::list<int>::const_iterator tmp = s21list.cend();
+    s21::list<int> check { 1, 2, 3, 10, 11, 12};
+
+    s21list.splice(tmp, s21list_);
+
+    s21::list<int>::ListIterator ch1 = s21list.begin();
+    s21::list<int>::ListIterator ch2 = check.begin();
+    while (ch1.itr) {
+        ASSERT_EQ(*ch1, *ch2);
+        ++ch1;
+        ++ch2;
+    }
+}
+
+TEST(bonus_suit, splice_3) {
+    s21::list<int> s21list {1, 2, 3};
+    s21::list<int> s21list_ {10, 11, 12};
+    s21::list<int>::const_iterator tmp = s21list.cbegin();
+    ++tmp;
+    s21::list<int> check { 1, 10, 11, 12, 2, 3};
+
+    s21list.splice(tmp, s21list_);
+
     s21::list<int>::ListIterator ch1 = s21list.begin();
     s21::list<int>::ListIterator ch2 = check.begin();
     while (ch1.itr) {

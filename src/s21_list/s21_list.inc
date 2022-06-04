@@ -39,16 +39,16 @@ namespace s21 {
     }
 
     template <typename T>
-    list<T>::list(const list &l) : size_(0) {
+    list<T>::list(const list<T> &l) : size_(0) {
         list<T>::ListIterator ptr(l);
         while (ptr.itr) {
             push_back(*ptr);
-            ptr++;
+            ++ptr;
         }
     }
 
     template <typename T>
-    list<T>::list(list &&l) : size_(0) {
+    list<T>::list(list<T> &&l) : size_(0) {
         if (&l != this) {
             head_ = l.head_;
             size_ = l.size_;
@@ -67,20 +67,16 @@ namespace s21 {
         if (size_ == 0) {
             this->head_ = new node;
             head_->data = data;
-            ++size_;
+            back_ = head_;
         } else {
-            node* p = head_;
-            while (p->pNext != nullptr) {
-                p = p->pNext;
-            }
             node* tmp = new node;
-            tmp->pPrev = p;
+            tmp->pPrev = this->back_;
             tmp->pNext = nullptr;
             tmp->data = data;
-            p->pNext = tmp;
-            ++size_;
+            this->back_->pNext = tmp;
+            back_ = tmp;
         }
-        last_node();
+        ++size_;
     }
 
     template <typename T>
@@ -119,9 +115,9 @@ namespace s21 {
     void list<T>::pop_back() {
         list<T>::ListIterator ptr(*this);
         ptr.end->pPrev->pNext = nullptr;
+        back_ = ptr.end->pPrev;
         delete ptr.end;
         size_--;
-        last_node();
     }
 
     template <typename T>
@@ -132,6 +128,7 @@ namespace s21 {
             head_->pPrev = nullptr;
             head_->data = data;
             ++size_;
+            back_ = head_;
         } else {
             node *first = new node;
             first->data = data;
@@ -163,7 +160,7 @@ namespace s21 {
         list<T>::ListIterator ptr(l);
         while (ptr.itr) {
             push_back(*ptr);
-            ptr++;
+            ++ptr;
         }
         return *this;
     }
@@ -195,7 +192,7 @@ namespace s21 {
         this->clear();
         for (; this->size_ < ptr.size_ ;) {
             this->push_front(*tmp);
-            tmp++;
+            ++tmp;
         }
     }
 
@@ -203,7 +200,7 @@ namespace s21 {
     void list<T>::unique() {
         list<T>::ListIterator ptr = this->begin();
         auto c = *ptr;
-        ptr++;
+        ++ptr;
         while (ptr.itr) {
             if (c == *ptr) {
                 ptr.itr->pPrev->pNext = ptr.itr->pNext;
@@ -211,31 +208,76 @@ namespace s21 {
                     ptr.itr->pNext->pPrev = ptr.itr->pPrev;
                 }
                 node *tmp = ptr.itr;
-                ptr++;
+                ++ptr;
                 delete tmp;
                 size_--;
             } else {
                 c = *ptr;
-                ptr++;
+                ++ptr;
             }
         }
     }
 
     template <typename T>
     void list<T>::sort() {
-        list<T>::ListIterator ptr_i = begin();
-        for (size_t i = 0 ; i < size_ - 1; ++i) {
+        if (size_ < 2) {
+            return;
+        } else if (size_ == 2) {
+            ListIterator ptr = begin();
+            ListIterator ptr_e = end();
+            if (*ptr > *ptr_e) {
+                ptr.swap_elements(ptr_e);
+            }
+            return;
+        } else {
+            list<int> Left;
+            list<int> Right;
+            ListIterator ptr = begin();
+
+            for (size_t i = 0; i < size_; i++) {
+                if (i < size_ / 2) {
+                    Left.push_back(*ptr);
+                } else {
+                    Right.push_back(*ptr);
+                }
+                ++ptr;
+            }
+
+            Left.sort();
+            Right.sort();
+            list<int> Result;
+
+            list<T>::ListIterator ptr_left = Left.begin();
+            list<T>::ListIterator ptr_right = Right.begin();
+
             bool flag = true;
-            for (size_t j = 0; j < size_ - i - 1; ++j, ++ptr_i) {
-                if (ptr_i.itr->data > ptr_i.itr->pNext->data) {
-                    flag = false;
-                    std::swap(ptr_i.itr->data, ptr_i.itr->pNext->data);
+
+            while (flag) {
+                if (*ptr_left < *ptr_right) {
+                    Result.push_back(*ptr_left);
+                    if (ptr_left.itr->pNext != nullptr) {
+                        ++ptr_left;
+                    } else {
+                        while (ptr_right.itr != nullptr) {
+                            Result.push_back(*ptr_right);
+                            ++ptr_right;
+                        }
+                        flag = false;
+                    }
+                } else {
+                    Result.push_back(*ptr_right);
+                    if (ptr_right.itr->pNext != nullptr) {
+                        ++ptr_right;
+                    } else {
+                        while (ptr_left.itr != nullptr) {
+                            Result.push_back(*ptr_left);
+                            ++ptr_left;
+                        }
+                        flag = false;
+                    }
                 }
             }
-            ptr_i = begin();
-            if (flag) {
-                break;
-            }
+            *this = std::move(Result);
         }
     }
 
@@ -247,13 +289,15 @@ namespace s21 {
     }
 
     template <typename T>
-    void list<T>::merge(const list& other) {
+    void list<T>::merge(list& other) {  // NOLINT(*)
         list<T>::iterator first = this->end();
         list<T>::iterator second = other.begin();
-        first.end->pNext = other.head_;
-        other.head_->pPrev = first.itr;
+        first.itr->pNext = second.itr;
+        second.itr->pPrev = first.itr;
         size_+= other.size_;
-        last_node();
+        back_ = other.back_;
+        other.head_ = nullptr;
+        other.size_ = 0;
     }
 
     template <typename T>
@@ -265,6 +309,9 @@ namespace s21 {
         int tmp_size = other.size_;
         other.size_ = size_;
         size_ = tmp_size;
+        tmp = other.back_;
+        other.back_ = back_;
+        back_ = tmp;
     }
 
     template <typename T>
@@ -282,14 +329,38 @@ namespace s21 {
     }
 
     template <typename T>
-    void list<T>::splice(const_iterator pos, const list& l) {
-        iterator tmp = l.begin();
-        pos.itr->pNext->pPrev = tmp.end;
-        tmp.end->pNext = pos.itr->pNext;
-        pos.itr->pNext = tmp.itr;
-        tmp.itr->pPrev = pos.itr;
-        size_ +=l.size_;
-        l.clear();
+    void list<T>::splice(const_iterator pos, list& l) {  // NOLINT(*)
+        if (pos.A.itr == nullptr) {
+            throw std::invalid_argument("attempt to dereference a null pointer");
+        }
+        if (l.size_ == 0) {
+            return;
+        }
+        iterator tmp = l.end();
+        if (pos.A.itr == pos.A.first) {
+            pos.A.itr->pPrev = tmp.itr;
+            head_ = tmp.first;
+            tmp.end->pNext = pos.A.first;
+            size_ += l.size_;
+            l.size_ = 0;
+            l.head_ = nullptr;
+        } else if (pos.A.itr == pos.A.end) {
+            pos.A.end->pNext = tmp.first;
+            tmp.first->pPrev = pos.A.itr;
+            size_ += l.size_;
+            back_ = l.back_;
+            l.size_ = 0;
+            l.head_ = nullptr;
+        } else {
+            pos.A.itr->pPrev->pNext = tmp.first;
+            tmp.first->pPrev = pos.A.itr->pPrev;
+            tmp.itr->pNext = pos.A.itr;
+            pos.A.itr->pPrev = tmp.itr;
+            size_ += l.size_;
+            l.size_ = 0;
+            l.head_ = nullptr;
+            last_node();
+        }
     }
 
     // ITERATOR
@@ -304,7 +375,7 @@ namespace s21 {
     template <typename T>
     T& list<T>::ListIterator::operator* () const {
         if (itr == nullptr) {
-            // бросить исключение
+            throw std::invalid_argument("attempt to dereference a null pointer");
         }
         return itr->data;
     }
@@ -312,7 +383,7 @@ namespace s21 {
     template <typename T>
     typename list<T>::ListIterator list<T>::ListIterator::operator++ () {
         if (itr == nullptr) {
-            // бросить исключение
+            throw std::invalid_argument("attempt to dereference a null pointer");
         }
         itr = itr->pNext;
         return *this;
@@ -321,7 +392,7 @@ namespace s21 {
     template <typename T>
     typename list<T>::ListIterator list<T>::ListIterator::operator++ (int) {
         if (itr == nullptr) {
-            // бросить исключение
+            throw std::invalid_argument("attempt to dereference a null pointer");
         }
         iterator ptr = *this;
         itr = itr->pNext;
@@ -331,7 +402,7 @@ namespace s21 {
     template <typename T>
     typename list<T>::ListIterator list<T>::ListIterator::operator-- () {
         if (itr == nullptr) {
-            // бросить исключение
+            throw std::invalid_argument("attempt to dereference a null pointer");
         }
         itr = itr->pPrev;
         return *this;
@@ -340,7 +411,7 @@ namespace s21 {
     template <typename T>
     typename list<T>::ListIterator list<T>::ListIterator::operator-- (int) {
         if (itr == nullptr) {
-            // бросить исключение
+            throw std::invalid_argument("attempt to dereference a null pointer");
         }
         iterator ptr = *this;
         itr = itr->pPrev;
@@ -366,7 +437,7 @@ namespace s21 {
     typename list<T>::iterator  list<T>::end() {
         ListIterator tmp(*this);
         while (tmp.itr->pNext != nullptr) {
-            tmp++;
+            ++tmp;
         }
         return tmp;
     }
@@ -405,10 +476,10 @@ namespace s21 {
     typename list<T>::iterator list<T>::insert(ListConstIterator pos, list<T>&& other) {
         iterator result = begin();
         iterator ptr = other.end();
-        for (; result.itr != pos.itr; ++result) {}
+        for (; result.itr != pos.A.itr; ++result) {}
         for (; ptr.itr != nullptr ;) {
             insert(result, *ptr);
-            ptr--;
+            --ptr;
         }
         return result;
     }
@@ -418,7 +489,7 @@ namespace s21 {
     void list<T>::emplace(ListConstIterator pos, Args&&... args) {
         std::initializer_list<T> lst = {args...};
         list<T> tmp(lst);
-        if (pos.itr == pos.end) {
+        if (pos.A.itr == pos.A.end) {
             tmp.reverse();
         }
         insert(pos, std::move(tmp));
@@ -436,85 +507,6 @@ namespace s21 {
     void list<T>::emplace_front(Args&&... args) {
         ListConstIterator pos = this->cbegin();
         emplace(pos, args...);
-    }
-
-    // CONST ITERATOR
-
-    template <typename T>
-    void list<T>::ListConstIterator::free_iterator() {
-        first = nullptr;
-        end = nullptr;
-        itr = nullptr;
-    }
-
-    template <typename T>
-    T& list<T>::ListConstIterator::operator*() const {
-        if (itr == nullptr) {
-            // бросить исключение
-        }
-        return itr->data;
-    }
-
-    template <typename T>
-    typename list<T>::ListConstIterator list<T>::ListConstIterator::operator++ () {
-        if (itr == nullptr) {
-            // бросить исключение
-        }
-        itr = itr->pNext;
-        return *this;
-    }
-
-    template <typename T>
-    typename list<T>::ListConstIterator list<T>::ListConstIterator::operator++ (int) {
-        if (itr == nullptr) {
-            // бросить исключение
-        }
-        const_iterator ptr = *this;
-        itr = itr->pNext;
-        return ptr;
-    }
-
-    template <typename T>
-    typename list<T>::ListConstIterator list<T>::ListConstIterator::operator-- () {
-        if (itr == nullptr) {
-            // бросить исключение
-        }
-        itr = itr->pPrev;
-        return *this;
-    }
-
-    template <typename T>
-    typename list<T>::ListConstIterator list<T>::ListConstIterator::operator-- (int) {
-        if (itr == nullptr) {
-            // бросить исключение
-        }
-        const_iterator ptr = *this;
-        itr = itr->pPrev;
-        return ptr;
-    }
-
-    template <typename T>
-    bool list<T>::ListConstIterator:: operator== (const ListConstIterator& l) {
-        return itr == l.itr;
-    }
-
-    template <typename T>
-    bool list<T>::ListConstIterator:: operator!= (const ListConstIterator& l) {
-        return itr != l.itr;
-    }
-
-    template <typename T>
-    typename list<T>::const_iterator  list<T>::cbegin() const {
-        return ListConstIterator(*this);
-    }
-
-    template <typename T>
-    typename list<T>::const_iterator  list<T>::cend() const {
-        ListConstIterator tmp(*this);
-        while (tmp.itr != tmp.end) {
-            tmp++;
-        }
-        return ListConstIterator(tmp);
     }
 
 }  // namespace s21

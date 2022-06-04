@@ -1,6 +1,7 @@
 CC := g++
 STD := -std=c++17
 CFLAG := -Wall -Wextra -Wshadow -pedantic
+S = --suppress=unmatchedSuppression: *cc
 
 FSANITIZE_DEBUG := True
 ifeq ($(shell uname), Linux)
@@ -40,6 +41,8 @@ linter:
 	@find . -name "*.hpp" -exec python3 ../materials/linters/cpplint.py {} \;
 	@rm -f CPPLINT.cfg
 
+cpplint:
+	cppcheck --enable=all  --check-config $(S)constParameter $(S)useStlAlgorithm $(S)missingIncludeSystem $(S)noCopyConstructor $(S)noOperatorEq $(S)noExplicitConstructor $(S)negativeIndex $(S)missingReturn ../src/
 
 clean:
 	@rm -f test
