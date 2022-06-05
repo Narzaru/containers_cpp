@@ -244,7 +244,7 @@ namespace s21 {
                 ++ptr;
             }
 
-            if (Left.size_ > 10000 ) {
+            if (Left.size_ > 10000) {
                 std::thread th(&list::sort, Left);
                 Right.sort();
                 th.join();
