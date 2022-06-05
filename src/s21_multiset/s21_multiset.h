@@ -26,6 +26,11 @@ namespace s21 {
         using sorted_tree<Key, Value>::equal_range;
         using sorted_tree<Key, Value>::lower_bound;
         using sorted_tree<Key, Value>::upper_bound;
+
+        template <typename... Args>
+        inline iterator emplace(Args &&...args) {
+            return insert(value_type(std::forward<Args>(args)...));
+        }
     };
 } // namespace s21
 

@@ -31,6 +31,11 @@ namespace s21 {
         std::pair<iterator, bool> insert_or_assign(const Key& key, const Value& obj);
 
         void merge(map& other);
+
+        template <typename... Args>
+        inline iterator emplace(Args &&...args) {
+            return insert(value_type(std::forward<Args>(args)...));
+        }
     };
     
 
