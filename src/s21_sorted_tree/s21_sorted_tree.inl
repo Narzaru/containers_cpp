@@ -139,6 +139,7 @@ namespace s21 {
 
     template<typename Key, typename Value>
     typename sorted_tree<Key, Value>::iterator sorted_tree<Key, Value>::insert_pair(const value_type& value) {
+        if (size_ + 1 > max_size_) throw std::out_of_range("Too much elements in this container");
         iterator result;
         // Node *new_node = new Node();
         if (root_ == nullptr) {

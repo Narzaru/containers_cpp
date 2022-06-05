@@ -24,9 +24,7 @@ namespace s21 {
         using sorted_tree<Key, Value>::find;
 
         template <typename... Args>
-        std::pair<iterator, bool> emplace(Args&&... args);
-        template <typename... Args>
-        inline iterator emplace(Args &&...args) {
+        inline std::pair<iterator, bool> emplace(Args &&...args) {
             return insert(value_type(std::forward<Args>(args)...));
         }
     };

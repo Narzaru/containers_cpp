@@ -33,7 +33,7 @@ namespace s21 {
         void merge(map& other);
 
         template <typename... Args>
-        inline iterator emplace(Args &&...args) {
+        inline std::pair<iterator, bool> emplace(Args &&...args) {
             return insert(value_type(std::forward<Args>(args)...));
         }
     };
