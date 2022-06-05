@@ -937,7 +937,7 @@ def GetHeaderExtensions():
 # This is set by --extensions flag
 def GetAllExtensions():
   return GetHeaderExtensions().union(_valid_extensions or set(
-    ['c', 'cc', 'cpp', 'cxx', 'c++', 'cu']))
+    ['c', 'cc', 'cpp', 'cxx', 'c++', 'cu', 'inc']))
 
 def ProcessExtensionsOption(val):
   global _valid_extensions

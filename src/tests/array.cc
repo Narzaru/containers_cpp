@@ -126,7 +126,7 @@ TEST(size, max_size_1) {
   std::array<int, 1> stdarray;
   ASSERT_EQ(array.max_size(), stdarray.max_size());
 }
-}
+}  // namespace array_size_suite
 
 namespace array_modifiers_suite {
 TEST(array_modifiers, swap_1) {
@@ -145,7 +145,7 @@ TEST(array_modifiers, fill_1) {
     ASSERT_EQ(item, 0);
   }
 }
-}
+}  // namespace array_modifiers_suite
 
 namespace array_swap_fill_suite {
 TEST(swap_fill, swap_1) {

@@ -354,11 +354,6 @@ TEST(access, at_2) {
   ASSERT_EQ(vec[0], 2);
 }
 
-TEST(access, operator_bracket_1) {
-  s21::vector<int> vec;
-  ASSERT_ANY_THROW(vec[0]);
-}
-
 TEST(access, operator_bracket_2) {
   s21::vector<int> vec({1, 2});
   ASSERT_NO_THROW(vec[0] = 2);
@@ -419,4 +414,4 @@ TEST(emplace, emplace_4) {
   vec.emplace_back(5);
   ASSERT_EQ(vec.back(), 5);
 }
-} // namespace emplace_suite
+}  // namespace emplace_suite

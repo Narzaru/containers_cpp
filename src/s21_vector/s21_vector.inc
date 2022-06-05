@@ -1,5 +1,7 @@
 #include "s21_vector.h"
+#include <cstddef>
 #include <cstdint>
+#include <limits>
 
 namespace s21 {
 
@@ -73,83 +75,85 @@ typename vector<T>::const_reference vector<T>::at(size_type position) const {
   if (capacity_ == 0) {
     throw std::length_error("vector is empty");
   }
+  return (*this)[position];
+}
+
+// operator[] uses for quick direct access without throwing
+template <typename T>
+typename vector<T>::reference vector<T>::operator[](
+    size_type position) noexcept {
   return array_[position];
 }
 
 template <typename T>
-typename vector<T>::reference vector<T>::operator[](size_type position) {
-  return at(position);
-}
-
-template <typename T>
 typename vector<T>::const_reference vector<T>::operator[](
-    size_type position) const {
-  return at(position);
+    size_type position) const noexcept {
+  return array_[position];
 }
 
 template <typename T>
-typename vector<T>::reference vector<T>::front() {
+typename vector<T>::reference vector<T>::front() noexcept {
   return *array_;
 }
 
 template <typename T>
-typename vector<T>::const_reference vector<T>::front() const {
+typename vector<T>::const_reference vector<T>::front() const noexcept {
   return *array_;
 }
 
 template <typename T>
-typename vector<T>::reference vector<T>::back() {
+typename vector<T>::reference vector<T>::back() noexcept {
   return *(array_ + (size_ - 1));
 }
 
 template <typename T>
-typename vector<T>::const_reference vector<T>::back() const {
+typename vector<T>::const_reference vector<T>::back() const noexcept {
   return *(array_ + (size_ - 1));
 }
 
 template <typename T>
-typename vector<T>::iterator vector<T>::data() {
+typename vector<T>::iterator vector<T>::data() noexcept {
   return &front();
 }
 
 template <typename T>
-typename vector<T>::const_iterator vector<T>::data() const {
+typename vector<T>::const_iterator vector<T>::data() const noexcept {
   return &front();
 }
 
 template <typename T>
-typename vector<T>::iterator vector<T>::begin() {
+typename vector<T>::iterator vector<T>::begin() noexcept {
   return &front();
 }
 
 template <typename T>
-typename vector<T>::const_iterator vector<T>::begin() const {
+typename vector<T>::const_iterator vector<T>::begin() const noexcept {
   return &front();
 }
 
 template <typename T>
-typename vector<T>::iterator vector<T>::end() {
+typename vector<T>::iterator vector<T>::end() noexcept {
   return &back() + 1;
 }
 
 template <typename T>
-typename vector<T>::const_iterator vector<T>::end() const {
+typename vector<T>::const_iterator vector<T>::end() const noexcept {
   return &back() + 1;
 }
 
 template <typename T>
-bool vector<T>::empty() const {
+bool vector<T>::empty() const noexcept {
   return size_ == 0;
 }
 
 template <typename T>
-typename vector<T>::size_type vector<T>::size() const {
+typename vector<T>::size_type vector<T>::size() const noexcept {
   return size_;
 }
 
 template <typename T>
-typename vector<T>::size_type vector<T>::max_size() const {
-  return PTRDIFF_MAX / sizeof(T);
+typename vector<T>::size_type vector<T>::max_size() const noexcept {
+  return std::numeric_limits<std::ptrdiff_t>::max() / sizeof(T);
 }
 
 template <typename T>
@@ -163,7 +167,7 @@ void vector<T>::reserve(vector<T>::size_type new_capacity) {
 }
 
 template <typename T>
-typename vector<T>::size_type vector<T>::capacity() const {
+typename vector<T>::size_type vector<T>::capacity() const noexcept {
   return capacity_;
 }
 
@@ -188,9 +192,6 @@ T *vector<T>::insert(T *pos, const T &value) {
   size_type insert_position = pos - array_;
   if (insert_position > size_) {
     throw std::out_of_range("insert position is out of range");
-  }
-  if (insert_position > max_size()) {
-    throw std::length_error("trying to allocate as much as possible");
   }
   if (size_ + 1 > capacity_) {
     realloc_and_copy(capacity_ == 0 ? 1 : capacity_ * 2);
