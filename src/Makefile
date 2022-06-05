@@ -41,6 +41,12 @@ linter:
 	@find . -name "*.hpp" -exec python3 ../materials/linters/cpplint.py {} \;
 	@rm -f CPPLINT.cfg
 
+gcov_report: test
+	@./test
+	lcov -t "test" -o testcoverage.info -c -d .
+	genhtml -o report test.info
+	open report/index.html
+
 cpplint:
 	cppcheck --enable=all  --check-config $(S)constParameter $(S)useStlAlgorithm $(S)missingIncludeSystem $(S)noCopyConstructor $(S)noOperatorEq $(S)noExplicitConstructor $(S)negativeIndex $(S)missingReturn ../src/
 
