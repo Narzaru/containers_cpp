@@ -3,6 +3,7 @@
 #include <initializer_list>
 #include <iostream>
 #include <climits>
+#include <thread>
 
 namespace s21 {
 
@@ -243,8 +244,15 @@ namespace s21 {
                 ++ptr;
             }
 
-            Left.sort();
-            Right.sort();
+            if (Left.size_ > 10000 ) {
+                std::thread th(&list::sort, Left);
+                Right.sort();
+                th.join();
+            } else {
+                Left.sort();
+                Right.sort();
+            }
+
             list<int> Result;
 
             list<T>::ListIterator ptr_left = Left.begin();
