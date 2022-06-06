@@ -12,7 +12,7 @@ namespace s21 {
             insert_pair(*ptr);
             ++ptr;
         }
-    };
+    }
 
     template<typename Key, typename Value>
     sorted_tree<Key, Value>::sorted_tree(sorted_tree<Key, Value> &&other) {
@@ -116,11 +116,15 @@ namespace s21 {
     }
 
     template<typename Key, typename Value>
-    typename sorted_tree<Key, Value>::Node *sorted_tree<Key, Value>::find_node_to_insert(const value_type& value) {
+    typename sorted_tree<Key, Value>::Node
+    *sorted_tree<Key, Value>::find_node_to_insert(const value_type& value) {
         Node *current_node = root_;
-        while ((current_node->key > value.first && current_node->left_child != nil) || (current_node->key < value.first && current_node->right_child != nil)) {
-            if (current_node->key > value.first) current_node = current_node->left_child;
-            else current_node = current_node->right_child;
+        while ((current_node->key > value.first && current_node->left_child != nil)
+        || (current_node->key < value.first && current_node->right_child != nil)) {
+            if (current_node->key > value.first)
+                current_node = current_node->left_child;
+            else
+                current_node = current_node->right_child;
         }
         return current_node;
     }
@@ -170,7 +174,7 @@ namespace s21 {
             if (node == node->parent->left_child)
                 node->parent->left_child = right;
             else
-                node->parent->right_child = right; 
+                node->parent->right_child = right;
         }
         right->left_child = node;
         node->parent = right;
@@ -188,13 +192,12 @@ namespace s21 {
             if (node == node->parent->right_child)
                 node->parent->right_child = left;
             else
-                node->parent->left_child = left; 
+                node->parent->left_child = left;
         }
         left->right_child = node;
         node->parent = left;
     }
-    
-    
+
     template<typename Key, typename Value>
     void sorted_tree<Key, Value>::fix_up_insert(Node *node) {
         Node *parent = node->parent;
@@ -239,7 +242,7 @@ namespace s21 {
                 }
             }
         }
-        root_->color = BLACK;        
+        root_->color = BLACK;
     }
 
     template<typename Key, typename Value>
@@ -292,10 +295,10 @@ namespace s21 {
                 child = node->left_child;
             else
                 child = node->right_child;
-            
+
             parent = node->parent;
             color = node->color;
-            
+
             if (child != nil) child->parent = parent;
             if (parent) {
                 if (node == parent->left_child)
@@ -397,7 +400,8 @@ namespace s21 {
     }
 
     template<typename Key, typename Value>
-    typename sorted_tree<Key, Value>::Node *sorted_tree<Key, Value>::Iterator::find_highest_child(Node *node) {
+    typename sorted_tree<Key, Value>::Node
+    *sorted_tree<Key, Value>::Iterator::find_highest_child(Node *node) {
         Node *current_child = node;
         if (node && node != nil && node->right_child != nil) {
             current_child = node->right_child;
@@ -413,13 +417,18 @@ namespace s21 {
         iterator result = this->begin();
         if (root_ && root_ != nil) {
             Node *current_node = root_;
-            while (current_node->key != key && ((current_node->left_child != nil && current_node->key > key) || (current_node->right_child != nil && current_node->key < key))) {
-                if (current_node->key > key) current_node = current_node->left_child;
-                else current_node = current_node->right_child;
+            while (current_node->key != key
+            && ((current_node->left_child != nil && current_node->key > key)
+            || (current_node->right_child != nil && current_node->key < key))) {
+                if (current_node->key > key)
+                    current_node = current_node->left_child;
+                else
+                    current_node = current_node->right_child;
             }
-            if (current_node->key == key) result.itr = current_node;
-            else result.itr = result.end;
-            
+            if (current_node->key == key)
+                result.itr = current_node;
+            else
+                result.itr = result.end;
         }
         return result;
     }
@@ -498,12 +507,13 @@ namespace s21 {
                         itr = itr->parent;
                     } else if (parent->right_child == itr) {
                         Node *higher_volume_parent = find_higher_volume_parent(parent);
-                        if (higher_volume_parent) itr = higher_volume_parent;
-                        else itr = end;
+                        if (higher_volume_parent)
+                            itr = higher_volume_parent;
+                        else
+                            itr = end;
                     }
                 }
             }
-            
         }
         return *this;
     }
@@ -524,10 +534,12 @@ namespace s21 {
                     itr = end;
                 } else if (parent->right_child == itr) {
                     itr = itr->parent;
-                } else if (parent->left_child == itr ) {
+                } else if (parent->left_child == itr) {
                     Node *lower_volume_parent = find_lower_volume_parent(parent);
-                    if (lower_volume_parent) itr = lower_volume_parent;
-                    else itr = end;
+                    if (lower_volume_parent)
+                        itr = lower_volume_parent;
+                    else
+                        itr = end;
                 }
                 current_node_iteration = itr->number_of_similar;
             }
@@ -546,14 +558,16 @@ namespace s21 {
     }
 
     template <typename Key, typename Value>
-    typename sorted_tree<Key, Value>::Node *sorted_tree<Key, Value>::Iterator::find_higher_volume_parent(Node *node) {
+    typename sorted_tree<Key, Value>::Node
+    *sorted_tree<Key, Value>::Iterator::find_higher_volume_parent(Node *node) {
         Node *current_node = node->parent;
         while (current_node && current_node->key < node->key) current_node = current_node->parent;
         return current_node;
     }
 
     template <typename Key, typename Value>
-    typename sorted_tree<Key, Value>::Node *sorted_tree<Key, Value>::Iterator::find_lower_volume_parent(Node *node) {
+    typename sorted_tree<Key, Value>::Node
+    *sorted_tree<Key, Value>::Iterator::find_lower_volume_parent(Node *node) {
         Node *current_node = node->parent;
         while (current_node && current_node->key > node->key) current_node = current_node->parent;
         return current_node;
@@ -586,4 +600,4 @@ namespace s21 {
     sorted_tree<Key, Value>::equal_range(const Key &key) {
       return std::pair(lower_bound(key), upper_bound(key));
     }
-}
+}  // namespace s21
