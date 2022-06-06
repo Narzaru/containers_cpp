@@ -42,6 +42,6 @@ namespace s21 {
 
 }  // namespace s21
 
-#include "s21_map.inl"
+#include "s21_map.inc"
 
 #endif  // SRC_S21_MAP_S21_MAP_H_

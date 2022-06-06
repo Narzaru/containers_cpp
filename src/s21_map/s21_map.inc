@@ -9,8 +9,9 @@ namespace s21 {
     map<Key, Value>::map(map<Key, Value>&& other) : sorted_tree<Key, Value>::sorted_tree(std::move(other)) {}
 
     template <class Key, class Value>
-    map<Key, Value>::map(std::initializer_list<value_type> const &items) : sorted_tree<Key, Value>::sorted_tree() {
-        for (const auto &data:items)
+    map<Key, Value>::map(std::initializer_list<value_type> const &items)
+    : sorted_tree<Key, Value>::sorted_tree() {
+        for (const auto &data : items)
             this->insert(data);
     }
 
@@ -57,12 +58,14 @@ namespace s21 {
     }
 
     template <class Key, class Value>
-    std::pair<typename map<Key, Value>::iterator, bool> map<Key, Value>::insert(const Key& key, const Value& obj) {
+    std::pair<typename map<Key, Value>::iterator, bool>
+    map<Key, Value>::insert(const Key& key, const Value& obj) {
         return insert(std::pair(key, obj));
     }
 
     template <class Key, class Value>
-    std::pair<typename map<Key, Value>::iterator, bool> map<Key, Value>::insert_or_assign(const Key& key, const Value& obj) {
+    std::pair<typename map<Key, Value>::iterator, bool>
+    map<Key, Value>::insert_or_assign(const Key& key, const Value& obj) {
         iterator result_itr = this->find(key);
         bool is_inserted = false;
         if (result_itr.itr == this->nil) {
@@ -82,4 +85,4 @@ namespace s21 {
             ++ptr;
         }
     }
-}
+}  // namespace s21

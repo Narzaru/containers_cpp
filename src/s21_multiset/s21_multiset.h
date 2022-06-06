@@ -37,6 +37,6 @@ namespace s21 {
     };
 }  // namespace s21
 
-#include "s21_multiset.inl"
+#include "s21_multiset.inc"
 
 #endif  // SRC_S21_MULTISET_S21_MULTISET_H_

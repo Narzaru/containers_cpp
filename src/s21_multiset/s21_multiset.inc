@@ -3,8 +3,9 @@ namespace s21 {
     multiset<Key, Value>::multiset() : sorted_tree<Key, Value>() {}
 
     template <class Key, class Value>
-    multiset<Key, Value>::multiset(std::initializer_list<value_type> const &items) : sorted_tree<Key, Value>::sorted_tree() {
-        for (const auto &data:items)
+    multiset<Key, Value>::multiset(std::initializer_list<value_type> const &items)
+    : sorted_tree<Key, Value>::sorted_tree() {
+        for (const auto &data : items)
             this->insert(data);
     }
 
@@ -12,7 +13,8 @@ namespace s21 {
     multiset<Key, Value>::multiset(const multiset<Key, Value>& other) : sorted_tree<Key, Value>(other) {}
 
     template <class Key, class Value>
-    multiset<Key, Value>::multiset(multiset<Key, Value>&& other) : sorted_tree<Key, Value>::sorted_tree(std::move(other)) {}
+    multiset<Key, Value>::multiset(multiset<Key, Value>&& other)
+    : sorted_tree<Key, Value>::sorted_tree(std::move(other)) {}
 
     template <class Key, class Value>
     multiset<Key, Value>::~multiset() {}
@@ -43,4 +45,4 @@ namespace s21 {
         }
     }
 
-}
+}  // namespace s21

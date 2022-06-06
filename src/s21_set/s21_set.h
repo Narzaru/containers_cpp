@@ -33,6 +33,6 @@ namespace s21 {
     };
 }  // namespace s21
 
-#include "s21_set.inl"
+#include "s21_set.inc"
 
 #endif  // SRC_S21_SET_S21_SET_H_

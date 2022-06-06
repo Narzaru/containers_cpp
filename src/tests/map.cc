@@ -10,8 +10,8 @@ namespace map_constructors_suite {
 
     TEST(constructors, initializer_list) {
         s21::map<int, double> map{{1, 1}, {2, 2}, {3, 3}};
-        int ints [] = {1, 2, 3};
-        double doubles [] = {1, 2, 3};
+        int ints[] = {1, 2, 3};
+        double doubles[] = {1, 2, 3};
         ASSERT_EQ(map.size(), 3);
         int i = 0;
         for (auto it = map.begin(); it != map.end(); ++it) {
@@ -21,7 +21,7 @@ namespace map_constructors_suite {
           i++;
         }
     }
-}
+}  // namespace map_constructors_suite
 
 namespace map_insert_suite {
     TEST(insert, insert_several_pairs) {
@@ -42,8 +42,8 @@ namespace map_insert_suite {
         map.insert(0, "Zero");
         map.insert(1, "One_third");
         ASSERT_EQ(map.size(), 3);
-        int ints [] = {0, 1, 2};
-        std::string strings [] = {"Zero", "One_first", "Two"};
+        int ints[] = {0, 1, 2};
+        std::string strings[] = {"Zero", "One_first", "Two"};
         int i = 0;
         for (auto it = map.begin(); it != map.end(); ++it) {
           std::pair<int, std::string> pair = *it;
@@ -61,8 +61,8 @@ namespace map_insert_suite {
         map.insert_or_assign(0, "Zero");
         map.insert_or_assign(1, "One_third");
         ASSERT_EQ(map.size(), 3);
-        int ints [] = {0, 1, 2};
-        std::string strings [] = {"Zero", "One_third", "Two"};
+        int ints[] = {0, 1, 2};
+        std::string strings[] = {"Zero", "One_third", "Two"};
         int i = 0;
         for (auto it = map.begin(); it != map.end(); ++it) {
           std::pair<int, std::string> pair = *it;
@@ -71,7 +71,7 @@ namespace map_insert_suite {
           i++;
         }
     }
-}
+}  // namespace map_insert_suite
 
 namespace map_erase_suite {
     TEST(erase, erase_elements) {
@@ -92,7 +92,7 @@ namespace map_erase_suite {
         ++it;
         ASSERT_TRUE(it == map.end());
     }
-}
+}  // namespace map_erase_suite
 
 namespace map_elements_access_suite {
     TEST(elements_access, at) {
@@ -117,8 +117,8 @@ namespace map_elements_access_suite {
         ASSERT_EQ(map[1], 4);
 
         EXPECT_THROW(map[4], std::out_of_range);
-    }    
-}
+    }
+}  // namespace map_elements_access_suite
 
 namespace map_additional_functions_suite {
     TEST(additional_functions, merge) {
@@ -140,13 +140,13 @@ namespace map_additional_functions_suite {
         EXPECT_THROW(map2[4], std::out_of_range);
     }
 
-}
+}  // namespace map_additional_functions_suite
 
 namespace map_iterator_suite {
     TEST(iterators, map_iterator) {
       s21::map<int, double> map;
-      int keys [] = {1, 2, 3};
-      double values [] = {4, 5, 6};
+      int keys[] = {1, 2, 3};
+      double values[] = {4, 5, 6};
       map.insert(1, 4);
       map.insert(2, 5);
       map.insert(3, 6);
@@ -157,13 +157,13 @@ namespace map_iterator_suite {
         i++;
       }
     }
-}
+}  // namespace map_iterator_suite
 
 namespace map_emplace_suite {
     TEST(emplace, insert_using_emplace) {
       s21::map<int, double> map;
-      int keys [] = {1, 2, 3};
-      double values [] = {4, 5, 6};
+      int keys[] = {1, 2, 3};
+      double values[] = {4, 5, 6};
       map.emplace(1, 4);
       map.emplace(2, 5);
       map.emplace(std::pair<int, double>(3, 6));
@@ -174,4 +174,4 @@ namespace map_emplace_suite {
         i++;
       }
     }
-}
+}  // namespace map_emplace_suite

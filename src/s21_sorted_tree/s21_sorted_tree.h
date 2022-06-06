@@ -1,3 +1,6 @@
+#ifndef SRC_S21_SORTED_TREE_H_
+#define SRC_S21_SORTED_TREE_H_
+
 #pragma once
 #include <cstddef>
 
@@ -20,7 +23,6 @@ namespace s21 {
         void clear();
 
         sorted_tree();
-        // sorted_tree(std::initializer_list<value_type> const &items);
         sorted_tree(const sorted_tree<Key, Value> &other);
         sorted_tree(sorted_tree<Key, Value> &&other);
         sorted_tree& operator=(const sorted_tree<Key, Value>& other);
@@ -58,12 +60,6 @@ namespace s21 {
             void free_node();
             void free_node_recursive(Node*, Node*);
         };
-
-        Node *find_node_to_insert(const value_type& value);
-        void rotate_left(Node *node);
-        void rotate_right(Node *node);
-        void fix_up_insert(Node *node);
-        void fix_up_erase(Node *node, Node *parent);
 
         class Iterator {
          public:
@@ -126,8 +122,6 @@ namespace s21 {
         const_iterator cbegin() const;
         const_iterator cend() const;
 
-
-        // iterator insert_pair(const value_type& value);
         void erase(iterator pos);
         void swap(sorted_tree<Key, Value>& other);
         void merge(sorted_tree<Key, Value>& other);
@@ -138,12 +132,15 @@ namespace s21 {
         size_type size_;
         size_type max_size_;
         Node *root_;
-        // Node *nil;
-        // void set_initial_properties();
         void reset();
         void free_sorted_tree();
         void erase_existing(iterator pos);
         void set_initial_properties();
+        Node *find_node_to_insert(const value_type &value);
+        void rotate_left(Node *node);
+        void rotate_right(Node *node);
+        void fix_up_insert(Node *node);
+        void fix_up_erase(Node *node, Node *parent);
 
      protected:
         Node *nil;
@@ -156,4 +153,6 @@ namespace s21 {
     };
 }  // namespace s21
 
-#include "s21_sorted_tree.inl"
+#include "s21_sorted_tree.inс"
+
+#endif  // SRC_S21_SORTED_TREE_H_

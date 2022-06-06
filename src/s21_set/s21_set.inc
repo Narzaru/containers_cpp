@@ -3,11 +3,12 @@ namespace s21 {
     set<Key, Value>::set() : sorted_tree<Key, Value>() {}
 
     template <class Key, class Value>
-    set<Key, Value>::set(std::initializer_list<value_type> const &items) : sorted_tree<Key, Value>::sorted_tree() {
-        for (const auto &data:items)
+    set<Key, Value>::set(std::initializer_list<value_type> const &items)
+    : sorted_tree<Key, Value>::sorted_tree() {
+        for ( const auto &data : items )
             this->insert(data);
     }
-    
+
     template <class Key, class Value>
     set<Key, Value>::set(const set<Key, Value>& other) : sorted_tree<Key, Value>(other) {}
 
@@ -59,4 +60,4 @@ namespace s21 {
     // }
 
 
-}
+}  // namespace s21

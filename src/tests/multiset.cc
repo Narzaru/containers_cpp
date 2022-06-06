@@ -11,7 +11,7 @@ namespace multiset_constructors_suite {
     TEST(constructors, initializer_list) {
         s21::multiset<double> multiset{1, 2, 3, 4, 5, 4, 5};
         ASSERT_EQ(multiset.size(), 7);
-        double numbers [] = {1, 2, 3, 4, 4, 5, 5};
+        double numbers[] = {1, 2, 3, 4, 4, 5, 5};
         auto it = multiset.begin();
         for (int i = 0; i < 7; i++) {
           ASSERT_EQ(numbers[i], (*it).first);
@@ -32,7 +32,7 @@ namespace multiset_constructors_suite {
 
     TEST(constructors, move_constructor) {
         s21::multiset<double> origin{1, 2, 3, 4, 5, 4, 5};
-        double numbers [] = {1, 2, 3, 4, 4, 5, 5};
+        double numbers[] = {1, 2, 3, 4, 4, 5, 5};
         s21::multiset<double> copy = std::move(origin);
         ASSERT_EQ(copy.size(), 7);
         int i = 0;
@@ -41,7 +41,7 @@ namespace multiset_constructors_suite {
           i++;
         }
     }
-}
+}  // namespace multiset_constructors_suite
 
 namespace multiset_insert_suite {
     TEST(insert, empty_constructor) {
@@ -61,7 +61,7 @@ namespace multiset_insert_suite {
       multiset.insert(0);
       multiset.insert(20);
       multiset.insert(15);
-      
+
       auto it_last_15 = multiset.insert(15);
       auto it = multiset.begin();
       ASSERT_EQ((*it).first, 0);
@@ -90,7 +90,7 @@ namespace multiset_insert_suite {
     TEST(insert, strings) {
       s21::multiset<std::string> multiset;
       // std::pair<s21::set<double>::iterator, bool> pair(set.insert(10));
-      std::string words [] = {"", "aboba", "aboba", "b", "ba", "boba", "oba"};
+      std::string words[] = {"", "aboba", "aboba", "b", "ba", "boba", "oba"};
       multiset.insert("aboba");
       multiset.insert("aboba");
       ASSERT_EQ(multiset.size(), 2);
@@ -109,10 +109,10 @@ namespace multiset_insert_suite {
       // ++it_const;
       // cout << *it_const << endl;
     }
-}
+}  // namespace multiset_insert_suite
 
 namespace multiset_erase_suite {
-    TEST (erase, empty_constructor) {
+    TEST(erase, empty_constructor) {
       s21::multiset<double> multiset;
       auto it = multiset.begin();
       auto end = multiset.end();
@@ -121,7 +121,7 @@ namespace multiset_erase_suite {
       ASSERT_EQ(*it, *end);
     }
 
-    TEST (erase, erase_using_iterator) {
+    TEST(erase, erase_using_iterator) {
       s21::multiset<double> multiset;
       multiset.insert(10);
       multiset.insert(15);
@@ -135,7 +135,7 @@ namespace multiset_erase_suite {
       auto it = multiset.begin();
       multiset.erase(it);
       ASSERT_EQ(multiset.size(), 6);
-      double numbers_1 [] = {8, 10, 10, 15, 18, 20};
+      double numbers_1[] = {8, 10, 10, 15, 18, 20};
       int i = 0;
       for (it = multiset.begin(); it != multiset.end(); ++it) {
         ASSERT_EQ((*it).first, numbers_1[i]);
@@ -145,14 +145,14 @@ namespace multiset_erase_suite {
       it = multiset.find(10);
       multiset.erase(it);
       ASSERT_EQ(multiset.size(), 5);
-      double numbers_2 [] = {8, 10, 15, 18, 20};
+      double numbers_2[] = {8, 10, 15, 18, 20};
       i = 0;
       for (it = multiset.begin(); it != multiset.end(); ++it) {
         ASSERT_EQ((*it).first, numbers_2[i]);
         i++;
       }
     }
-}
+}  // namespace multiset_erase_suite
 
 namespace multiset_modifiers_suite {
     TEST(modifiers, swap) {
@@ -184,7 +184,7 @@ namespace multiset_modifiers_suite {
         ASSERT_TRUE(multiset1.contains(7));
         ASSERT_TRUE(multiset2.contains(6));
     }
-}
+}  // namespace multiset_modifiers_suite
 
 namespace multiset_operators_suite {
     TEST(operators, equal) {
@@ -218,12 +218,12 @@ namespace multiset_operators_suite {
         auto it = multiset2.begin();
         EXPECT_THROW(*it, std::out_of_range);
     }
-}
+}  // namespace multiset_operators_suite
 
 namespace multiset_iterator_suite {
     TEST(iterators, iterator_add) {
         s21::multiset<double> multiset;
-        double numbers [] = {5, 5, 6, 6, 7};
+        double numbers[] = {5, 5, 6, 6, 7};
         multiset.insert(6);
         multiset.insert(5);
         multiset.insert(7);
@@ -238,7 +238,7 @@ namespace multiset_iterator_suite {
 
     TEST(iterators, iterator_sub) {
         s21::multiset<double> multiset;
-        double numbers [] = {5, 5, 5, 6, 7};
+        double numbers[] = {5, 5, 5, 6, 7};
         multiset.insert(5);
         multiset.insert(6);
         multiset.insert(5);
@@ -255,7 +255,7 @@ namespace multiset_iterator_suite {
 
     TEST(iterators, const_iterator) {
         s21::multiset<double> multiset;
-        double numbers [] = {2, 2, 5, 6, 7};
+        double numbers[] = {2, 2, 5, 6, 7};
         multiset.insert(6);
         multiset.insert(5);
         multiset.insert(7);
@@ -267,14 +267,14 @@ namespace multiset_iterator_suite {
             i++;
         }
     }
-}
+}  // namespace multiset_iterator_suite
 
 namespace multiset_additional_functions_suite {
     TEST(additional_functions, lower_bound) {
         s21::multiset<double> multiset{5, 6, 7, 7, 8};
-        double numbers [] = {7, 7, 8};
+        double numbers[] = {7, 7, 8};
         auto it = multiset.lower_bound(7);
-        
+
         int i = 0;
         for (; it != multiset.end(); ++it) {
             ASSERT_EQ((*it).first, numbers[i]);
@@ -284,9 +284,9 @@ namespace multiset_additional_functions_suite {
 
     TEST(additional_functions, upper_bound) {
         s21::multiset<double> multiset{5, 6, 7, 7, 8};
-        double numbers [] = {8};
+        double numbers[] = {8};
         auto it = multiset.upper_bound(7);
-        
+
         int i = 0;
         for (; it != multiset.end(); ++it) {
             ASSERT_EQ((*it).first, numbers[i]);
@@ -305,12 +305,12 @@ namespace multiset_additional_functions_suite {
         i++;
       }
     }
-}
+}  // namespace multiset_additional_functions_suite
 
 namespace multiset_emplace_suite {
     TEST(emplace, insert_using_emplace) {
         s21::multiset<double> multiset;
-        double numbers [] = {5, 6, 7, 7, 8};
+        double numbers[] = {5, 6, 7, 7, 8};
         multiset.emplace(8);
         multiset.emplace(6);
         multiset.emplace(7);
@@ -322,4 +322,4 @@ namespace multiset_emplace_suite {
             i++;
         }
     }
-}
+}  // namespace multiset_emplace_suite
