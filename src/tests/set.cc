@@ -39,7 +39,7 @@ namespace set_constructors_suite {
           i++;
         }
     }
-}
+}  // namespace set_constructors_suite
 
 namespace set_insert_suite {
     TEST(insert, empty_set_constructor) {
@@ -58,7 +58,7 @@ namespace set_insert_suite {
       set.insert(12);
       set.insert(15);
       set.insert(20);
-      
+
       auto pair(set.insert(15));
       double first = (*pair.first).first;
       auto begin = set.begin();
@@ -88,7 +88,7 @@ namespace set_insert_suite {
     TEST(insert, strings) {
       s21::set<std::string> set;
       // std::pair<s21::set<double>::iterator, bool> pair(set.insert(10));
-      std::string words [] = {"", "aboba", "b", "ba", "boba", "oba"};
+      std::string words[] = {"", "aboba", "b", "ba", "boba", "oba"};
       set.insert("aboba");
       set.insert("aboba");
       ASSERT_EQ(set.size(), 1);
@@ -107,10 +107,10 @@ namespace set_insert_suite {
       // ++it_const;
       // cout << *it_const << endl;
     }
-}
+}  // namespace set_insert_suite
 
 namespace set_erase_suite {
-    TEST (erase, empty_constructor) {
+    TEST(erase, empty_constructor) {
       s21::set<double> set;
       auto it = set.begin();
       auto end = set.end();
@@ -119,7 +119,7 @@ namespace set_erase_suite {
       ASSERT_EQ(*it, *end);
     }
 
-    TEST (erase, erase_using_iterator) {
+    TEST(erase, erase_using_iterator) {
       s21::set<double> set;
       set.insert(10);
       set.insert(15);
@@ -133,9 +133,9 @@ namespace set_erase_suite {
       ASSERT_EQ(set.size(), 5);
     }
 
-    TEST (erase, erase_with_fix_up) {
+    TEST(erase, erase_with_fix_up) {
       s21::set<double> set{10, 15, 20, 18, 8, 1, 12, 25};
-      double numbers_before [] = {1, 8, 10, 12, 15, 18, 20, 25};
+      double numbers_before[] = {1, 8, 10, 12, 15, 18, 20, 25};
       int i = 0;
       for (auto iter = set.begin(); iter != set.end(); ++iter) {
           ASSERT_EQ((*iter).first, numbers_before[i]);
@@ -145,7 +145,7 @@ namespace set_erase_suite {
       auto it = set.find(1);
       set.erase(it);
       ASSERT_EQ(set.size(), 7);
-      double numbers_after [] = {8, 10, 12, 15, 18, 20, 25};
+      double numbers_after[] = {8, 10, 12, 15, 18, 20, 25};
       i = 0;
       for (it = set.begin(); it != set.end(); ++it) {
           ASSERT_EQ((*it).first, numbers_after[i]);
@@ -156,7 +156,7 @@ namespace set_erase_suite {
       it = set.find(8);
       set.erase(it);
       ASSERT_EQ(set.size(), 7);
-      double numbers_after_1 [] = {1, 10, 12, 15, 18, 20, 25};
+      double numbers_after_1[] = {1, 10, 12, 15, 18, 20, 25};
       i = 0;
       for (it = set.begin(); it != set.end(); ++it) {
           ASSERT_EQ((*it).first, numbers_after_1[i]);
@@ -165,7 +165,7 @@ namespace set_erase_suite {
 
       set.insert(8);
       set.erase(set.find(18));
-      double numbers_after_2 [] = {1, 8, 10, 12, 15, 20, 25};
+      double numbers_after_2[] = {1, 8, 10, 12, 15, 20, 25};
       i = 0;
       for (it = set.begin(); it != set.end(); ++it) {
           ASSERT_EQ((*it).first, numbers_after_2[i]);
@@ -178,7 +178,7 @@ namespace set_erase_suite {
       set.insert(0);
       set.insert(16);
       set.erase(set.find(1));
-      double numbers_after_3 [] = {0, 2, 4, 7, 8, 10, 12, 15, 16, 18, 20, 25};
+      double numbers_after_3[] = {0, 2, 4, 7, 8, 10, 12, 15, 16, 18, 20, 25};
       i = 0;
       for (it = set.begin(); it != set.end(); ++it) {
           ASSERT_EQ((*it).first, numbers_after_3[i]);
@@ -187,7 +187,7 @@ namespace set_erase_suite {
       set.insert(1);
 
       set.erase(set.find(1));
-      double numbers_after_4 [] = {0, 2, 4, 7, 8, 10, 12, 15, 16, 18, 20, 25};
+      double numbers_after_4[] = {0, 2, 4, 7, 8, 10, 12, 15, 16, 18, 20, 25};
       i = 0;
       for (it = set.begin(); it != set.end(); ++it) {
           ASSERT_EQ((*it).first, numbers_after_4[i]);
@@ -196,15 +196,16 @@ namespace set_erase_suite {
       set.insert(1);
 
       set.erase(set.find(2));
-      double numbers_after_5 [] = {0, 1, 4, 7, 8, 10, 12, 15, 16, 18, 20, 25};
+      double numbers_after_5[] = {0, 1, 4, 7, 8, 10, 12, 15, 16, 18, 20, 25};
       i = 0;
       for (it = set.begin(); it != set.end(); ++it) {
           ASSERT_EQ((*it).first, numbers_after_5[i]);
           i++;
       }
 
-      s21::set<double> set_new{1, 0, 3, 2, 7, 4, 8, 12, 10, 15, 16, 18, 20, 25, 5, 6, 9, 11, 21, 22, 23, 24, 30, 31, 32, 33, 34, 35};
-      double numbers_after_6 [] = {1, 2, 5, 6, 7, 8, 9, 10, 11, 21, 22, 23, 24, 25, 30, 31, 32, 33, 34, 35};
+      s21::set<double> set_new{1, 0, 3, 2, 7, 4, 8, 12,
+          10, 15, 16, 18, 20, 25, 5, 6, 9, 11, 21, 22, 23, 24, 30, 31, 32, 33, 34, 35};
+      double numbers_after_6[] = {1, 2, 5, 6, 7, 8, 9, 10, 11, 21, 22, 23, 24, 25, 30, 31, 32, 33, 34, 35};
       set_new.erase(set_new.find(18));
       set_new.erase(set_new.find(15));
       set_new.erase(set_new.find(0));
@@ -219,7 +220,7 @@ namespace set_erase_suite {
         i++;
       }
     }
-}
+}  // namespace set_erase_suite
 
 namespace set_modifiers_suite {
     TEST(modifiers, swap) {
@@ -247,8 +248,7 @@ namespace set_modifiers_suite {
         ASSERT_TRUE(set1.contains(7));
         ASSERT_TRUE(set2.contains(6));
     }
-}
-
+}  // namespace set_modifiers_suite
 
 namespace set_operators_suite {
     TEST(operators, equal) {
@@ -278,12 +278,12 @@ namespace set_operators_suite {
         auto it = set2.begin();
         EXPECT_THROW(*it, std::out_of_range);
     }
-}
+}  // namespace set_operators_suite
 
 namespace set_iterator_suite {
     TEST(iterators, iterator_add) {
         s21::set<double> set1;
-        double numbers [] = {5, 6, 7};
+        double numbers[] = {5, 6, 7};
         set1.insert(6);
         set1.insert(5);
         set1.insert(7);
@@ -296,7 +296,7 @@ namespace set_iterator_suite {
 
     TEST(iterators, iterator_sub) {
         s21::set<double> set1;
-        double numbers [] = {5, 6, 7};
+        double numbers[] = {5, 6, 7};
         set1.insert(6);
         set1.insert(5);
         set1.insert(7);
@@ -311,7 +311,7 @@ namespace set_iterator_suite {
 
     TEST(iterators, const_iterator) {
         s21::set<double> set1;
-        double numbers [] = {5, 6, 7};
+        double numbers[] = {5, 6, 7};
         set1.insert(6);
         set1.insert(5);
         set1.insert(7);
@@ -321,12 +321,12 @@ namespace set_iterator_suite {
             i++;
         }
     }
-}
+}  // namespace set_iterator_suite
 
 namespace set_emplace_suite {
     TEST(emplace, insert_using_emplace) {
         s21::set<double> set1;
-        double numbers [] = {5, 6, 7};
+        double numbers[] = {5, 6, 7};
         set1.emplace(6);
         set1.emplace(5);
         set1.emplace(7);
@@ -336,4 +336,4 @@ namespace set_emplace_suite {
             i++;
         }
     }
-}
+}  // namespace set_emplace_suite

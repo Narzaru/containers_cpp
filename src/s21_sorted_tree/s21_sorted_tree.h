@@ -28,7 +28,7 @@ namespace s21 {
 
         ~sorted_tree() {
             free_sorted_tree();
-        };
+        }
 
         bool empty() const;
         size_type size() const;
@@ -46,10 +46,12 @@ namespace s21 {
 
             int number_of_similar;
 
-            explicit Node(Key d_key = Key(), Value d_value = Value(), node_color d_color = BLACK, Node *d_parent = nullptr, Node *d_left_child = nullptr, Node *d_right_child = nullptr)
-            : key(d_key), value(d_value), color(d_color), parent(d_parent), left_child(d_left_child), right_child(d_right_child) {
+            explicit Node(Key d_key = Key(), Value d_value = Value(), node_color d_color = BLACK,
+                Node *d_parent = nullptr, Node *d_left_child = nullptr, Node *d_right_child = nullptr)
+                : key(d_key), value(d_value), color(d_color), parent(d_parent),
+                left_child(d_left_child), right_child(d_right_child) {
                 number_of_similar = 1;
-            };
+            }
             ~Node() {
                 free_node();
             }
@@ -76,7 +78,7 @@ namespace s21 {
 
             Iterator() {
                 nullify_iterator_properties();
-            };
+            }
 
             ~Iterator() {
                 free_iterator();
@@ -112,7 +114,7 @@ namespace s21 {
         class ConstIterator : public Iterator {
          public:
             ConstIterator() {
-            };
+            }
 
             ~ConstIterator() {
             }
@@ -131,7 +133,6 @@ namespace s21 {
         void merge(sorted_tree<Key, Value>& other);
 
         bool contains(const Key& key);
-        
 
      private:
         size_type size_;
@@ -153,6 +154,6 @@ namespace s21 {
         iterator upper_bound(const Key& key);
         std::pair<iterator, iterator> equal_range(const Key &key);
     };
-} // namespace s21
+}  // namespace s21
 
 #include "s21_sorted_tree.inl"

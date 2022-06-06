@@ -6,8 +6,7 @@
 #include <initializer_list>
 #include "../s21_sorted_tree/s21_sorted_tree.h"
 
-namespace s21
-{
+namespace s21 {
     template <typename Key, typename Value>
     class map : public sorted_tree<Key, Value> {
      public:
@@ -36,8 +35,7 @@ namespace s21
         void merge(map &other);
 
         template <typename... Args>
-        inline std::pair<iterator, bool> emplace(Args &&...args)
-        {
+        inline std::pair<iterator, bool> emplace(Args &&...args) {
             return insert(value_type(std::forward<Args>(args)...));
         }
     };
