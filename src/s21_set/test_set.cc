@@ -61,15 +61,15 @@ namespace insert_suite {
       set.insert(15);
       set.insert(20);
       
-      std::pair<s21::set<double>::iterator, bool> pair(set.insert(15));
+      auto pair(set.insert(15));
       double first = (*pair.first).first;
-      s21::set<double>::iterator begin = set.begin();
+      auto begin = set.begin();
       ASSERT_EQ((*begin).first, 1);
       ASSERT_EQ(first, 15);
       ASSERT_EQ(pair.second, false);
       ASSERT_EQ(set.size(), 5);
 
-      s21::set<double>::iterator number = set.find(16);
+      auto number = set.find(16);
       ASSERT_EQ(number.itr, number.end);
       number = set.find(15);
       ASSERT_EQ((*number).first, 15);
@@ -81,7 +81,7 @@ namespace insert_suite {
       ASSERT_TRUE(set.contains(15));
       ASSERT_TRUE(set.contains(1));
 
-      s21::set<double>::iterator it = set.find(15);
+      auto it = set.find(15);
       set.erase(it);
       ASSERT_FALSE(set.contains(15));
       ASSERT_EQ(set.size(), 4);
@@ -233,6 +233,21 @@ namespace iterator_suite {
         set1.insert(7);
         int i = 0;
         for (auto it = set1.cbegin(); it != set1.cend(); ++it) {
+            ASSERT_EQ((*it).first, numbers[i]);
+            i++;
+        }
+    }
+}
+
+namespace emplace_suite {
+    TEST(emplace, insert_using_emplace) {
+        s21::set<double> set1;
+        double numbers [] = {5, 6, 7};
+        set1.emplace(6);
+        set1.emplace(5);
+        set1.emplace(7);
+        int i = 0;
+        for (auto it = set1.begin(); it != set1.end(); ++it) {
             ASSERT_EQ((*it).first, numbers[i]);
             i++;
         }

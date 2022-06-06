@@ -143,7 +143,7 @@ namespace s21 {
         iterator result;
         // Node *new_node = new Node();
         if (root_ == nullptr) {
-            root_ = new Node(value.first, value.second, BLACK, nullptr, nil, nil);;
+            root_ = new Node(value.first, value.second, BLACK, nullptr, nil, nil);
             result = this->begin();
             size_++;
         } else {

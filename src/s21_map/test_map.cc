@@ -182,8 +182,23 @@ namespace iterator_suite {
         i++;
       }
     }
+}
 
-    
+namespace emplace_suite {
+    TEST(emplace, insert_using_emplace) {
+      s21::map<int, double> map;
+      int keys [] = {1, 2, 3};
+      double values [] = {4, 5, 6};
+      map.emplace(1, 4);
+      map.emplace(2, 5);
+      map.emplace(std::pair<int, double>(3, 6));
+      int i = 0;
+      for (auto it = map.begin(); it != map.end(); ++it) {
+        ASSERT_EQ((*it).first, keys[i]);
+        ASSERT_EQ((*it).second, values[i]);
+        i++;
+      }
+    }
 }
 
 int main(int argc, char *argv[]) {
