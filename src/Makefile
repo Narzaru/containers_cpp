@@ -11,7 +11,7 @@ ifeq ($(shell uname), Linux)
 endif
 
 GTEST_LIBS := -lgtest -pthread
-INCLUDE_PATHS := . s21_list s21_queue s21_vector tests
+INCLUDE_PATHS := . s21_list s21_queue s21_vector s21_set s21_map s21_multiset tests
 INCLUDE := $(addprefix -I,$(INCLUDE_PATHS))
 
 TEST_FILES := $(addprefix ./tests/,\
@@ -20,7 +20,11 @@ TEST_FILES := $(addprefix ./tests/,\
 	vector.cc\
 	list.cc\
 	queue.cc\
-	stack.cc)
+	stack.cc\
+	set.cc\
+	map.cc\
+	multiset.cc\
+	)
 
 all: test
 
@@ -37,6 +41,7 @@ linter:
 	@find . -name "*.cc" -exec python3 ../materials/linters/cpplint.py {} \;
 	@find . -name "*.cpp" -exec python3 ../materials/linters/cpplint.py {} \;
 	@find . -name "*.inc" -exec python3 ../materials/linters/cpplint.py {} \;
+	@find . -name "*.inl" -exec python3 ../materials/linters/cpplint.py {} \;
 	@find . -name "*.h" -exec python3 ../materials/linters/cpplint.py {} \;
 	@find . -name "*.hpp" -exec python3 ../materials/linters/cpplint.py {} \;
 	@rm -f CPPLINT.cfg

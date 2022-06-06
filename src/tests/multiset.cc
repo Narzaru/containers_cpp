@@ -1,10 +1,10 @@
 #include <gtest/gtest.h>
-#include "s21_multiset.h"
-#include <iostream>
+
+#include "s21_containersplus.h"
 
 using namespace std;
 
-namespace constructors_suite {
+namespace multiset_constructors_suite {
     TEST(constructors, empty_constructor) {
         s21::multiset<double> multi;
         ASSERT_EQ(multi.size(), 0);
@@ -45,7 +45,7 @@ namespace constructors_suite {
     }
 }
 
-namespace insert_suite {
+namespace multiset_insert_suite {
     TEST(insert, empty_constructor) {
       s21::multiset<double> multiset;
       auto it = multiset.insert(10);
@@ -113,7 +113,7 @@ namespace insert_suite {
     }
 }
 
-namespace erase_suite {
+namespace multiset_erase_suite {
     TEST (erase, empty_constructor) {
       s21::multiset<double> multiset;
       auto it = multiset.begin();
@@ -137,16 +137,26 @@ namespace erase_suite {
       auto it = multiset.begin();
       multiset.erase(it);
       ASSERT_EQ(multiset.size(), 6);
-      double numbers [] = {8, 10, 10, 15, 18, 20};
+      double numbers_1 [] = {8, 10, 10, 15, 18, 20};
       int i = 0;
-      for (auto it = multiset.begin(); it != multiset.end(); ++it) {
-        ASSERT_EQ((*it).first, numbers[i]);
+      for (it = multiset.begin(); it != multiset.end(); ++it) {
+        ASSERT_EQ((*it).first, numbers_1[i]);
+        i++;
+      }
+
+      it = multiset.find(10);
+      multiset.erase(it);
+      ASSERT_EQ(multiset.size(), 5);
+      double numbers_2 [] = {8, 10, 15, 18, 20};
+      i = 0;
+      for (it = multiset.begin(); it != multiset.end(); ++it) {
+        ASSERT_EQ((*it).first, numbers_2[i]);
         i++;
       }
     }
 }
 
-namespace modifiers_suite {
+namespace multiset_modifiers_suite {
     TEST(modifiers, swap) {
         s21::multiset<double> multiset1, multiset2;
         multiset1.insert(5);
@@ -178,7 +188,7 @@ namespace modifiers_suite {
     }
 }
 
-namespace operators_suite {
+namespace multiset_operators_suite {
     TEST(operators, equal) {
         s21::multiset<double> multiset1, multiset2;
         multiset1.insert(5);
@@ -212,7 +222,7 @@ namespace operators_suite {
     }
 }
 
-namespace iterator_suite {
+namespace multiset_iterator_suite {
     TEST(iterators, iterator_add) {
         s21::multiset<double> multiset;
         double numbers [] = {5, 5, 6, 6, 7};
@@ -231,7 +241,6 @@ namespace iterator_suite {
     TEST(iterators, iterator_sub) {
         s21::multiset<double> multiset;
         double numbers [] = {5, 5, 5, 6, 7};
-        int numbers_size = 5;
         multiset.insert(5);
         multiset.insert(6);
         multiset.insert(5);
@@ -262,7 +271,7 @@ namespace iterator_suite {
     }
 }
 
-namespace emplace_suite {
+namespace multiset_emplace_suite {
     TEST(emplace, insert_using_emplace) {
         s21::multiset<double> multiset;
         double numbers [] = {5, 6, 7, 7, 8};
@@ -277,9 +286,4 @@ namespace emplace_suite {
             i++;
         }
     }
-}
-
-int main(int argc, char *argv[]) {
-  testing::InitGoogleTest(&argc, argv);
-  return RUN_ALL_TESTS();
 }

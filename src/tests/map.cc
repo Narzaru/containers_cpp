@@ -1,10 +1,10 @@
 #include <gtest/gtest.h>
-#include "s21_map.h"
-#include <iostream>
+
+#include "s21_containers.h"
 
 using namespace std;
 
-namespace constructors_suite {
+namespace map_constructors_suite {
     TEST(constructors, empty_constructor) {
         s21::map<int, double> map;
         ASSERT_EQ(map.size(), 0);
@@ -12,17 +12,20 @@ namespace constructors_suite {
 
     TEST(constructors, initializer_list) {
         s21::map<int, double> map{{1, 1}, {2, 2}, {3, 3}};
+        int ints [] = {1, 2, 3};
+        double doubles [] = {1, 2, 3};
         ASSERT_EQ(map.size(), 3);
+        int i = 0;
         for (auto it = map.begin(); it != map.end(); ++it) {
           std::pair<int, double> pair = *it;
-          cout << pair.first;
-          cout << " : ";
-          cout << pair.second << endl;
+          ASSERT_EQ(pair.first, ints[i]);
+          ASSERT_EQ(pair.second, doubles[i]);
+          i++;
         }
     }
 }
 
-namespace insert_suite {
+namespace map_insert_suite {
     TEST(insert, insert_several_pairs) {
         s21::map<int, std::string> map;
         map.insert(std::make_pair(1, "One_first"));
@@ -31,12 +34,6 @@ namespace insert_suite {
         map.insert(std::make_pair(0, "Zero"));
         map.insert(std::make_pair(1, "One_third"));
         ASSERT_EQ(map.size(), 3);
-        for (auto it = map.begin(); it != map.end(); ++it) {
-          std::pair<int, std::string> pair = *it;
-          cout << pair.first;
-          cout << " : ";
-          cout << pair.second << endl;
-        }
         // auto it = tree.end();
         // for (; it != tree.begin(); --it) {
         //   cout << (*it).first << endl;
@@ -52,11 +49,14 @@ namespace insert_suite {
         map.insert(0, "Zero");
         map.insert(1, "One_third");
         ASSERT_EQ(map.size(), 3);
+        int ints [] = {0, 1, 2};
+        std::string strings [] = {"Zero", "One_first", "Two"};
+        int i = 0;
         for (auto it = map.begin(); it != map.end(); ++it) {
           std::pair<int, std::string> pair = *it;
-          cout << pair.first;
-          cout << " : ";
-          cout << pair.second << endl;
+          ASSERT_EQ(pair.first, ints[i]);
+          ASSERT_EQ(pair.second, strings[i]);
+          i++;
         }
         // auto it = tree.end();
         // for (; it != tree.begin(); --it) {
@@ -73,11 +73,14 @@ namespace insert_suite {
         map.insert_or_assign(0, "Zero");
         map.insert_or_assign(1, "One_third");
         ASSERT_EQ(map.size(), 3);
+        int ints [] = {0, 1, 2};
+        std::string strings [] = {"Zero", "One_third", "Two"};
+        int i = 0;
         for (auto it = map.begin(); it != map.end(); ++it) {
           std::pair<int, std::string> pair = *it;
-          cout << pair.first;
-          cout << " : ";
-          cout << pair.second << endl;
+          ASSERT_EQ(pair.first, ints[i]);
+          ASSERT_EQ(pair.second, strings[i]);
+          i++;
         }
         // auto it = tree.end();
         // for (; it != tree.begin(); --it) {
@@ -87,7 +90,7 @@ namespace insert_suite {
     }
 }
 
-namespace erase_suite {
+namespace map_erase_suite {
     TEST(erase, erase_elements) {
         s21::map<int, std::string> map{{1, "One"}, {2, "Two"}, {3, "Three"}};
         ASSERT_EQ(map.size(), 3);
@@ -106,20 +109,9 @@ namespace erase_suite {
         ++it;
         ASSERT_TRUE(it == map.end());
     }
-
-    TEST(constructors, initializer_list) {
-        s21::map<int, double> map{{1, 1}, {2, 2}, {3, 3}};
-        ASSERT_EQ(map.size(), 3);
-        for (auto it = map.begin(); it != map.end(); ++it) {
-          std::pair<int, double> pair = *it;
-          cout << pair.first;
-          cout << " : ";
-          cout << pair.second << endl;
-        }
-    }
 }
 
-namespace elements_access_suite {
+namespace map_elements_access_suite {
     TEST(elements_access, at) {
         s21::map<int, double> map{{1, 1}, {2, 2}, {3, 3}};
         ASSERT_EQ(map.at(1), 1);
@@ -145,7 +137,7 @@ namespace elements_access_suite {
     }    
 }
 
-namespace additional_functions_suite {
+namespace map_additional_functions_suite {
     TEST(additional_functions, merge) {
         s21::map<int, double> map1{{1, 1}, {2, 2}, {3, 3}};
         s21::map<int, double> map2{{4, 4}, {5, 5}, {6, 6}};
@@ -167,7 +159,7 @@ namespace additional_functions_suite {
 
 }
 
-namespace iterator_suite {
+namespace map_iterator_suite {
     TEST(iterators, map_iterator) {
       s21::map<int, double> map;
       int keys [] = {1, 2, 3};
@@ -184,7 +176,7 @@ namespace iterator_suite {
     }
 }
 
-namespace emplace_suite {
+namespace map_emplace_suite {
     TEST(emplace, insert_using_emplace) {
       s21::map<int, double> map;
       int keys [] = {1, 2, 3};
@@ -199,10 +191,4 @@ namespace emplace_suite {
         i++;
       }
     }
-}
-
-int main(int argc, char *argv[]) {
-
-  testing::InitGoogleTest(&argc, argv);
-  return RUN_ALL_TESTS();
 }

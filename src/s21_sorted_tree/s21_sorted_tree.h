@@ -46,13 +46,8 @@ namespace s21 {
 
             int number_of_similar;
 
-            Node(Key key = Key(), Value value = Value(), node_color color = BLACK, Node *parent = nullptr, Node *left_child = nullptr, Node *right_child = nullptr) {
-                this->key = key;
-                this->value = value;
-                this->color = color;
-                this->parent = parent;
-                this->left_child = left_child;
-                this->right_child = right_child;
+            explicit Node(Key d_key = Key(), Value d_value = Value(), node_color d_color = BLACK, Node *d_parent = nullptr, Node *d_left_child = nullptr, Node *d_right_child = nullptr)
+            : key(d_key), value(d_value), color(d_color), parent(d_parent), left_child(d_left_child), right_child(d_right_child) {
                 number_of_similar = 1;
             };
             ~Node() {

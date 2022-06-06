@@ -130,7 +130,7 @@ namespace s21 {
     template<typename Key, typename Value>
     typename sorted_tree<Key, Value>::Node *sorted_tree<Key, Value>::find_node_to_insert(const value_type& value) {
         Node *current_node = root_;
-        while (current_node->key > value.first && current_node->left_child != nil || current_node->key < value.first && current_node->right_child != nil) {
+        while ((current_node->key > value.first && current_node->left_child != nil) || (current_node->key < value.first && current_node->right_child != nil)) {
             if (current_node->key > value.first) current_node = current_node->left_child;
             else current_node = current_node->right_child;
         }
@@ -327,7 +327,7 @@ namespace s21 {
     template<typename Key, typename Value>
     void sorted_tree<Key, Value>::fix_up_erase(Node *node, Node *parent) {
         Node *other;
-        while (!node || node->color == BLACK && node != root_) {
+        while ((!node) || (node->color == BLACK && node != root_ && node != nil)) {
             if (parent->left_child == node) {
                 other = parent->right_child;
                 if (other->color == RED) {
@@ -362,7 +362,7 @@ namespace s21 {
                     node = parent;
                     parent = node->parent;
                 } else {
-                    if (other->left_child->color = BLACK) {
+                    if (other->left_child->color == BLACK) {
                         other->right_child->color = BLACK;
                         other->color = RED;
                         rotate_left(other);
@@ -425,7 +425,7 @@ namespace s21 {
         iterator result = this->begin();
         if (root_ && root_ != nil) {
             Node *current_node = root_;
-            while (current_node->key != key && (current_node->left_child != nil && current_node->key > key || current_node->right_child != nil && current_node->key < key)) {
+            while (current_node->key != key && ((current_node->left_child != nil && current_node->key > key) || (current_node->right_child != nil && current_node->key < key))) {
                 if (current_node->key > key) current_node = current_node->left_child;
                 else current_node = current_node->right_child;
             }
