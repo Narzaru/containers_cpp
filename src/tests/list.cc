@@ -184,10 +184,10 @@ TEST(list_change_suit, unique) {
 
 TEST(bonus_suit, emplace) {
     s21::list<int> s21list{1, 2, 3};
-    s21::list<int> check{1, 33, 44, 55, 2, 3};
+    s21::list<int> check{1, 33, 2, 3};
     s21::list<int>::ListConstIterator s21it = s21list.cbegin();
     ++s21it;
-    s21list.emplace(s21it, 33, 44, 55);
+    s21list.emplace(s21it, 33);
     s21::list<int>::ListIterator ch1 = s21list.begin();
     s21::list<int>::ListIterator ch2 = check.begin();
     while (ch1.itr) {
@@ -199,9 +199,9 @@ TEST(bonus_suit, emplace) {
 
 TEST(bonus_suit, emplace_2) {
     s21::list<int> s21list{1, 2, 3};
-    s21::list<int> check{1, 2, 3, 33, 44, 55};
+    s21::list<int> check{1, 2, 3, 33};
     s21::list<int>::ListConstIterator s21it = s21list.cend();
-    s21list.emplace(s21it, 33, 44, 55);
+    s21list.emplace(s21it, 33);
     s21::list<int>::ListIterator ch1 = s21list.begin();
     s21::list<int>::ListIterator ch2 = check.begin();
     while (ch1.itr) {
@@ -214,9 +214,9 @@ TEST(bonus_suit, emplace_2) {
 
 TEST(bonus_suit, emplace_3) {
     s21::list<int> s21list{1, 2, 3};
-    s21::list<int> check{33, 44, 55, 1, 2, 3};
+    s21::list<int> check{33, 1, 2, 3};
     s21::list<int>::ListConstIterator s21it = s21list.cbegin();
-    s21list.emplace(s21it, 33, 44, 55);
+    s21list.emplace(s21it, 33);
     s21::list<int>::ListIterator ch1 = s21list.begin();
     s21::list<int>::ListIterator ch2 = check.begin();
     while (ch1.itr) {
@@ -230,14 +230,14 @@ TEST(bonus_suit, emplace_3) {
 TEST(bonus_suit, emplace_4) {
     s21::list<std::list<int>> s21list;
     s21::list<int> example({1, 2, 3, 4});
-    s21list.emplace_front(std::initializer_list<int>({1, 2, 3, 4}));
+    s21list.emplace(s21list.cbegin(), std::initializer_list<int>({1, 2, 3, 4}));
     std::equal(s21list.front().begin(), s21list.front().end(), example.begin());
 }
 
 TEST(bonus_suit, emplace_back) {
     s21::list<int> s21list{1, 2, 3};
-    s21::list<int> check{1, 2, 3, 33, 44, 55};
-    s21list.emplace_back(33, 44, 55);
+    s21::list<int> check{1, 2, 3, 33};
+    s21list.emplace_back(33);
     s21::list<int>::ListIterator ch1 = s21list.begin();
     s21::list<int>::ListIterator ch2 = check.begin();
     while (ch1.itr) {
@@ -249,8 +249,8 @@ TEST(bonus_suit, emplace_back) {
 
 TEST(bonus_suit, emplace_front) {
     s21::list<int> s21list{1, 2, 3};
-    s21::list<int> check{5, 5, 5, 1, 2, 3};
-    s21list.emplace_front(5, 5, 5);
+    s21::list<int> check{5, 1, 2, 3};
+    s21list.emplace_front(5);
     s21::list<int>::ListIterator ch1 = s21list.begin();
     s21::list<int>::ListIterator ch2 = check.begin();
     while (ch1.itr) {

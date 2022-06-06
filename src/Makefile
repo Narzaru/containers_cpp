@@ -41,9 +41,10 @@ linter:
 	@find . -name "*.hpp" -exec python3 ../materials/linters/cpplint.py {} \;
 	@rm -f CPPLINT.cfg
 
+gcov_report: CFLAG+=--coverage
 gcov_report: test
 	@./test
-	lcov -t "test" -o testcoverage.info -c -d .
+	lcov -t "test" -o test.info --no-external -c -d .
 	genhtml -o report test.info
 	open report/index.html
 
@@ -52,3 +53,4 @@ cpplint:
 
 clean:
 	@rm -f test
+	@rm -rf $(STATICLIB) *.o *.gcno *.gcda *.gcov test.info report  

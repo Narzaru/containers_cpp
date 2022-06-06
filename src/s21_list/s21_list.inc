@@ -28,7 +28,14 @@ namespace s21 {
     template <typename T>
     list<T>::list(size_t n) : size_(0) {
         for (size_t i = 0; i < n; i++) {
-            push_back(0);
+            push_back(value_type());
+        }
+    }
+
+    template <typename T>
+    list<T>::list(size_t n, size_t value) : size_(0) {
+        for (size_t i = 0; i < n; i++) {
+            push_back(value);
         }
     }
 
@@ -444,6 +451,9 @@ namespace s21 {
     template <typename T>
     typename list<T>::iterator  list<T>::end() {
         ListIterator tmp(*this);
+        if (tmp.itr == nullptr) {
+            return ListIterator(*this);
+        }
         while (tmp.itr->pNext != nullptr) {
             ++tmp;
         }
@@ -452,7 +462,11 @@ namespace s21 {
 
     template <typename T>
     typename list<T>::iterator list<T>::insert(ListIterator pos, const T& value) {
-        if (pos.itr != pos.end) {
+        if (pos.itr == pos.end) {
+            push_back(value);
+        } else if (pos.itr == pos.first) {
+            push_front(value);
+        } else {
             node* element = new node;
             element->data = pos.itr->data;
             pos.itr->data = value;
@@ -461,10 +475,6 @@ namespace s21 {
             pos.itr->pNext->pPrev = element;
             pos.itr->pNext = element;
             size_++;
-        } else if (pos.itr == pos.first) {
-            push_front(value);
-        } else {
-            push_back(value);
         }
         if (pos.itr != nullptr) {
             pos++;
@@ -472,49 +482,71 @@ namespace s21 {
         return pos;
     }
 
-    /**
-    * @brief перегрузка для emplace
-    * 
-    * @tparam T 
-    * @param pos 
-    * @param other 
-    * @return list<T>::iterator 
-    */
     template <typename T>
-    typename list<T>::iterator list<T>::insert(ListConstIterator pos, list<T>&& other) {
+    typename list<T>::iterator list<T>::insert(ListConstIterator pos, node* node_) {
         iterator result = begin();
-        iterator ptr = other.end();
         for (; result.itr != pos.A.itr; ++result) {}
-        for (; ptr.itr != nullptr ;) {
-            insert(result, *ptr);
-            --ptr;
+
+        if (result.first == result.end) {
+            head_ = node_;
+            back_ = node_;
+            size_++;
+        } else if (result.itr == result.first) {
+            head_ = node_;
+            node_->pNext = result.itr;
+            result.itr->pPrev = node_;
+            size_++;
+        } else if (result.itr == result.end) {
+            result.itr->pNext = node_;
+            node_->pPrev = result.itr;
+            size_++;
+            back_ = node_;
+        } else {
+            node_->pPrev = result.itr->pPrev;
+            node_->pNext = result.itr;
+            result.itr->pPrev->pNext = node_;
+            result.itr->pPrev = node_;
+            size_++;
         }
         return result;
     }
 
     template <typename T>
     template <typename... Args>
-    void list<T>::emplace(ListConstIterator pos, Args&&... args) {
-        std::initializer_list<T> lst = {args...};
-        list<T> tmp(lst);
-        if (pos.A.itr == pos.A.end) {
-            tmp.reverse();
-        }
-        insert(pos, std::move(tmp));
+    typename list<T>::iterator list<T>::emplace(ListConstIterator pos, Args&&... args) {
+        node* new_node = new node;
+        std::allocator_traits<std::allocator<node>>::construct(_allocator, &new_node->data,
+                                                                std::forward<Args>(args)...);
+        insert(pos, new_node);
+        iterator result = begin();
+        for (; result.itr != pos.A.itr; ++result) {}
+        return result;
     }
 
     template <typename T>
     template <typename... Args>
-    void list<T>::emplace_back(Args&&... args) {
+    typename list<T>::iterator list<T>::emplace_back(Args&&... args) {
+        node* new_node = new node;
+        std::allocator_traits<std::allocator<node>>::construct(_allocator, &new_node->data,
+                                                                std::forward<Args>(args)...);
         ListConstIterator pos = this->cend();
-        emplace(pos, args...);
+        insert(pos, new_node);
+        iterator result = begin();
+        for (; result.itr != pos.A.itr; ++result) {}
+        return result;
     }
 
     template <typename T>
     template <typename... Args>
-    void list<T>::emplace_front(Args&&... args) {
+    typename list<T>::iterator list<T>::emplace_front(Args&&... args) {
+        node* new_node = new node;
+        std::allocator_traits<std::allocator<node>>::construct(_allocator, &new_node->data,
+                                                                std::forward<Args>(args)...);
         ListConstIterator pos = this->cbegin();
-        emplace(pos, args...);
+        insert(pos, new_node);
+        iterator result = begin();
+        for (; result.itr != pos.A.itr; ++result) {}
+        return result;
     }
 
 }  // namespace s21
