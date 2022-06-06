@@ -58,13 +58,6 @@ namespace s21 {
 
     template <class Key, class Value>
     std::pair<typename map<Key, Value>::iterator, bool> map<Key, Value>::insert(const Key& key, const Value& obj) {
-        // iterator result_itr = this->find(key);
-        // bool is_inserted = false;
-        // if (result_itr.itr == this->nil) {
-        //     result_itr = this->insert_pair(std::pair(key, obj));
-        //     is_inserted = true;
-        // }
-        // return std::pair(result_itr, is_inserted);
         return insert(std::pair(key, obj));
     }
 

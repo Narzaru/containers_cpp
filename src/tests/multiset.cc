@@ -2,8 +2,6 @@
 
 #include "s21_containersplus.h"
 
-using namespace std;
-
 namespace multiset_constructors_suite {
     TEST(constructors, empty_constructor) {
         s21::multiset<double> multi;
@@ -268,6 +266,44 @@ namespace multiset_iterator_suite {
             ASSERT_EQ((*it).first, numbers[i]);
             i++;
         }
+    }
+}
+
+namespace multiset_additional_functions_suite {
+    TEST(additional_functions, lower_bound) {
+        s21::multiset<double> multiset{5, 6, 7, 7, 8};
+        double numbers [] = {7, 7, 8};
+        auto it = multiset.lower_bound(7);
+        
+        int i = 0;
+        for (; it != multiset.end(); ++it) {
+            ASSERT_EQ((*it).first, numbers[i]);
+            i++;
+        }
+    }
+
+    TEST(additional_functions, upper_bound) {
+        s21::multiset<double> multiset{5, 6, 7, 7, 8};
+        double numbers [] = {8};
+        auto it = multiset.upper_bound(7);
+        
+        int i = 0;
+        for (; it != multiset.end(); ++it) {
+            ASSERT_EQ((*it).first, numbers[i]);
+            i++;
+        }
+    }
+
+    TEST(additional_functions, equal_range) {
+      s21::multiset<double> multiset{5, 6, 7, 7, 8};
+      double numbers[] = {7, 7, 8};
+      auto it = multiset.equal_range(7);
+
+      int i = 0;
+      for (; it.first != it.second; ++it.first) {
+        ASSERT_EQ((*it.first).first, numbers[i]);
+        i++;
+      }
     }
 }
 

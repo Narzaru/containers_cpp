@@ -1,3 +1,6 @@
+#ifndef SRC_S21_SET_S21_SET_H_
+#define SRC_S21_SET_S21_SET_H_
+
 #pragma once
 #include "../s21_sorted_tree/s21_sorted_tree.h"
 
@@ -28,6 +31,8 @@ namespace s21 {
             return insert(value_type(std::forward<Args>(args)...));
         }
     };
-} // namespace s21
+}  // namespace s21
 
 #include "s21_set.inl"
+
+#endif  // SRC_S21_SET_S21_SET_H_

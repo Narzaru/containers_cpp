@@ -14,13 +14,6 @@ namespace s21 {
         }
     };
 
-    // template <class Key, class Value>
-    // sorted_tree<Key, Value>::sorted_tree(std::initializer_list<value_type> const &items) {
-    //     set_initial_properties();
-    //     for (const auto &data:items)
-    //         this->insert_pair(data);
-    // }
-
     template<typename Key, typename Value>
     sorted_tree<Key, Value>::sorted_tree(sorted_tree<Key, Value> &&other) {
         max_size_ = other.max_size_;
@@ -86,7 +79,6 @@ namespace s21 {
             root_->free_node_recursive(root_, nil);
             size_ = 0;
         }
-        // delete nil;
     }
 
     template <typename Key, typename Value>
@@ -106,16 +98,12 @@ namespace s21 {
         if (node->right_child != nil) free_node_recursive(node->right_child, nil);
         node->left_child = nullptr;
         node->right_child = nullptr;
-        // node->key = key_type();
-        // node->value = value_type();
-        // node->color = RED;
         delete node;
         node = nullptr;
     }
 
     template <typename Key, typename Value>
     void sorted_tree<Key, Value>::swap(sorted_tree<Key, Value>& other) {
-        // sorted_tree<Key, Value> *temp;
         Node *tmp = other.root_;
         other.root_ = root_;
         root_ = tmp;
@@ -573,11 +561,6 @@ namespace s21 {
 
     // MULTISET FUNCTIONS
     template <typename Key, typename Value>
-    std::pair<typename sorted_tree<Key, Value>::iterator, typename sorted_tree<Key, Value>::iterator> equal_range(const Key& key) {
-        return std::pair(lower_bound(key), upper_bound(key));
-    }
-
-    template <typename Key, typename Value>
     typename sorted_tree<Key, Value>::iterator sorted_tree<Key, Value>::lower_bound(const Key& key) {
         iterator result = this->begin();
         while (result != this->end()) {
@@ -597,5 +580,10 @@ namespace s21 {
         return result;
     }
 
-
+    template <typename Key, typename Value>
+    std::pair<typename sorted_tree<Key, Value>::iterator,
+              typename sorted_tree<Key, Value>::iterator>
+    sorted_tree<Key, Value>::equal_range(const Key &key) {
+      return std::pair(lower_bound(key), upper_bound(key));
+    }
 }

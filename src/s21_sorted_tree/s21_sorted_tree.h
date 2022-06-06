@@ -149,9 +149,9 @@ namespace s21 {
         iterator insert_pair(const value_type& value);
         iterator find(const Key& key);
 
-        std::pair<iterator,iterator> equal_range(const Key& key);
         iterator lower_bound(const Key& key);
         iterator upper_bound(const Key& key);
+        std::pair<iterator, iterator> equal_range(const Key &key);
     };
 } // namespace s21
 

@@ -1,9 +1,12 @@
+#ifndef SRC_S21_MULTISET_S21_MULTISET_H_
+#define SRC_S21_MULTISET_S21_MULTISET_H_
+
 #pragma once
 #include "../s21_sorted_tree/s21_sorted_tree.h"
 
 namespace s21 {
     template <typename Key, typename Value = int>
-    class multiset : public sorted_tree<Key, Value> {
+    class multiset : public s21::sorted_tree<Key, Value> {
      public:
         using value_type = Key;
         using iterator = typename sorted_tree<Key, Value>::Iterator;
@@ -32,6 +35,8 @@ namespace s21 {
             return insert(value_type(std::forward<Args>(args)...));
         }
     };
-} // namespace s21
+}  // namespace s21
 
 #include "s21_multiset.inl"
+
+#endif  // SRC_S21_MULTISET_S21_MULTISET_H_

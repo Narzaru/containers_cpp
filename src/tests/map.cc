@@ -2,8 +2,6 @@
 
 #include "s21_containers.h"
 
-using namespace std;
-
 namespace map_constructors_suite {
     TEST(constructors, empty_constructor) {
         s21::map<int, double> map;
@@ -34,11 +32,6 @@ namespace map_insert_suite {
         map.insert(std::make_pair(0, "Zero"));
         map.insert(std::make_pair(1, "One_third"));
         ASSERT_EQ(map.size(), 3);
-        // auto it = tree.end();
-        // for (; it != tree.begin(); --it) {
-        //   cout << (*it).first << endl;
-        // }
-        // cout << (*it).first << endl;
     }
 
     TEST(insert, insert_several_keys_values) {
@@ -58,11 +51,6 @@ namespace map_insert_suite {
           ASSERT_EQ(pair.second, strings[i]);
           i++;
         }
-        // auto it = tree.end();
-        // for (; it != tree.begin(); --it) {
-        //   cout << (*it).first << endl;
-        // }
-        // cout << (*it).first << endl;
     }
 
     TEST(insert, insert_or_assign) {
@@ -82,11 +70,6 @@ namespace map_insert_suite {
           ASSERT_EQ(pair.second, strings[i]);
           i++;
         }
-        // auto it = tree.end();
-        // for (; it != tree.begin(); --it) {
-        //   cout << (*it).first << endl;
-        // }
-        // cout << (*it).first << endl;
     }
 }
 
