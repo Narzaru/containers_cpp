@@ -153,6 +153,6 @@ namespace s21 {
     };
 }  // namespace s21
 
-#include "s21_sorted_tree.inс"
+#include "s21_sorted_tree.inc"
 
 #endif  // SRC_S21_SORTED_TREE_H_
