@@ -8,30 +8,30 @@ namespace s21 {
 template <typename Key, typename Value = int>
 class multiset : public s21::sorted_tree<Key, Value> {
  public:
-    using value_type = Key;
-    using iterator = typename sorted_tree<Key, Value>::Iterator;
-    using const_iterator = typename sorted_tree<Key, Value>::ConstIterator;
+  using value_type = Key;
+  using iterator = typename sorted_tree<Key, Value>::Iterator;
+  using const_iterator = typename sorted_tree<Key, Value>::ConstIterator;
 
-    multiset();
-    multiset(std::initializer_list<value_type> const &items);
-    multiset(const multiset &s);
-    multiset(multiset &&s);
-    multiset & operator=(const multiset& s);
-    multiset & operator=(multiset&& s);
-    ~multiset();
+  multiset();
+  multiset(std::initializer_list<value_type> const& items);
+  multiset(const multiset& s);
+  multiset(multiset&& s);
+  multiset& operator=(const multiset& s);
+  multiset& operator=(multiset&& s);
+  ~multiset();
 
-    iterator insert(const value_type& value);
-    void merge(multiset& other);  // NOLINT(*)
+  iterator insert(const value_type& value);
+  void merge(multiset& other);  // NOLINT(*)
 
-    using sorted_tree<Key, Value>::find;
-    using sorted_tree<Key, Value>::equal_range;
-    using sorted_tree<Key, Value>::lower_bound;
-    using sorted_tree<Key, Value>::upper_bound;
+  using sorted_tree<Key, Value>::find;
+  using sorted_tree<Key, Value>::equal_range;
+  using sorted_tree<Key, Value>::lower_bound;
+  using sorted_tree<Key, Value>::upper_bound;
 
-    template <typename... Args>
-    inline iterator emplace(Args &&...args) {
-        return insert(value_type(std::forward<Args>(args)...));
-    }
+  template <typename... Args>
+  inline iterator emplace(Args&&... args) {
+    return insert(value_type(std::forward<Args>(args)...));
+  }
 };
 }  // namespace s21
 
