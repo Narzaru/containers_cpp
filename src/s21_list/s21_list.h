@@ -5,8 +5,6 @@
 
 namespace s21 {
 
-class ListConstIterator;
-
 template <typename T>
 class list {
  public:
@@ -27,6 +25,7 @@ class list {
     void swap(list& other);
     void unique();
     void merge(list& other);
+    void sort();
 
     T& front() const;
     T& back() const;
@@ -119,6 +118,14 @@ class list {
         ListConstIterator operator--() {return (ListConstIterator)--A;}
         ListConstIterator operator--(int) {return (ListConstIterator)A--;}
 
+        operator ListIterator() {
+            iterator result;
+            result.first = A.first;
+            result.end = A.end;
+            result.itr = A.itr;
+            return result;
+        }
+
         bool operator==(const ListConstIterator& other) {
             return this->A.itr == other.A.itr;
         }
@@ -143,8 +150,6 @@ class list {
     template <typename... Args>
     iterator emplace_front(Args&&... args);
 
-    void sort();
-
  private:
     using Allocator = std::allocator<node>;
     Allocator _allocator;
@@ -153,7 +158,6 @@ class list {
     node* back_;
     void last_node();
 };
-
 }  // namespace s21
 #include "s21_list.inc"
 

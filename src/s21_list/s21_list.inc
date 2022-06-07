@@ -511,7 +511,7 @@ namespace s21 {
         return result;
     }
 
-    /*When implementing this method, the behavior of the standard function of
+    /*When implementing emplace method, the behavior of the standard function of
     the list class was taken as a basis.
     https://www.cplusplus.com/reference/list/list/emplace/
     */
@@ -523,9 +523,7 @@ namespace s21 {
         std::allocator_traits<std::allocator<node>>::construct(_allocator, &new_node->data,
                                                                 std::forward<Args>(args)...);
         insert(pos, new_node);
-        iterator result = begin();
-        for (; result.itr != pos.A.itr; ++result) {}
-        return result;
+        return pos;
     }
 
     template <typename T>
@@ -536,9 +534,7 @@ namespace s21 {
                                                                 std::forward<Args>(args)...);
         ListConstIterator pos = this->cend();
         insert(pos, new_node);
-        iterator result = begin();
-        for (; result.itr != pos.A.itr; ++result) {}
-        return result;
+        return pos;
     }
 
     template <typename T>
@@ -549,9 +545,7 @@ namespace s21 {
                                                                 std::forward<Args>(args)...);
         ListConstIterator pos = this->cbegin();
         insert(pos, new_node);
-        iterator result = begin();
-        for (; result.itr != pos.A.itr; ++result) {}
-        return result;
+        return pos;
     }
 
 }  // namespace s21
