@@ -260,7 +260,7 @@ namespace s21 {
                 Right.sort();
             }
 
-            list<int> Result;
+            list<T> Result;
 
             list<T>::ListIterator ptr_left = Left.begin();
             list<T>::ListIterator ptr_right = Right.begin();
