@@ -16,13 +16,16 @@ namespace multiset_constructors_suite {
 
     TEST(constructors, initializer_list) {
         s21::multiset<double> multiset{1, 2, 3, 4, 5, 4, 5};
-        ASSERT_EQ(multiset.size(), 7);
         std::multiset<double> origin{1, 2, 3, 4, 5, 4, 5};
+        ASSERT_EQ(multiset.size(), origin.size());
         auto it_origin = origin.begin();
         for (auto it = multiset.begin(); it != multiset.end(); ++it) {
           ASSERT_EQ((*it).first, *it_origin);
           ++it_origin;
         }
+        multiset.clear();
+        origin.clear();
+        ASSERT_EQ(multiset.size(), origin.size());
     }
 
     TEST(constructors, copy_constructor) {

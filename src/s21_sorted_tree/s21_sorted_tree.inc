@@ -78,6 +78,7 @@ namespace s21 {
         if (root_) {
             root_->free_node_recursive(root_, nil);
             size_ = 0;
+            root_ = nullptr;
         }
     }
 
