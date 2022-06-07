@@ -1,7 +1,7 @@
 #ifndef SRC_S21_STACK_S21_STACK_H_
 #define SRC_S21_STACK_S21_STACK_H_
 
-#include "s21_vector/s21_vector.h"
+#include "../s21_vector/s21_vector.h"
 
 namespace s21 {
 template <typename T>
