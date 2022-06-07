@@ -78,12 +78,12 @@ namespace s21 {
     }
 
     template <class Key, class Value>
-    void map<Key, Value>::merge(map<Key, Value>& other) {
-        iterator ptr(other);
-        while (ptr.itr != ptr.end) {
-            insert(ptr.itr->key, ptr.itr->value);
-            ++ptr;
-        }
-        other.clear();
+    void map<Key, Value>::merge(map<Key, Value>& other) {  // NOLINT(*)
+      iterator ptr(other);
+      while (ptr.itr != ptr.end) {
+        insert(ptr.itr->key, ptr.itr->value);
+        ++ptr;
+      }
+      other.clear();
     }
 }  // namespace s21

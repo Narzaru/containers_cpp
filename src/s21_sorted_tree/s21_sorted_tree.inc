@@ -454,13 +454,13 @@ namespace s21 {
     }
 
     template<typename Key, typename Value>
-    typename sorted_tree<Key, Value>::const_iterator sorted_tree<Key, Value>::cbegin() const {
+    typename sorted_tree<Key, Value>::const_iterator sorted_tree<Key, Value>::cbegin() const noexcept {
         const_iterator iter(*this);
         return iter;
     }
 
     template<typename Key, typename Value>
-    typename sorted_tree<Key, Value>::const_iterator sorted_tree<Key, Value>::cend() const {
+    typename sorted_tree<Key, Value>::const_iterator sorted_tree<Key, Value>::cend() const noexcept {
         const_iterator iter(*this);
         iter.itr = iter.end;
         return iter;

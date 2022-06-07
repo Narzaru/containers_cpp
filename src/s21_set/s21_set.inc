@@ -42,22 +42,12 @@ namespace s21 {
     }
 
     template <class Key, class Value>
-    void set<Key, Value>::merge(set& other) {
-        iterator ptr(other);
-        while (ptr.itr != ptr.end) {
-            insert(ptr.itr->key);
-            ++ptr;
-        }
+    void set<Key, Value>::merge(set& other) {  // NOLINT(*)
+      iterator ptr(other);
+      while (ptr.itr != ptr.end) {
+        insert(ptr.itr->key);
+        ++ptr;
+      }
+      other.clear();
     }
-
-    // template <class Key, class Value>
-    // template <typename Key, typename Value>
-    // std::pair<Key, Value> set<Key, Value>::Iterator::operator* () const {
-    //     if (itr == nullptr) {
-    //         throw std::out_of_range("Container is empty");
-    //     }
-    //     return std::pair(itr->key, itr->value);
-    // }
-
-
 }  // namespace s21

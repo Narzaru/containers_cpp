@@ -32,7 +32,7 @@ class map : public sorted_tree<Key, Value> {
     std::pair<iterator, bool> insert(const Key &key, const Value &obj);
     std::pair<iterator, bool> insert_or_assign(const Key &key, const Value &obj);
 
-    void merge(map &other);
+    void merge(map &other);  // NOLINT(*)
 
     template <typename... Args>
     inline std::pair<iterator, bool> emplace(Args &&...args) {

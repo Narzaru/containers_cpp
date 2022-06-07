@@ -118,8 +118,8 @@ class sorted_tree {
         }
     };
     using const_iterator = ConstIterator;
-    const_iterator cbegin() const;
-    const_iterator cend() const;
+    const_iterator cbegin() const noexcept;
+    const_iterator cend() const noexcept;
 
     void erase(iterator pos);
     void swap(sorted_tree<Key, Value>& other);

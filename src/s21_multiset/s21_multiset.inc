@@ -37,13 +37,13 @@ namespace s21 {
     }
 
     template <class Key, class Value>
-    void multiset<Key, Value>::merge(multiset& other) {
-        iterator ptr(other);
-        while (ptr.itr != ptr.end) {
-            insert(ptr.itr->key);
-            ++ptr;
-        }
-        other.clear();
+    void multiset<Key, Value>::merge(multiset& other) {  // NOLINT(*)
+      iterator ptr(other);
+      while (ptr.itr != ptr.end) {
+        insert(ptr.itr->key);
+        ++ptr;
+      }
+      other.clear();
     }
 
 }  // namespace s21

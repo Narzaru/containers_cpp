@@ -21,7 +21,7 @@ class set : public sorted_tree<Key, Value> {
     ~set();
 
     std::pair<iterator, bool> insert(const value_type& value);
-    void merge(set& other);
+    void merge(set& other);  // NOLINT(*)
 
     using sorted_tree<Key, Value>::find;
 

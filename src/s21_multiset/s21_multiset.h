@@ -21,7 +21,7 @@ class multiset : public s21::sorted_tree<Key, Value> {
     ~multiset();
 
     iterator insert(const value_type& value);
-    void merge(multiset& other);
+    void merge(multiset& other);  // NOLINT(*)
 
     using sorted_tree<Key, Value>::find;
     using sorted_tree<Key, Value>::equal_range;

@@ -94,7 +94,6 @@ namespace map_erase_suite {
         ASSERT_EQ(map.size(), 2);
         ASSERT_EQ(origin.size(), 2);
         EXPECT_THROW(map.at(2), std::out_of_range);
-        
 
         it = map.begin();
         it_origin = origin.begin();
