@@ -84,5 +84,6 @@ namespace s21 {
             insert(ptr.itr->key, ptr.itr->value);
             ++ptr;
         }
+        other.clear();
     }
 }  // namespace s21
