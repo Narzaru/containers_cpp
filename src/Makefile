@@ -41,10 +41,8 @@ linter:
 	@find . -name "*.cc" -exec python3 ../materials/linters/cpplint.py {} \;
 	@find . -name "*.cpp" -exec python3 ../materials/linters/cpplint.py {} \;
 	@find . -name "*.inc" -exec python3 ../materials/linters/cpplint.py {} \;
-	@find . -name "*.inl" -exec python3 ../materials/linters/cpplint.py {} \;
 	@find . -name "*.h" -exec python3 ../materials/linters/cpplint.py {} \;
 	@find . -name "*.hpp" -exec python3 ../materials/linters/cpplint.py {} \;
-	@rm -f CPPLINT.cfg
 
 gcov_report: CFLAG+=--coverage
 gcov_report: test
@@ -59,3 +57,4 @@ cpplint:
 clean:
 	@rm -f test
 	rm -rf $(STATICLIB) *.o *.gcno *.gcda *.gcov test.info report
+	@rm -f CPPLINT.cfg
