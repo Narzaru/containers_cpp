@@ -52,8 +52,7 @@ gcov_report: test
 	open report/index.html
 
 cpplint:
-	cppcheck --enable=all  --check-config --suppress=missingIncludeSystem ../src/s21_containers.h
-	cppcheck --enable=all  --check-config --suppress=missingIncludeSystem ../src/s21_containersplus.h
+	cppcheck --enable=all  --check-config --suppress=missingInclude ./.
 clean:
 	@rm -f test
-	@rm -rf $(STATICLIB) *.o *.gcno *.gcda *.gcov test.info report  
+	@rm -rf *.o *.gcno *.gcda *.gcov test.info report  
