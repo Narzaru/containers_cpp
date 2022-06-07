@@ -5,6 +5,8 @@
 
 namespace s21 {
 
+class ListConstIterator;
+
 template <typename T>
 class list {
  public:
@@ -31,6 +33,7 @@ class list {
 
     list<T>();
     list<T>(size_t n);
+    list(size_t n, size_t value);
     list<T>(std::initializer_list<T> const& items);
     list<T>(list &&l);
     list(const list &l);
@@ -58,7 +61,7 @@ class list {
         }
         void free_memory();
     };
-    typedef list<T>::listNode node;
+    using node = typename list<T>::listNode;
 
     class ListIterator {
      public:
@@ -76,6 +79,7 @@ class list {
             end = other.back_;
             itr = other.head_;
         }
+
         ~ListIterator() {
             free_iterator();
         }
@@ -89,10 +93,11 @@ class list {
         bool operator==(const ListIterator& other);
         bool operator!=(const ListIterator& other);
     };
-        using iterator = typename list<T>::ListIterator;
-        iterator begin();
-        iterator end();
-        void erase(iterator pos);
+    using iterator = typename list<T>::ListIterator;
+
+    iterator begin();
+    iterator end();
+    void erase(iterator pos);
 
     class ListConstIterator  {
      public:
@@ -129,22 +134,24 @@ class list {
     void splice(const_iterator pos, list& other); // NOLINT(*)
     iterator insert(iterator pos, const_reference value);
     iterator insert(const_iterator pos, list<T>&& other);
+    iterator insert(const_iterator pos, node* node);
 
     template <typename... Args>
-    void emplace(const_iterator pos, Args&&... args);
+    iterator emplace(const_iterator pos, Args&&... args);
     template <typename... Args>
-    void emplace_back(Args&&... args);
+    iterator emplace_back(Args&&... args);
     template <typename... Args>
-    void emplace_front(Args&&... args);
+    iterator emplace_front(Args&&... args);
 
     void sort();
-    // void sort(ListIterator ptr_L, ListIterator ptr_R);
+
  private:
-        size_t size_;
-        node* head_;
-        node* back_;
-        void last_node();
-        // list<T>::ListIterator list<T>::partition(ListIterator L, ListIterator R);
+    using Allocator = std::allocator<node>;
+    Allocator _allocator;
+    size_t size_;
+    node* head_;
+    node* back_;
+    void last_node();
 };
 
 }  // namespace s21

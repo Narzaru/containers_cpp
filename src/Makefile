@@ -1,7 +1,7 @@
 CC := g++
 STD := -std=c++17
 CFLAG := -Wall -Wextra -Wshadow -pedantic
-S = --suppress=unmatchedSuppression: *cc
+S = --suppress
 
 FSANITIZE_DEBUG := True
 ifeq ($(shell uname), Linux)
@@ -54,8 +54,8 @@ gcov_report: test
 	open report/index.html
 
 cpplint:
-	cppcheck --enable=all  --check-config $(S)constParameter $(S)useStlAlgorithm $(S)missingIncludeSystem $(S)noCopyConstructor $(S)noOperatorEq $(S)noExplicitConstructor $(S)negativeIndex $(S)missingReturn ../src/
-
+	cppcheck --enable=all  --check-config --suppress=missingIncludeSystem ../src/s21_containers.h
+	cppcheck --enable=all  --check-config --suppress=missingIncludeSystem ../src/s21_containersplus.h
 clean:
 	@rm -f test
-	rm -rf $(STATICLIB) *.o *.gcno *.gcda *.gcov test.info report
+	@rm -rf $(STATICLIB) *.o *.gcno *.gcda *.gcov test.info report  
