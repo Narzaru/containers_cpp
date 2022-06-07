@@ -70,7 +70,7 @@ namespace s21 {
         nil = new Node();
         root_ = nullptr;
         size_ = 0;
-        max_size_ = std::numeric_limits<size_type>::max() / sizeof(Key);
+        max_size_ = std::numeric_limits<size_type>::max() / (10 * sizeof(Key));
     }
 
     template <typename Key, typename Value>

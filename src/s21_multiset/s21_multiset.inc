@@ -43,6 +43,7 @@ namespace s21 {
             insert(ptr.itr->key);
             ++ptr;
         }
+        other.reset();
     }
 
 }  // namespace s21

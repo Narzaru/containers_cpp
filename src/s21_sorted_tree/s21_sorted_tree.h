@@ -131,7 +131,6 @@ class sorted_tree {
     size_type size_;
     size_type max_size_;
     Node *root_;
-    void reset();
     void free_sorted_tree();
     void erase_existing(iterator pos);
     void set_initial_properties();
@@ -148,6 +147,7 @@ class sorted_tree {
     iterator lower_bound(const Key& key);
     iterator upper_bound(const Key& key);
     std::pair<iterator, iterator> equal_range(const Key &key);
+    void reset();
 };
 }  // namespace s21
 
