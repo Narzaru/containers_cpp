@@ -100,6 +100,32 @@ TEST(list_size_suit, size_swap) {
     ASSERT_EQ(s21list2.size(), 6);
 }
 
+TEST(list_size_suit, erase) {
+    s21::list<int> s21list{566, 123, 3, 3, 2, 1};
+    s21list.erase(s21list.begin());
+    s21list.erase(s21list.end());
+    s21::list<int>::ListIterator s21it = s21list.begin();
+    ASSERT_EQ(*s21it, 123);
+    s21::list<int>::ListIterator s21it_ = s21list.end();
+    ASSERT_EQ(*s21it_, 2);
+}
+
+TEST(list_size_suit, erase_2) {
+    s21::list<int> s21list{566, 123, 3, 3, 2, 1};
+    s21::list<int> check{566, 3, 3, 2, 1};
+
+    s21::list<int>::ListIterator s21it = s21list.begin();
+    s21it++;
+    s21list.erase(s21it);
+
+    s21::list<int>::ListIterator s21it_ = s21list.begin();
+    s21::list<int>::ListIterator check_ = check.begin();
+
+    while (s21it_.itr) {
+        ASSERT_TRUE(*(s21it_++) <= *(check_++));
+    }
+}
+
 TEST(list_insert_suit, insert_int) {
     s21::list<int> s21list{566, 123};
     std::list<int> stdlist{44, 55};
@@ -113,6 +139,20 @@ TEST(list_insert_suit, insert_int) {
     s21list.insert(s21it, 99);
     s21list.erase(s21it);
     ASSERT_EQ(s21list.size(), 3);
+}
+
+TEST(list_insert_suit, insert_int_2) {
+    s21::list<int> s21list{566, 123, 18};
+    s21::list<int> check{566, 77, 123, 18};
+    s21::list<int>::ListIterator s21it;
+    s21it = s21list.begin();
+    s21it++;
+    s21list.insert(s21it, 77);
+    s21it = s21list.begin();
+    s21::list<int>::ListIterator s21it_ = check.begin();
+    while (s21it_.itr) {
+        ASSERT_TRUE(*(s21it++) <= *(s21it_++));
+    }
 }
 
 TEST(list_sort_suit, sort) {
@@ -130,6 +170,20 @@ TEST(list_sort_suit, sort) {
         ++s21it;
         ++stdit;
         ++sortit;
+    }
+}
+
+TEST(list_sort_suit, sort_2) {
+    s21::list<int> s21list;
+    unsigned int first;
+    for (size_t i = 0; i < 1000000; i++) {
+        s21list.push_back(rand_r(&first));
+    }
+    s21list.sort();
+    s21::list<int>::ListIterator s21it = s21list.begin();
+
+    while (s21it.itr) {
+        ASSERT_TRUE(*s21it <= *(s21it++));
     }
 }
 
