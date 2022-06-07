@@ -238,8 +238,8 @@ namespace s21 {
             }
             return;
         } else {
-            list<int> Left;
-            list<int> Right;
+            list<T> Left;
+            list<T> Right;
             ListIterator ptr = begin();
 
             for (size_t i = 0; i < size_; i++) {
