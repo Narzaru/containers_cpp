@@ -511,6 +511,11 @@ namespace s21 {
         return result;
     }
 
+    /*When implementing this method, the behavior of the standard function of
+    the list class was taken as a basis.
+    https://www.cplusplus.com/reference/list/list/emplace/
+    */
+
     template <typename T>
     template <typename... Args>
     typename list<T>::iterator list<T>::emplace(ListConstIterator pos, Args&&... args) {
