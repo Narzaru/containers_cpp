@@ -139,6 +139,7 @@ class sorted_tree {
     void rotate_right(Node *node);
     void fix_up_insert(Node *node);
     void fix_up_erase(Node *node, Node *parent);
+    void reset();
 
  protected:
     Node *nil;
@@ -147,7 +148,6 @@ class sorted_tree {
     iterator lower_bound(const Key& key);
     iterator upper_bound(const Key& key);
     std::pair<iterator, iterator> equal_range(const Key &key);
-    void reset();
 };
 }  // namespace s21
 
