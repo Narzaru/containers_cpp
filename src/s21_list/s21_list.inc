@@ -3,7 +3,7 @@
 #include <initializer_list>
 #include <iostream>
 #include <climits>
-#include <thread>
+#include <thread> // NOLINT(*)
 
 namespace s21 {
 

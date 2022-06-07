@@ -1,6 +1,6 @@
 #ifndef SRC_S21_QUEUE_S21_QUEUE_H_
 #define SRC_S21_QUEUE_S21_QUEUE_H_
-#include "s21_list.h"
+#include "../s21_queue/s21_queue.h"
 
 namespace s21 {
 
